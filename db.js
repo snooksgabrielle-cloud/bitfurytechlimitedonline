@@ -29,12 +29,25 @@ export async function initDb() {
   if (fs.existsSync(dbPath)) {
     try {
       fileBuffer = fs.readFileSync(dbPath);
-    } catch {
-      fileBuffer = null;
+      if (fileBuffer && fileBuffer.length > 0) {
+        sqliteDb = new SQL.Database(fileBuffer);
+      }
+    } catch (err) {
+      console.warn('⚠️ SQLite database file is corrupted or malformed. Removing bad file and re-initializing database...', err.message);
+      try {
+        if (fs.existsSync(dbPath)) {
+          fs.unlinkSync(dbPath);
+        }
+      } catch (e) {
+        // ignore deletion error
+      }
+      sqliteDb = null;
     }
   }
 
-  sqliteDb = new SQL.Database(fileBuffer);
+  if (!sqliteDb) {
+    sqliteDb = new SQL.Database();
+  }
 
   // Enable foreign keys
   sqliteDb.run('PRAGMA foreign_keys = ON;');
