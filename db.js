@@ -306,13 +306,14 @@ export const db = {
     const instance = await initDb();
     const p = Array.isArray(params) ? params : [params];
     instance.run(sql, p);
-    persist();
 
     const resId = instance.exec('SELECT last_insert_rowid() as id');
     const lastID = resId && resId[0] && resId[0].values && resId[0].values[0] ? resId[0].values[0][0] : 0;
 
     const resChanges = instance.exec('SELECT changes() as cnt');
     const changes = resChanges && resChanges[0] && resChanges[0].values && resChanges[0].values[0] ? resChanges[0].values[0][0] : 0;
+
+    persist();
 
     return {
       lastID,

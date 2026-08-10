@@ -832,6 +832,38 @@ function handleDepositFormSubmit(event) {
     });
 }
 
+/**
+ * Renders a loading spinner component inside a button during async operations
+ */
+function setButtonLoading(button, isLoading, loadingText = 'Processing...', defaultText = null) {
+  if (!button) return;
+
+  if (isLoading) {
+    if (!button.hasAttribute('data-original-html')) {
+      button.setAttribute('data-original-html', defaultText || button.innerHTML);
+    }
+    button.disabled = true;
+    button.classList.add('btn-loading');
+    button.innerHTML = `
+      <span class="btn-loading-content">
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span>${loadingText}</span>
+      </span>
+    `;
+  } else {
+    button.disabled = false;
+    button.classList.remove('btn-loading');
+    const original = button.getAttribute('data-original-html');
+    if (original) {
+      button.innerHTML = original;
+      button.removeAttribute('data-original-html');
+    } else if (defaultText) {
+      button.innerHTML = defaultText;
+    }
+  }
+}
+window.setButtonLoading = setButtonLoading;
+
 function handleAuthFormSubmit(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -862,14 +894,24 @@ function handleAuthFormSubmit(event) {
         password: passwordVal,
       };
 
+  const defaultBtnText = isRegister ? 'Create Account & Log In' : 'Log In to Dashboard';
+  const loadingMsg = isRegister ? 'Creating Account...' : 'Authenticating...';
+
   if (button) {
-    button.disabled = true;
-    button.textContent = isRegister ? 'Creating Account...' : 'Authenticating...';
+    setButtonLoading(button, true, loadingMsg, defaultBtnText);
   }
 
   postJson(isRegister ? '/api/auth/register' : '/api/auth/login', payload)
     .then((data) => {
       saveAuth(data);
+      if (button) {
+        button.innerHTML = `
+          <span class="btn-loading-content" style="color: #34d399;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 0.5rem;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>${isRegister ? 'Account Created!' : 'Authenticated!'}</span>
+          </span>
+        `;
+      }
       createMessage(form, isRegister ? 'Account created successfully! Redirecting to dashboard...' : 'Login successful! Redirecting to dashboard...');
       setTimeout(() => {
         if (data && data.user && data.user.role === 'admin') {
@@ -877,13 +919,12 @@ function handleAuthFormSubmit(event) {
         } else {
           window.location.href = 'dashboard.html';
         }
-      }, 500);
+      }, 550);
     })
     .catch((error) => {
       createMessage(form, error.message || (isRegister ? 'Registration failed. Please try again.' : 'Invalid email or password.'));
       if (button) {
-        button.disabled = false;
-        button.textContent = isRegister ? 'Create Account & Log In' : 'Log In to Dashboard';
+        setButtonLoading(button, false, '', defaultBtnText);
       }
     });
 }
@@ -908,18 +949,6 @@ function initForms() {
 
   if (registerForm) {
     registerForm.addEventListener('submit', handleAuthFormSubmit);
-  }
-
-  // Handle Fill Sample Credentials helper button
-  const fillSampleBtn = document.querySelector('#fill-sample-btn');
-  if (fillSampleBtn) {
-    fillSampleBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const emailInput = document.querySelector('#email');
-      const passInput = document.querySelector('#password');
-      if (emailInput) emailInput.value = 'user@bitfurytech.com';
-      if (passInput) passInput.value = 'User1234!';
-    });
   }
 
   document.querySelectorAll('[data-logout]').forEach((button) => {
@@ -1021,6 +1050,96 @@ function renderPortfolioGrowthChart(depositBal, interestBal, totalInvest, timefr
   `;
 }
 
+/**
+ * Smooth Count-up number ticker animation for balances, profit, and financial statistics
+ */
+function animateCountUp(targetEl, targetVal, options = {}) {
+  let elements = [];
+  if (typeof targetEl === 'string') {
+    elements = Array.from(document.querySelectorAll(`#${targetEl}, .${targetEl}`));
+  } else if (targetEl instanceof HTMLElement) {
+    elements = [targetEl];
+  } else if (targetEl && targetEl.length) {
+    elements = Array.from(targetEl);
+  }
+  if (!elements || elements.length === 0) return;
+
+  elements.forEach((el) => {
+    const {
+      duration = 1250,
+      prefix = '$',
+      suffix = '',
+      hasPlus = false,
+      decimals = 2,
+      isMasked = false
+    } = options;
+
+    const parseValLocal = (val) => {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return val;
+      if (typeof val === 'string') {
+        const clean = val.replace(/[^0-9.-]+/g, '');
+        const num = parseFloat(clean);
+        return isNaN(num) ? 0 : num;
+      }
+      return 0;
+    };
+
+    const numericTarget = parseValLocal(targetVal);
+    const sign = hasPlus && numericTarget > 0 ? '+' : '';
+    const formattedFinal = `${sign}${prefix}${numericTarget.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    })}${suffix}`;
+
+    el.setAttribute('data-real-val', formattedFinal);
+
+    if (isMasked || (localStorage.getItem('balance_masked') === 'true' && el.id === 'stat-total-available-balance')) {
+      el.textContent = '••••••';
+      return;
+    }
+
+    if (el._animFrame) {
+      cancelAnimationFrame(el._animFrame);
+    }
+
+    const startTime = performance.now();
+    const startNum = 0; // Starts ticking up from 0 on page load
+
+    el.classList.add('number-tick-up');
+    el.classList.add('number-ticking');
+
+    const updateCounter = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentVal = startNum + (numericTarget - startNum) * easeOut;
+
+      if (localStorage.getItem('balance_masked') === 'true' && el.id === 'stat-total-available-balance') {
+        el.textContent = '••••••';
+        el.classList.remove('number-ticking');
+        return;
+      }
+
+      const currSign = hasPlus && currentVal > 0 ? '+' : '';
+      el.textContent = `${currSign}${prefix}${currentVal.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      })}${suffix}`;
+
+      if (progress < 1) {
+        el._animFrame = requestAnimationFrame(updateCounter);
+      } else {
+        el.textContent = formattedFinal;
+        el.classList.remove('number-ticking');
+      }
+    };
+
+    el._animFrame = requestAnimationFrame(updateCounter);
+  });
+}
+window.animateCountUp = animateCountUp;
+
 async function loadDashboardData() {
   const dashboard = document.querySelector('[data-dashboard]');
   if (!dashboard) return;
@@ -1059,25 +1178,33 @@ async function loadDashboardData() {
       return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
 
-    // Top Green Stat Cards & Main Balance
+    // Top Green Stat Cards & Main Balance - Animate count-up on load
     const depVal = parseVal(data.depositWallet);
     const intVal = parseVal(data.interestWallet);
     const totalAvail = depVal + intVal;
     const isMasked = localStorage.getItem('balance_masked') === 'true';
 
-    const totalAvailEl = document.getElementById('stat-total-available-balance');
-    if (totalAvailEl) {
-      const formattedTotal = fmt(totalAvail);
-      totalAvailEl.setAttribute('data-real-val', formattedTotal);
-      totalAvailEl.textContent = isMasked ? '••••••' : formattedTotal;
-    }
+    // 1. Available Balance
+    animateCountUp('stat-total-available-balance', totalAvail, { isMasked, duration: 1300 });
 
-    if (document.getElementById('stat-deposit-wallet')) document.getElementById('stat-deposit-wallet').textContent = fmt(data.depositWallet);
-    if (document.getElementById('stat-interest-wallet')) document.getElementById('stat-interest-wallet').textContent = fmt(data.interestWallet);
-    if (document.getElementById('stat-total-invest')) document.getElementById('stat-total-invest').textContent = fmt(data.totalInvest);
-    if (document.getElementById('stat-total-deposit')) document.getElementById('stat-total-deposit').textContent = fmt(data.totalDeposit);
-    if (document.getElementById('stat-total-withdraw')) document.getElementById('stat-total-withdraw').textContent = fmt(data.totalWithdraw);
-    if (document.getElementById('stat-referral-earnings')) document.getElementById('stat-referral-earnings').textContent = fmt(data.referralEarnings);
+    // 2. Yesterday's Earnings
+    const investmentsList = data.activeInvestments || data.investments || [];
+    const calculatedYesterdayEarnings = investmentsList.reduce((sum, inv) => {
+      const amt = parseVal(inv.amount);
+      const rate = parseVal(inv.dailyRate || inv.daily_rate);
+      return sum + (amt * (rate / 100));
+    }, 0) || 0.14;
+
+    const yesterdayEarningsVal = data.yesterdayEarnings !== undefined ? parseVal(data.yesterdayEarnings) : calculatedYesterdayEarnings;
+    animateCountUp('stat-yesterday-earnings', yesterdayEarningsVal, { hasPlus: true, duration: 1100 });
+
+    // 3. Stat Card Balances
+    animateCountUp('stat-deposit-wallet', data.depositWallet, { duration: 1200 });
+    animateCountUp('stat-interest-wallet', data.interestWallet, { duration: 1200 });
+    animateCountUp('stat-total-invest', data.totalInvest, { duration: 1200 });
+    animateCountUp('stat-total-deposit', data.totalDeposit, { duration: 1200 });
+    animateCountUp('stat-total-withdraw', data.totalWithdraw, { duration: 1200 });
+    animateCountUp('stat-referral-earnings', data.referralEarnings, { duration: 1200 });
 
     // Update Multi-Currency Portfolio Valuations
     if (window.updateFxValuations) {
@@ -1089,6 +1216,55 @@ async function loadDashboardData() {
     if (document.getElementById('withdraw-deposit-avail')) document.getElementById('withdraw-deposit-avail').textContent = fmt(data.depositWallet);
     if (document.getElementById('modal-dep-bal')) document.getElementById('modal-dep-bal').textContent = fmt(data.depositWallet);
     if (document.getElementById('modal-int-bal')) document.getElementById('modal-int-bal').textContent = fmt(data.interestWallet);
+
+    // Update Interest & Yield View Board Metrics
+    const totalAccruedInterest = investmentsList.reduce((sum, inv) => sum + parseVal(inv.accruedProfit || inv.accrued_profit || 0), 0) + intVal;
+    if (document.getElementById('board-total-interest')) {
+      document.getElementById('board-total-interest').textContent = fmt(totalAccruedInterest);
+    }
+    if (document.getElementById('board-yesterday-interest')) {
+      document.getElementById('board-yesterday-interest').textContent = '+' + fmt(yesterdayEarningsVal);
+    }
+    if (document.getElementById('board-interest-wallet-bal')) {
+      document.getElementById('board-interest-wallet-bal').textContent = fmt(data.interestWallet);
+    }
+    const avgRate = investmentsList.length > 0 
+      ? (investmentsList.reduce((s, i) => s + parseVal(i.dailyRate || i.daily_rate || 0), 0) / investmentsList.length).toFixed(2)
+      : '1.80';
+    if (document.getElementById('board-avg-yield-rate')) {
+      document.getElementById('board-avg-yield-rate').textContent = `${avgRate}% / Day`;
+    }
+
+    // Update Interest Board Accrual History Table
+    const boardTbody = document.getElementById('interest-board-tbody');
+    if (boardTbody) {
+      if (investmentsList.length === 0) {
+        boardTbody.innerHTML = `
+          <tr>
+            <td class="muted" style="font-size: 0.82rem;">Today, 00:00 UTC</td>
+            <td style="font-weight: 700; color: #ffffff;">Crypto Momentum Alpha</td>
+            <td style="font-family: monospace;">$10.00</td>
+            <td><span class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">1.40% / Day</span></td>
+            <td style="font-weight: 700; color: #34d399;">+$0.14</td>
+            <td><span class="badge badge-success">Accrued to Wallet</span></td>
+          </tr>
+        `;
+      } else {
+        boardTbody.innerHTML = investmentsList.map((inv) => {
+          const dailyProf = parseVal(inv.amount) * (parseVal(inv.dailyRate || inv.daily_rate) / 100);
+          return `
+            <tr>
+              <td class="muted" style="font-size: 0.82rem;">${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, 00:00 UTC</td>
+              <td style="font-weight: 700; color: #ffffff;">${inv.planName || inv.plan_name}</td>
+              <td style="font-family: monospace;">${fmt(inv.amount)}</td>
+              <td><span class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">${inv.dailyRate || inv.daily_rate}% / Day</span></td>
+              <td style="font-weight: 700; color: #34d399;">+${fmt(dailyProf)}</td>
+              <td><span class="badge badge-success">Accrued to Wallet</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
 
     const userNameEl = document.querySelector('[data-user-name]');
     if (userNameEl && data.user) {
@@ -1102,7 +1278,6 @@ async function loadDashboardData() {
       if (document.getElementById('prof-country')) document.getElementById('prof-country').value = data.user.country || '';
     }
 
-    const investmentsList = data.activeInvestments || data.investments || [];
     window.currentActiveInvestments = investmentsList;
     window.currentDashboardData = data;
 
@@ -3063,10 +3238,10 @@ async function initCryptoDepositPortal() {
 
   // Render Coin Buttons Grid
   container.innerHTML = activeAdminWallets.map((w, idx) => `
-    <button type="button" class="fintech-action-card crypto-coin-btn ${idx === 0 ? 'active-coin-selected' : ''}" data-coin-code="${w.coin_code}" style="padding: 0.65rem 0.5rem; text-align: center; border: 1px solid ${idx === 0 ? '#c084fc' : 'rgba(255,255,255,0.1)'}; background: ${idx === 0 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.03)'}; border-radius: 10px; cursor: pointer; transition: all 0.2s ease;">
-      <div style="font-size: 1.4rem; font-weight: 800; color: #c084fc;">${w.coin_symbol || '₮'}</div>
-      <div style="font-size: 0.8rem; font-weight: 700; color: #ffffff; margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${w.coin_code.replace('_', ' ')}</div>
-      <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.1rem;">${w.network ? w.network.split(' ')[0] : 'Crypto'}</div>
+    <button type="button" class="crypto-coin-btn ${idx === 0 ? 'active-coin-selected' : ''}" data-coin-code="${w.coin_code}" style="padding: 0.55rem 0.4rem; text-align: center; border: 1px solid ${idx === 0 ? '#c084fc' : 'rgba(255,255,255,0.1)'}; background: ${idx === 0 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.03)'}; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; width: 100%; box-sizing: border-box; min-width: 0;">
+      <div style="font-size: 1.2rem; font-weight: 800; color: #c084fc; line-height: 1;">${w.coin_symbol || '₮'}</div>
+      <div style="font-size: 0.76rem; font-weight: 700; color: #ffffff; margin-top: 0.2rem; word-break: break-word; line-height: 1.2;">${w.coin_code.replace('_', ' ')}</div>
+      <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 0.1rem; word-break: break-word;">${w.network ? w.network.split(' ')[0] : 'Crypto'}</div>
     </button>
   `).join('');
 
@@ -3124,6 +3299,18 @@ async function initCryptoDepositPortal() {
     btn.addEventListener('click', () => {
       const code = btn.getAttribute('data-coin-code');
       selectCryptoCoin(code);
+
+      const activeBox = document.getElementById('deposit-gateway-active-box');
+      if (activeBox) {
+        activeBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        activeBox.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
+        activeBox.style.borderColor = '#c084fc';
+        activeBox.style.boxShadow = '0 0 24px rgba(192, 132, 252, 0.6)';
+        setTimeout(() => {
+          activeBox.style.boxShadow = 'none';
+          activeBox.style.borderColor = 'rgba(168, 85, 247, 0.35)';
+        }, 1200);
+      }
     });
   });
 

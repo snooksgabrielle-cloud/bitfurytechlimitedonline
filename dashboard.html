@@ -195,198 +195,193 @@
           </div>
         </div>
 
-        <!-- Main Balance Container Card (Exact layout from screenshot) -->
-        <div class="available-balance-card">
-          <div class="balance-card-top">
-            <div class="balance-label-group">
-              <span class="verified-shield-icon">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-              </span>
-              <span class="balance-title">Available Balance</span>
-              <button class="eye-toggle-btn" type="button" id="toggle-balance-eye" title="Toggle balance visibility">
-                <svg id="eye-icon-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg id="eye-icon-closed" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-              </button>
-            </div>
-            <button class="trans-history-link" type="button" data-switch-tab="transactions">
-              Transaction History &rsaquo;
-            </button>
-          </div>
-
-          <div class="balance-card-main-row">
-            <div class="balance-amount-display" data-switch-tab="deposit">
-              <h1 id="stat-total-available-balance" class="balance-amount">$10.00</h1>
-              <span class="balance-arrow">&rsaquo;</span>
-            </div>
-            <button class="btn-add-money-purple" type="button" data-switch-tab="deposit">
-              Add Money
-            </button>
-          </div>
-
-          <div class="balance-card-sub-row" data-switch-tab="active-investments">
-            <div class="sub-row-left">
-              <span class="coins-icon">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 4.02 2 6.5s4.48 4.5 10 4.5 10-2.02 10-4.5S17.52 2 12 2zm0 6.5c-4.41 0-8-1.34-8-2.5s3.59-2.5 8-2.5 8 1.34 8 2.5-3.59 2.5-8 2.5z"/><path d="M2 9v3.5c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5V9c0 1.16-3.59 2.5-8 2.5S4 10.16 2 9z"/><path d="M2 14.5V18c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-3.5c0 1.16-3.59 2.5-8 2.5s-8-1.34-8-2.5z"/></svg>
-              </span>
-              <span class="earnings-label">Yesterday's Earnings: <strong class="earnings-amount" id="stat-yesterday-earnings">+$0.14</strong></span>
-            </div>
-            <span class="sub-row-arrow">&rsaquo;</span>
-          </div>
-        </div>
-
-        <!-- 4-Card Action Grid (Matching screenshot bottom action row) -->
-        <div class="fintech-action-grid">
-          <button class="fintech-action-card" type="button" data-switch-tab="withdraw">
-            <div class="action-card-icon-box bank-icon-bg">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 3L2 8h20l-10-5z"/></svg>
-              <span class="fee-badge">0 Fee</span>
-            </div>
-            <span class="action-card-title">To Bank</span>
-          </button>
-
-          <button class="fintech-action-card" type="button" data-switch-tab="deposit">
-            <div class="action-card-icon-box wallet-icon-bg">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M7 10h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H7"/><circle cx="16" cy="12" r="1.5"/></svg>
-            </div>
-            <span class="action-card-title">To Wallet</span>
-          </button>
-
-          <button class="fintech-action-card" type="button" data-switch-tab="plans">
-            <div class="action-card-icon-box savings-icon-bg">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 5c-1.5 0-2.8 1.2-3 2.5-.2-1.3-1.5-2.5-3-2.5s-2.8 1.2-3 2.5C9.8 6.2 8.5 5 7 5 4.8 5 3 6.8 3 9c0 5.25 9 11 9 11s9-5.75 9-11c0-2.2-1.8-4-4-4z"/><circle cx="12" cy="11" r="2"/></svg>
-            </div>
-            <span class="action-card-title">Savings</span>
-          </button>
-
-          <button class="fintech-action-card" type="button" data-switch-tab="active-investments">
-            <div class="action-card-icon-box cards-icon-bg">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/></svg>
-            </div>
-            <span class="action-card-title">Cards</span>
-          </button>
-        </div>
-
-        <!-- Detailed Stat Cards Row -->
-        <div class="stat-card-row">
-          <div class="stat-box green-stat">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Deposit Wallet Balance</span>
-              <h3 id="stat-deposit-wallet">$10.00</h3>
-            </div>
-          </div>
-
-          <div class="stat-box green-stat">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Interest Wallet Balance</span>
-              <h3 id="stat-interest-wallet">$0.00</h3>
-            </div>
-          </div>
-
-          <div class="stat-box green-stat" data-switch-tab="active-investments" style="cursor: pointer;" title="View Active Investments">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Total Invest</span>
-              <h3 id="stat-total-invest">$0.00</h3>
-            </div>
-          </div>
-
-          <div class="stat-box green-stat">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Total Deposit</span>
-              <h3 id="stat-total-deposit">$0.00</h3>
-            </div>
-          </div>
-
-          <div class="stat-box green-stat">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Total Withdraw</span>
-              <h3 id="stat-total-withdraw">$0.00</h3>
-            </div>
-          </div>
-
-          <div class="stat-box green-stat">
-            <div class="stat-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div class="stat-details">
-              <span class="stat-title">Referral Earnings</span>
-              <h3 id="stat-referral-earnings">$0.00</h3>
-            </div>
-          </div>
-        </div>
-
         <!-- TAB 1: OVERVIEW -->
         <div class="tab-content active" id="tab-overview">
-          <div class="panel highlight-banner">
-            <div class="banner-content">
-              <span class="badge badge-accent">Bitfury Tech Investment Engine</span>
-              <h2>Start Earning Daily Interest Today</h2>
-              <p class="muted">Your account was credited with a <strong>$10.00 Sign Up Bonus</strong> in your Deposit Wallet. Fund your wallet or invest directly into our institutional algorithmic trading & stock strategies to compound daily profits.</p>
-              <div class="banner-actions">
-                <button class="btn btn-primary" type="button" data-switch-tab="plans">Explore Investment Plans</button>
-                <button class="btn btn-secondary" type="button" data-switch-tab="deposit">Fund Deposit Wallet</button>
+          <!-- Main Balance Container Card (Exact layout from screenshot) -->
+          <div class="available-balance-card">
+            <div class="balance-card-top">
+              <div class="balance-label-group">
+                <span class="verified-shield-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </span>
+                <span class="balance-title">Available Balance</span>
+                <button class="eye-toggle-btn" type="button" id="toggle-balance-eye" title="Toggle balance visibility">
+                  <svg id="eye-icon-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg id="eye-icon-closed" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <button class="trans-history-link" type="button" data-switch-tab="transactions">
+                Transaction History &rsaquo;
+              </button>
+            </div>
+
+            <div class="balance-card-main-row">
+              <div class="balance-amount-display" data-switch-tab="deposit">
+                <h1 id="stat-total-available-balance" class="balance-amount">$10.00</h1>
+                <span class="balance-arrow">&rsaquo;</span>
+              </div>
+              <button class="btn-add-money-purple" type="button" data-switch-tab="deposit">
+                Add Money
+              </button>
+            </div>
+
+            <div class="balance-card-sub-row" data-switch-tab="active-investments">
+              <div class="sub-row-left">
+                <span class="coins-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 4.02 2 6.5s4.48 4.5 10 4.5 10-2.02 10-4.5S17.52 2 12 2zm0 6.5c-4.41 0-8-1.34-8-2.5s3.59-2.5 8-2.5 8 1.34 8 2.5-3.59 2.5-8 2.5z"/><path d="M2 9v3.5c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5V9c0 1.16-3.59 2.5-8 2.5S4 10.16 2 9z"/><path d="M2 14.5V18c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-3.5c0 1.16-3.59 2.5-8 2.5s-8-1.34-8-2.5z"/></svg>
+                </span>
+                <span class="earnings-label">Yesterday's Earnings: <strong class="earnings-amount" id="stat-yesterday-earnings">+$0.14</strong></span>
+              </div>
+              <span class="sub-row-arrow">&rsaquo;</span>
+            </div>
+          </div>
+
+          <!-- Quick Overview Stat Summary Row -->
+          <div class="stat-card-row">
+            <div class="stat-box green-stat" data-switch-tab="deposit" style="cursor: pointer;">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Deposit Wallet Balance</span>
+                <h3 id="stat-deposit-wallet">$10.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat" data-switch-tab="withdraw" style="cursor: pointer;">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Interest Wallet Balance</span>
+                <h3 id="stat-interest-wallet">$0.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat" data-switch-tab="active-investments" style="cursor: pointer;">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Total Invest</span>
+                <h3 id="stat-total-invest">$0.00</h3>
               </div>
             </div>
           </div>
 
-          <!-- Quick Action Bar -->
-          <div class="dash-quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem;">
-            <button class="quick-action-pill" type="button" data-switch-tab="deposit" style="padding: 0.85rem 1rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; color: #34d399; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-              Deposit
+          <!-- Quick Action Features Grid (Mobile Contained) -->
+          <div class="dash-quick-actions">
+            <button class="quick-action-pill pill-deposit" type="button" data-switch-tab="deposit">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Deposit</span>
             </button>
-            <button class="quick-action-pill" type="button" data-switch-tab="withdraw" style="padding: 0.85rem 1rem; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 14px; color: #f87171; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              Withdraw
+            <button class="quick-action-pill pill-withdraw" type="button" data-switch-tab="withdraw">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span>Withdraw</span>
             </button>
-            <button class="quick-action-pill" type="button" data-switch-tab="active-investments" style="padding: 0.85rem 1rem; background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 14px; color: #c084fc; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              Active Investment
+            <button class="quick-action-pill pill-investments" type="button" data-switch-tab="active-investments">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <span>Investments</span>
             </button>
-            <button class="quick-action-pill" type="button" data-switch-tab="plans" style="padding: 0.85rem 1rem; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px; color: #38bdf8; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              New Investment
+            <button class="quick-action-pill pill-plans" type="button" data-switch-tab="plans">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span>New Plan</span>
             </button>
-            <button class="quick-action-pill" type="button" data-switch-tab="profile" style="padding: 0.85rem 1rem; background: rgba(250, 204, 21, 0.12); border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 14px; color: #facc15; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Profile Setting
+            <button class="quick-action-pill pill-settings" type="button" data-switch-tab="profile">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Settings</span>
             </button>
           </div>
 
           <!-- Real-Time Yield Countdown Bar -->
-          <div class="panel yield-countdown-banner" style="background: linear-gradient(135deg, rgba(6, 78, 59, 0.4), rgba(10, 26, 47, 0.8)); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-              <div style="display: flex; align-items: center; gap: 0.8rem;">
-                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: center; color: #34d399;">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div class="panel yield-countdown-banner">
+            <div class="yield-banner-inner">
+              <div class="yield-timer-block">
+                <div class="yield-timer-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
                 <div>
-                  <div style="font-size: 0.78rem; color: #34d399; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Next Daily Interest Yield Payout</div>
-                  <div style="font-size: 1.25rem; font-weight: 800; color: #ffffff;" id="yield-countdown-timer">18h 42m 15s</div>
+                  <div class="yield-timer-label">Next Daily Yield Payout</div>
+                  <div class="yield-timer-value" id="yield-countdown-timer">18h 42m 15s</div>
                 </div>
               </div>
-              <div style="flex: 1; max-width: 320px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem;">
+              <div class="yield-progress-block">
+                <div class="yield-progress-labels">
                   <span>Daily Yield Cycle</span>
-                  <span id="yield-progress-pct" style="color: #34d399; font-weight: 700;">78% Complete</span>
+                  <span id="yield-progress-pct">78% Complete</span>
                 </div>
-                <div style="height: 8px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden;">
+                <div class="yield-progress-track">
                   <div id="yield-progress-bar" style="height: 100%; width: 78%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 999px; transition: width 1s linear;"></div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interest & Yield Earnings View Board -->
+          <div class="panel interest-view-board">
+            <div class="interest-board-header">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                  <span class="interest-board-badge">📈 REAL-TIME YIELD</span>
+                  <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem;">Interest &amp; Yield Earnings Board</h3>
+                </div>
+                <p class="muted" style="margin: 0.25rem 0 0; font-size: 0.82rem; line-height: 1.4;">Live profit accrual breakdown, active strategy yield metrics &amp; payout wallet management</p>
+              </div>
+              <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="withdraw" style="border-color: #34d399; color: #34d399; font-size: 0.78rem; font-weight: 700;">Withdraw Interest</button>
+                <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans" style="font-size: 0.78rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">+ Reinvest Interest</button>
+              </div>
+            </div>
+
+            <!-- Interest Board Quick Stats Grid -->
+            <div class="interest-stats-grid">
+              <div class="interest-stat-tile tile-green">
+                <div class="interest-stat-label">Total Accrued Interest</div>
+                <div id="board-total-interest" class="interest-stat-value">$0.00</div>
+              </div>
+              <div class="interest-stat-tile tile-blue">
+                <div class="interest-stat-label">Yesterday's Profit</div>
+                <div id="board-yesterday-interest" class="interest-stat-value" style="color: #38bdf8;">+$0.14</div>
+              </div>
+              <div class="interest-stat-tile tile-purple">
+                <div class="interest-stat-label">Avg Daily Yield Rate</div>
+                <div id="board-avg-yield-rate" class="interest-stat-value" style="color: #c084fc;">1.80% / Day</div>
+              </div>
+              <div class="interest-stat-tile tile-yellow">
+                <div class="interest-stat-label">Interest Wallet Balance</div>
+                <div id="board-interest-wallet-bal" class="interest-stat-value" style="color: #facc15;">$0.00</div>
+              </div>
+            </div>
+
+            <!-- Interest Accrual Logs Breakdown Table -->
+            <div style="margin-top: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                <h4 style="margin: 0; color: #e2e8f0; font-size: 0.9rem; font-weight: 700;">Daily Interest Accrual History</h4>
+                <span style="font-size: 0.75rem; color: #34d399; font-weight: 600;">⚡ 24h Auto Compound Enabled</span>
+              </div>
+              <div class="table-wrap">
+                <table class="table" id="interest-board-table">
+                  <thead>
+                    <tr>
+                      <th>Accrual Time</th>
+                      <th>Investment Strategy</th>
+                      <th>Principal</th>
+                      <th>Daily Yield Rate</th>
+                      <th>Daily Profit</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="interest-board-tbody">
+                    <tr>
+                      <td class="muted" style="font-size: 0.82rem;">Today, 00:00 UTC</td>
+                      <td style="font-weight: 700; color: #ffffff;">Crypto Momentum Alpha</td>
+                      <td style="font-family: monospace;">$10.00</td>
+                      <td><span class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">1.40% / Day</span></td>
+                      <td style="font-weight: 700; color: #34d399;">+$0.14</td>
+                      <td><span class="badge badge-success">Accrued to Wallet</span></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -422,28 +417,30 @@
           <div class="panel">
             <div class="panel-header">
               <h3>Active Investments Overview</h3>
-              <div style="display: flex; gap: 0.5rem;">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="active-investments">View All Active Investments</button>
                 <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans">+ New Investment</button>
               </div>
             </div>
-            <table class="table" id="overview-active-investments">
-              <thead>
-                <tr>
-                  <th>Plan Name</th>
-                  <th>Amount Invested</th>
-                  <th>Daily Return Rate</th>
-                  <th>Accrued Profit</th>
-                  <th>Status</th>
-                  <th>Agreement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="6" class="text-center muted">No active investments found. Click "Explore Investment Plans" to activate your first strategy.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="overview-active-investments">
+                <thead>
+                  <tr>
+                    <th>Plan Name</th>
+                    <th>Amount Invested</th>
+                    <th>Daily Return Rate</th>
+                    <th>Accrued Profit</th>
+                    <th>Status</th>
+                    <th>Agreement</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center muted">No active investments found. Click "Explore Investment Plans" to activate your first strategy.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div class="panel">
@@ -454,27 +451,51 @@
                 <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="transactions">View All</button>
               </div>
             </div>
-            <table class="table" id="overview-transactions">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Trx ID</th>
-                  <th>Amount</th>
-                  <th>Wallet</th>
-                  <th>Details</th>
-                  <th>Status</th>
-                  <th>Post Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Populated dynamically -->
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="overview-transactions">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Trx ID</th>
+                    <th>Amount</th>
+                    <th>Wallet</th>
+                    <th>Details</th>
+                    <th>Status</th>
+                    <th>Post Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <!-- TAB 2: INVESTMENT PLANS -->
         <div class="tab-content" id="tab-plans">
+          <div class="stat-card-row" style="margin-bottom: 1.25rem;">
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Deposit Wallet Balance</span>
+                <h3 id="stat-deposit-wallet">$10.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.2-3 2.5-.2-1.3-1.5-2.5-3-2.5s-2.8 1.2-3 2.5C9.8 6.2 8.5 5 7 5 4.8 5 3 6.8 3 9c0 5.25 9 11 9 11s9-5.75 9-11c0-2.2-1.8-4-4-4z"/><circle cx="12" cy="11" r="2"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Savings &amp; Yield Strategy</span>
+                <h3 style="color: #34d399;">Institutional Plans</h3>
+              </div>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-header-block">
               <div class="eyebrow">Institutional Investment Strategies</div>
@@ -603,8 +624,30 @@
 
         <!-- TAB 3: ACTIVE INVESTMENTS -->
         <div class="tab-content" id="tab-active-investments">
+          <div class="stat-card-row" style="margin-bottom: 1.25rem;">
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Total Active Investment</span>
+                <h3 id="stat-total-invest">$0.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Yesterday's Earnings</span>
+                <h3 id="stat-yesterday-earnings">+$0.14</h3>
+              </div>
+            </div>
+          </div>
+
           <div class="panel">
-            <div class="panel-header">
+            <div class="panel-header" style="flex-wrap: wrap; gap: 0.5rem;">
               <div>
                 <h2>Your Running Investments</h2>
                 <p class="muted">Daily profits are computed in real time and automatically distributed into your Interest Wallet.</p>
@@ -612,25 +655,27 @@
               <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans">+ New Investment</button>
             </div>
 
-            <table class="table" id="full-active-investments-table">
-              <thead>
-                <tr>
-                  <th>Plan Name</th>
-                  <th>Amount Invested</th>
-                  <th>Daily Return %</th>
-                  <th>Est. Daily Profit</th>
-                  <th>Accrued Profit</th>
-                  <th>Date Started</th>
-                  <th>Status</th>
-                  <th>Agreement PDF</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="8" class="text-center muted">No active investments yet. Select a plan to start earning.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="full-active-investments-table">
+                <thead>
+                  <tr>
+                    <th>Plan Name</th>
+                    <th>Amount Invested</th>
+                    <th>Daily Return %</th>
+                    <th>Est. Daily Profit</th>
+                    <th>Accrued Profit</th>
+                    <th>Date Started</th>
+                    <th>Status</th>
+                    <th>Agreement PDF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="8" class="text-center muted">No active investments yet. Select a plan to start earning.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -692,6 +737,28 @@
 
         <!-- TAB 5: DEPOSIT WALLET -->
         <div class="tab-content" id="tab-deposit">
+          <div class="stat-card-row" style="margin-bottom: 1.25rem;">
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Deposit Wallet Balance</span>
+                <h3 id="stat-deposit-wallet">$10.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Total Deposit</span>
+                <h3 id="stat-total-deposit">$0.00</h3>
+              </div>
+            </div>
+          </div>
+
           <div class="panel" style="border: 1px solid rgba(168, 85, 247, 0.3); background: linear-gradient(135deg, rgba(124, 58, 237, 0.06) 0%, rgba(15, 23, 42, 0.95) 100%);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
               <div>
@@ -703,38 +770,36 @@
             </div>
 
             <!-- Cryptocurrency Coin Selection Grid -->
-            <div style="margin-bottom: 1.5rem;">
-              <label style="display: block; font-weight: 700; color: #cbd5e1; margin-bottom: 0.6rem;">1. Select Cryptocurrency Coin &amp; Network</label>
-              <div id="deposit-coin-selector-grid" class="fintech-action-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.65rem;">
+            <div style="margin-bottom: 1.25rem;">
+              <label style="display: block; font-weight: 700; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">1. Select Cryptocurrency Coin &amp; Network</label>
+              <div id="deposit-coin-selector-grid" class="crypto-coin-grid">
                 <!-- Coin selector items populated dynamically -->
               </div>
             </div>
 
             <!-- Selected Coin Gateway Details Box -->
-            <div id="deposit-gateway-active-box" class="panel" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(168, 85, 247, 0.35); padding: 1.25rem; margin-bottom: 1.5rem;">
-              <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
-                <div style="background: #ffffff; padding: 0.5rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
-                  <img id="deposit-qr-code-img" src="https://api.qrserver.com/v1/create-qr-code/?data=bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001&size=160x160" alt="Crypto Deposit QR Code" width="140" height="140" style="display: block;" />
-                </div>
-                <div style="flex: 1; min-width: 250px;">
-                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
-                    <span id="deposit-active-coin-symbol" style="font-size: 1.4rem; font-weight: 800; color: #c084fc;">₿</span>
-                    <h3 id="deposit-active-coin-title" style="margin: 0; color: #ffffff; font-size: 1.2rem;">Bitcoin (BTC)</h3>
-                    <span id="deposit-active-network-badge" class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-size: 0.75rem;">Bitcoin Network</span>
+            <div id="deposit-gateway-active-box" class="panel gateway-active-box">
+              <div class="gateway-box-inner">
+                <div class="gateway-details-content">
+                  <div class="gateway-coin-header">
+                    <span id="deposit-active-coin-symbol" class="gateway-coin-sym">₿</span>
+                    <h3 id="deposit-active-coin-title" class="gateway-coin-title">Bitcoin (BTC)</h3>
+                    <span id="deposit-active-network-badge" class="badge gateway-network-badge">Bitcoin Network</span>
                   </div>
-                  <p class="muted" style="margin: 0 0 0.6rem; font-size: 0.88rem;">Send your crypto deposit to the official company admin recipient address below:</p>
+                  <p class="muted gateway-instruction-text">Send your crypto deposit to the official company admin recipient address below:</p>
 
-                  <div style="display: flex; gap: 0.5rem; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 0.4rem 0.6rem;">
-                    <input type="text" id="deposit-active-wallet-address-input" readonly value="bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001" style="background: transparent; border: none; font-family: monospace; color: #38bdf8; font-size: 0.9rem; flex: 1; outline: none; width: 100%; cursor: text;" aria-label="Official Deposit Crypto Wallet Address" />
+                  <div class="gateway-address-input-row">
+                    <input type="text" id="deposit-active-wallet-address-input" readonly value="bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001" aria-label="Official Deposit Crypto Wallet Address" />
                     <code id="deposit-active-wallet-address" style="display: none;">bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001</code>
-                    <button type="button" id="copy-deposit-address-btn" class="btn btn-secondary btn-sm" style="flex-shrink: 0; font-size: 0.8rem; padding: 0.4rem 0.85rem; font-weight: 700; border-color: #38bdf8; color: #38bdf8;" aria-label="Copy cryptocurrency wallet address to clipboard">
+                    <button type="button" id="copy-deposit-address-btn" class="btn btn-secondary btn-sm copy-addr-btn" aria-label="Copy cryptocurrency wallet address to clipboard">
                       📋 Copy Address
                     </button>
                   </div>
-                  <div id="deposit-memo-row" style="margin-top: 0.5rem; display: none; font-size: 0.85rem; color: #facc15;">
-                    <div style="display: flex; gap: 0.5rem; align-items: center; background: rgba(250, 204, 21, 0.1); border: 1px dashed rgba(250, 204, 21, 0.4); border-radius: 8px; padding: 0.4rem 0.6rem;">
-                      <span style="flex: 1;">⚠️ Destination Memo / Tag Required: <strong id="deposit-memo-value">1089241</strong></span>
-                      <button type="button" id="copy-deposit-memo-btn" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-color: #facc15; color: #facc15;" aria-label="Copy destination memo or tag to clipboard">
+
+                  <div id="deposit-memo-row" class="gateway-memo-row">
+                    <div class="memo-row-inner">
+                      <span>⚠️ Destination Memo / Tag Required: <strong id="deposit-memo-value">1089241</strong></span>
+                      <button type="button" id="copy-deposit-memo-btn" class="btn btn-secondary btn-sm copy-memo-btn" aria-label="Copy destination memo or tag to clipboard">
                         📋 Copy Memo
                       </button>
                     </div>
@@ -773,27 +838,51 @@
 
           <div class="panel">
             <h3>Your Deposit Requests History</h3>
-            <table class="table" id="deposit-history-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Amount ($ USD)</th>
-                  <th>Crypto Coin &amp; Method</th>
-                  <th>Transaction Reference / TXID</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="5" class="text-center muted">No deposits recorded yet.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="deposit-history-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount ($ USD)</th>
+                    <th>Crypto Coin &amp; Method</th>
+                    <th>Transaction Reference / TXID</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="5" class="text-center muted">No deposits recorded yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <!-- TAB 6: WITHDRAW FUNDS -->
         <div class="tab-content" id="tab-withdraw">
+          <div class="stat-card-row" style="margin-bottom: 1.25rem;">
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Interest Wallet Balance</span>
+                <h3 id="stat-interest-wallet">$0.00</h3>
+              </div>
+            </div>
+
+            <div class="stat-box green-stat">
+              <div class="stat-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+              <div class="stat-details">
+                <span class="stat-title">Total Withdraw</span>
+                <h3 id="stat-total-withdraw">$0.00</h3>
+              </div>
+            </div>
+          </div>
+
           <div class="panel" style="border: 1px solid rgba(52, 211, 153, 0.3); background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(15, 23, 42, 0.95) 100%);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
               <div>
@@ -859,23 +948,25 @@
 
           <div class="panel">
             <h3>Withdrawal Request History</h3>
-            <table class="table" id="withdrawal-history-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Amount ($ USD)</th>
-                  <th>Source Wallet</th>
-                  <th>Payout Coin &amp; Method</th>
-                  <th>Recipient Wallet Address</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="6" class="text-center muted">No withdrawal requests found.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="withdrawal-history-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount ($ USD)</th>
+                    <th>Source Wallet</th>
+                    <th>Payout Coin &amp; Method</th>
+                    <th>Recipient Wallet Address</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center muted">No withdrawal requests found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -893,12 +984,12 @@
               </button>
             </div>
 
-            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0 1.2rem;">
-              <div style="flex: 1; min-width: 220px; position: relative;">
-                <input type="text" id="trx-search-input" placeholder="Search Trx ID or details..." style="width: 100%; padding: 0.65rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.9rem;" />
+            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.85rem 0 1.2rem; width: 100%; box-sizing: border-box;">
+              <div style="flex: 1 1 180px; min-width: 0; position: relative; width: 100%;">
+                <input type="text" id="trx-search-input" placeholder="Search Trx ID or details..." style="width: 100%; padding: 0.65rem 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.88rem; box-sizing: border-box;" />
               </div>
-              <div style="width: 180px;">
-                <select id="trx-type-filter" style="width: 100%; padding: 0.65rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+              <div style="flex: 1 1 140px; min-width: 0; width: 100%;">
+                <select id="trx-type-filter" style="width: 100%; padding: 0.65rem 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.88rem; box-sizing: border-box;">
                   <option value="all">All Transaction Types</option>
                   <option value="deposit">Deposits</option>
                   <option value="investment">Investments</option>
@@ -909,24 +1000,26 @@
               </div>
             </div>
 
-            <table class="table" id="full-transactions-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Trx ID</th>
-                  <th>Amount</th>
-                  <th>Wallet</th>
-                  <th>Details</th>
-                  <th>Status</th>
-                  <th>Post Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="7" class="text-center muted">Loading transactions...</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="full-transactions-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Trx ID</th>
+                    <th>Amount</th>
+                    <th>Wallet</th>
+                    <th>Details</th>
+                    <th>Status</th>
+                    <th>Post Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="7" class="text-center muted">Loading transactions...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
