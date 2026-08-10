@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80">
+  <g fill="none" fill-rule="evenodd">
+    <!-- Outer Seal Circle -->
+    <circle cx="40" cy="40" r="36" stroke="#94A3B8" stroke-width="2.5" fill="#0F172A"/>
+    <circle cx="40" cy="40" r="30" stroke="#94A3B8" stroke-width="1.2" stroke-dasharray="2 2"/>
+    <!-- Inner Shield & Eagle Graphic -->
+    <path d="M40 22 L49 28 L49 42 C49 48 40 54 40 54 C40 54 31 48 31 42 L31 28 Z" fill="#1E293B" stroke="#CBD5E1" stroke-width="1.5"/>
+    <path d="M40 26 L40 50 M34 32 L46 32 M34 38 L46 38 M34 44 L46 44" stroke="#CBD5E1" stroke-width="1"/>
+    <!-- Eagle Wings -->
+    <path d="M22 32 C28 26 34 26 36 29 C32 35 28 38 22 36 Z" fill="#CBD5E1"/>
+    <path d="M58 32 C52 26 46 26 44 29 C48 35 52 38 58 36 Z" fill="#CBD5E1"/>
+    <!-- Seal Circular Text -->
+    <text x="40" y="14" font-family="sans-serif" font-size="4.2" font-weight="bold" fill="#94A3B8" text-anchor="middle" letter-spacing="0.5">U.S. SECURITIES AND</text>
+    <text x="40" y="70" font-family="sans-serif" font-size="4.2" font-weight="bold" fill="#94A3B8" text-anchor="middle" letter-spacing="0.5">EXCHANGE COMMISSION</text>
+    <!-- Vertical Line Divider -->
+    <line x1="88" y1="12" x2="88" y2="68" stroke="#94A3B8" stroke-width="2"/>
+    <!-- Header Text -->
+    <text x="98" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#E2E8F0">US Securities</text>
+    <text x="98" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#E2E8F0">And Exchange</text>
+    <text x="98" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#E2E8F0">Commission</text>
+  </g>
+</svg>

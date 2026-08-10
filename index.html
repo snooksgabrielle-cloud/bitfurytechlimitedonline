@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitfurytech | Wealth, secured</title>
+    <meta name="description" content="Premium investment platform with dashboards, market intelligence, and admin controls." />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function() {
+        var savedTheme = localStorage.getItem('bitfurytech_theme') || 'dark';
+        if (savedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('theme-light');
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="container navbar">
+        <a href="index.html" class="brand">
+          <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
+          <span><span class="brand-mark">Bit</span>furytech</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html" data-page="index.html" data-i18n="nav_home">Home</a>
+          <a href="about.html" data-page="about.html" data-i18n="nav_about">About</a>
+          <a href="services.html" data-page="services.html" data-i18n="nav_services">Services</a>
+          <a href="market.html" data-page="market.html" data-i18n="nav_markets">Markets</a>
+          <a href="navigation.html" data-page="navigation.html" data-i18n="nav_navigation">Navigation</a>
+          <a href="contact.html" data-page="contact.html" data-i18n="nav_contact">Contact</a>
+          <button type="button" class="theme-toggle-btn" aria-label="Switch Color Theme" title="Toggle Display Theme">
+            <span class="theme-toggle-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-toggle-label">Navy</span>
+          </button>
+          <a href="login.html" class="btn btn-primary" data-i18n="nav_login">Login</a>
+          <a href="register.html" class="btn btn-secondary" data-i18n="nav_register">Register</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Meet Bitfury tech Investment</div>
+            <h1>Invest and Grow With Bitfury tech Investment</h1>
+            <p class="lead">Invest with an algo-trading firm you can trust and make the most out of your money. Unique results coupled with 24/7 monitoring of your funds is assured!</p>
+            <div class="hero-actions">
+              <a href="login.html" class="btn btn-primary" data-i18n="nav_login">Login</a>
+              <a href="register.html" class="btn btn-secondary" data-i18n="nav_register">Register</a>
+            </div>
+            <div class="stats-grid">
+              <div class="stat">
+                <div class="value">$4.8B</div>
+                <div class="muted">Assets under guidance</div>
+              </div>
+              <div class="stat">
+                <div class="value">24/7</div>
+                <div class="muted">Protection and monitoring</div>
+              </div>
+              <div class="stat">
+                <div class="value">98.7%</div>
+                <div class="muted">Client retention</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="eyebrow" style="margin-bottom: 0.6rem;">About Us</div>
+            <h3 style="font-size: 1.35rem; margin-top: 0; margin-bottom: 0.75rem;">Bitfury tech Investment</h3>
+            <p class="muted" style="line-height: 1.6; margin-bottom: 0.8rem;">
+              Bitfury tech Investment is an algorithm trading firm dedicated to producing exceptional results for its investors by strictly adhering to mathematical and statistical methods.
+            </p>
+            <p class="muted" style="line-height: 1.6; margin-bottom: 1.2rem;">
+              We study market dynamics to create considered investment allocations supported by real-time risk mitigation, 24/7 monitoring, and forward-thinking quantitative algorithms.
+            </p>
+            <div class="hero-actions" style="margin: 0;">
+              <a href="about.html" class="btn btn-primary">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TradingView Ticker Tape -->
+      <div class="container" style="margin-top: 1.5rem; margin-bottom: 0.5rem;">
+        <div class="tradingview-widget-container" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border);">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+          {
+            "symbols": [
+              { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin / USD" },
+              { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum / USD" },
+              { "proName": "BINANCE:SOLUSDT", "title": "Solana / USDT" },
+              { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+              { "proName": "FOREXCOM:NSXUSD", "title": "Nasdaq 100" },
+              { "proName": "FX_IDC:EURUSD", "title": "EUR / USD" },
+              { "proName": "OANDA:XAUUSD", "title": "Gold / USD" }
+            ],
+            "showSymbolLogo": true,
+            "isTransparent": true,
+            "displayMode": "adaptive",
+            "colorTheme": "dark",
+            "locale": "en"
+          }
+          </script>
+        </div>
+      </div>
+
+      <!-- Live TradingView Advanced Chart Section -->
+      <section class="section" style="padding-top: 1rem;">
+        <div class="container">
+          <div class="surface-card">
+            <div class="inline-row" style="justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.8rem;">
+              <div>
+                <div class="eyebrow">Real-Time Market Intelligence</div>
+                <h2 class="section-title" style="margin-top: 0.2rem;">Live TradingView Market Chart</h2>
+              </div>
+              <div class="badge-pill" style="margin: 0;">Live Market Feed • Real-Time Execution</div>
+            </div>
+            
+            <div class="tradingview-widget-container" style="height: 520px; width: 100%; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);">
+              <div class="tradingview-widget-container__widget" style="height: calc(100% - 32px); width: 100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+              {
+                "autosize": true,
+                "symbol": "BINANCE:BTCUSDT",
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "calendar": false,
+                "backgroundColor": "#081020",
+                "gridColor": "rgba(255, 255, 255, 0.05)",
+                "support_host": "https://www.tradingview.com"
+              }
+              </script>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="surface-card" style="margin-bottom: 2rem;">
+            <div class="preview-grid">
+              <div>
+                <div class="eyebrow">Company overview</div>
+                <h2 style="margin: 0 0 0.5rem;">New standard in market investment.</h2>
+                <p class="muted">A trusted destination for traders worldwide, we simplify the sophisticated ways of markets investment.</p>
+                <div class="hero-actions">
+                  <a href="about.html" class="btn btn-secondary">About the company</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <iframe 
+                  src="https://www.youtube.com/embed/QYE14pQ6NeQ?rel=0&modestbranding=1" 
+                  title="Bitfurytech Official Company Video" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowfullscreen>
+                </iframe>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <h2 class="section-title">Investment plans</h2>
+              <p class="section-subtitle">Bitfurytech presents a refined set of investment pathways designed to match different investor goals, from growth-focused strategies to long-horizon wealth building.</p>
+            </div>
+          </div>
+          <div class="plan-grid">
+            <div class="plan-card">
+              <button class="plan-bell-btn" type="button" data-plan-id="crypto" data-plan-name="Crypto Growth" aria-label="Subscribe to price alerts" title="Subscribe to price alerts">
+                <svg class="bell-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="bell-pulse"></span>
+                <span class="bell-tooltip">Alerts Off</span>
+              </button>
+              <div class="plan-head-panel plan-head-crypto">
+                <div class="plan-head-canvas">
+                  <svg viewBox="0 0 320 180" class="plan-head-svg" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="320" height="180" rx="16" fill="#F8FAFC"/>
+                    <path d="M 0 30 L 320 30 M 0 60 L 320 60 M 0 90 L 320 90 M 0 120 L 320 120 M 0 150 L 320 150" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+                    <path class="bg-arrow" d="M100 130 L160 70 L220 130" stroke="#E2E8F0" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path class="bg-arrow" d="M120 110 L160 70 L200 110" stroke="#CBD5E1" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <g class="anim-coin anim-coin-1">
+                      <ellipse cx="70" cy="75" rx="28" ry="32" fill="#15803D"/>
+                      <ellipse cx="68" cy="73" rx="26" ry="30" fill="#16A34A"/>
+                      <text x="68" y="81" font-family="sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle">₿</text>
+                    </g>
+                    <g class="anim-coin anim-coin-2">
+                      <ellipse cx="250" cy="65" rx="24" ry="28" fill="#166534"/>
+                      <ellipse cx="248" cy="63" rx="22" ry="26" fill="#22C55E"/>
+                      <text x="248" y="71" font-family="sans-serif" font-weight="900" font-size="18" fill="#FFFFFF" text-anchor="middle">₿</text>
+                    </g>
+                    <g class="anim-figure">
+                      <path d="M130 135 L190 135 L180 100 L140 100 Z" fill="#1E293B"/>
+                      <rect x="145" y="102" width="30" height="20" rx="4" fill="#4ADE80"/>
+                      <circle cx="160" cy="82" r="10" fill="#15803D"/>
+                      <path d="M148 95 C148 90 172 90 172 95 L175 115 L145 115 Z" fill="#16A34A"/>
+                    </g>
+                    <g class="anim-coin anim-coin-3">
+                      <circle cx="160" cy="40" r="14" fill="#15803D"/>
+                      <circle cx="159" cy="39" r="12" fill="#4ADE80"/>
+                      <text x="159" y="44" font-family="sans-serif" font-weight="800" font-size="12" fill="#064E3B" text-anchor="middle">₿</text>
+                    </g>
+                  </svg>
+                </div>
+                <div class="plan-head-footer">
+                  <div class="plan-head-title">CRYPTO</div>
+                  <a href="investment.html" class="plan-head-btn">See Plan</a>
+                </div>
+              </div>
+              <div class="eyebrow">Crypto Growth Strategy</div>
+              <h3>Algorithmic Trading & Yield Arbitrage</h3>
+              <p class="muted">Bitfurytech deploys institutional algorithmic trading and yield optimization across top digital assets to maximize returns while managing market volatility.</p>
+              <ul>
+                <li>Automated market-making & momentum execution</li>
+                <li>Real-time liquidity & price fluctuation alerts</li>
+                <li>High-activity risk-managed portfolio support</li>
+              </ul>
+              <div class="plan-card-actions">
+                <a href="plan-details.html?plan=crypto" class="btn btn-secondary open-income-modal" data-plan="crypto">Learn More</a>
+                <a href="register.html" class="btn btn-primary invest-now-btn" data-plan="crypto">Invest Now</a>
+              </div>
+            </div>
+            <div class="plan-card">
+              <button class="plan-bell-btn" type="button" data-plan-id="stock" data-plan-name="Stock Market" aria-label="Subscribe to price alerts" title="Subscribe to price alerts">
+                <svg class="bell-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="bell-pulse"></span>
+                <span class="bell-tooltip">Alerts Off</span>
+              </button>
+              <div class="plan-head-panel plan-head-stock">
+                <div class="plan-head-canvas">
+                  <svg viewBox="0 0 320 180" class="plan-head-svg" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="320" height="180" rx="16" fill="#F8FAFC"/>
+                    <path d="M 30 20 L 30 150 M 80 20 L 80 150 M 130 20 L 130 150 M 180 20 L 180 150 M 230 20 L 230 150 M 280 20 L 280 150" stroke="#F1F5F9" stroke-width="1.5"/>
+                    <path d="M 20 140 L 300 140" stroke="#CBD5E1" stroke-width="2"/>
+                    <rect class="stock-bar bar-1" x="50" y="80" width="22" height="60" rx="4" fill="#16A34A"/>
+                    <rect class="stock-bar bar-2" x="90" y="55" width="22" height="85" rx="4" fill="#15803D"/>
+                    <rect class="stock-bar bar-3" x="130" y="95" width="22" height="45" rx="4" fill="#334155"/>
+                    <rect class="stock-bar bar-4" x="170" y="40" width="22" height="100" rx="4" fill="#22C55E"/>
+                    <g transform="translate(245, 60)">
+                      <path d="M 0 0 L 25 0 A 25 25 0 1 1 -18 -18 Z" fill="#1E293B"/>
+                      <path d="M 0 0 L -18 -18 A 25 25 0 0 1 25 0 Z" fill="#22C55E" transform="translate(3, -3)"/>
+                    </g>
+                    <path class="stock-trend-line" d="M 40 110 L 61 70 L 101 45 L 141 85 L 181 30 L 220 50 L 270 25" stroke="#15803D" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <circle cx="270" cy="25" r="5" fill="#22C55E" class="trend-pulse"/>
+                    <g class="anim-gear" transform="translate(35, 35)">
+                      <circle cx="0" cy="0" r="10" stroke="#CBD5E1" stroke-width="3" fill="none" stroke-dasharray="4 2"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="plan-head-footer">
+                  <div class="plan-head-title">STOCK</div>
+                  <a href="investment.html" class="plan-head-btn">See Plan</a>
+                </div>
+              </div>
+              <div class="eyebrow">Stock Market Strategy</div>
+              <h3>Global Equity Indexing & Momentum</h3>
+              <p class="muted">Bitfurytech leverages quantitative research and sector rebalancing to deliver consistent capital growth through diversified global stock market equities.</p>
+              <ul>
+                <li>Broad international equity & index exposure</li>
+                <li>Dynamic risk-adjusted sector allocation</li>
+                <li>Regular account auditing & performance reporting</li>
+              </ul>
+              <div class="plan-card-actions">
+                <a href="plan-details.html?plan=stock" class="btn btn-secondary open-income-modal" data-plan="stock">Learn More</a>
+                <a href="register.html" class="btn btn-primary invest-now-btn" data-plan="stock">Invest Now</a>
+              </div>
+            </div>
+            <div class="plan-card">
+              <button class="plan-bell-btn" type="button" data-plan-id="realestate" data-plan-name="Real Estate" aria-label="Subscribe to price alerts" title="Subscribe to price alerts">
+                <svg class="bell-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="bell-pulse"></span>
+                <span class="bell-tooltip">Alerts Off</span>
+              </button>
+              <div class="plan-head-panel plan-head-realestate">
+                <div class="plan-head-canvas">
+                  <svg viewBox="0 0 320 180" class="plan-head-svg" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="320" height="180" rx="16" fill="#F8FAFC"/>
+                    <g class="anim-clouds">
+                      <path d="M30 35 Q40 25 55 35 Q65 25 75 35 L80 35 A10 10 0 0 1 80 50 L25 50 A10 10 0 0 1 30 35 Z" fill="#E2E8F0" opacity="0.8"/>
+                      <path d="M220 28 Q230 18 245 28 Q255 18 265 28 L270 28 A8 8 0 0 1 270 42 L215 42 A8 8 0 0 1 220 28 Z" fill="#E2E8F0" opacity="0.7"/>
+                    </g>
+                    <rect x="35" y="60" width="48" height="90" fill="#1E293B" rx="2"/>
+                    <rect class="window-glow" x="42" y="70" width="12" height="15" fill="#FEF08A" rx="1"/>
+                    <rect class="window-glow" x="61" y="70" width="12" height="15" fill="#FEF08A" rx="1"/>
+                    <rect class="window-glow" x="42" y="95" width="12" height="15" fill="#FEF08A" rx="1"/>
+                    <rect class="window-glow" x="61" y="95" width="12" height="15" fill="#E2E8F0" rx="1"/>
+                    <rect x="90" y="40" width="60" height="110" fill="#15803D" rx="2"/>
+                    <rect class="window-glow" x="98" y="52" width="18" height="22" fill="#DCFCE7" rx="1"/>
+                    <rect class="window-glow" x="124" y="52" width="18" height="22" fill="#DCFCE7" rx="1"/>
+                    <rect class="window-glow" x="98" y="84" width="18" height="22" fill="#DCFCE7" rx="1"/>
+                    <rect class="window-glow" x="124" y="84" width="18" height="22" fill="#DCFCE7" rx="1"/>
+                    <polygon points="155,90 185,65 215,90" fill="#16A34A"/>
+                    <rect x="160" y="90" width="50" height="60" fill="#22C55E" rx="1"/>
+                    <rect x="180" y="115" width="12" height="35" fill="#14532D" rx="1"/>
+                    <circle cx="185" cy="78" r="5" fill="#FFFFFF"/>
+                    <rect x="215" y="55" width="65" height="95" fill="#334155" rx="2"/>
+                    <rect class="window-glow" x="225" y="68" width="18" height="20" fill="#E2E8F0" rx="1"/>
+                    <rect class="window-glow" x="252" y="68" width="18" height="20" fill="#E2E8F0" rx="1"/>
+                    <rect class="window-glow" x="225" y="96" width="18" height="20" fill="#E2E8F0" rx="1"/>
+                    <rect class="window-glow" x="252" y="96" width="18" height="20" fill="#E2E8F0" rx="1"/>
+                    <line x1="20" y1="150" x2="300" y2="150" stroke="#94A3B8" stroke-width="2"/>
+                    <g class="anim-bike" transform="translate(18, 138)">
+                      <circle cx="6" cy="8" r="6" stroke="#16A34A" stroke-width="1.5" fill="none"/>
+                      <circle cx="22" cy="8" r="6" stroke="#16A34A" stroke-width="1.5" fill="none"/>
+                      <path d="M6 8 L13 8 L18 2 L22 8 M13 8 L13 2 L17 2" stroke="#16A34A" stroke-width="1.5" fill="none"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="plan-head-footer">
+                  <div class="plan-head-title">REAL ESTATE</div>
+                  <a href="investment.html" class="plan-head-btn">See Plan</a>
+                </div>
+              </div>
+              <div class="eyebrow">Real Estate Strategy</div>
+              <h3>Institutional Commercial & Residential Real Estate</h3>
+              <p class="muted">Bitfurytech acquires and manages prime commercial properties and high-yield real estate projects to generate recurring income and capital growth.</p>
+              <ul>
+                <li>Direct equity stakes in commercial & residential developments</li>
+                <li>Inflation-protected passive cash flow & dividend yields</li>
+                <li>Professional asset management & structural oversight</li>
+              </ul>
+              <div class="plan-card-actions">
+                <a href="plan-details.html?plan=realestate" class="btn btn-secondary open-income-modal" data-plan="realestate">Learn More</a>
+                <a href="register.html" class="btn btn-primary invest-now-btn" data-plan="realestate">Invest Now</a>
+              </div>
+            </div>
+          </div>
+          <div class="hero-actions" style="margin-top: 1rem;">
+            <a href="investment.html" class="btn btn-primary">View full investment plans</a>
+          </div>
+
+          <!-- Company's Mission & Vision Section -->
+          <div class="surface-card mission-card-container" style="margin-top: 2rem;">
+            <div class="eyebrow">Company's Mission & Vision</div>
+            <h2 class="section-title" style="margin-top: 0.3rem;">Engineered for disciplined capital growth, innovation & total transparency</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1rem; margin-bottom: 1.25rem;">
+              <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 14px; border: 1px solid var(--border);">
+                <div class="badge-pill" style="margin-bottom: 0.4rem;">Our Mission</div>
+                <p class="muted" style="font-size: 0.98rem; line-height: 1.6; margin: 0;">
+                  At <strong>Bitfurytech</strong>, our mission is to deliver exceptional, risk-adjusted investment performance through cutting-edge quantitative trading, rigorous market analysis, and unyielding financial discipline—empowering investors with daily automated payouts and complete peace of mind.
+                </p>
+              </div>
+              <div style="background: rgba(15, 23, 42, 0.6); padding: 1.2rem; border-radius: 14px; border: 1px solid var(--border);">
+                <div class="badge-pill" style="margin-bottom: 0.4rem; background: rgba(91, 215, 255, 0.16); color: #5bd7ff; border-color: rgba(91, 215, 255, 0.3);">Our Vision</div>
+                <p class="muted" style="font-size: 0.98rem; line-height: 1.6; margin: 0;">
+                  Our vision is to become the premier global benchmark for algorithmic wealth creation—democratizing access to institutional-grade crypto, equities, and real estate investment strategies for individuals and corporations worldwide.
+                </p>
+              </div>
+            </div>
+
+            <!-- Animated Features Carousel -->
+            <div class="carousel-wrapper" id="mission-carousel">
+              <div class="carousel-track">
+                <div class="feature-card carousel-slide active">
+                  <div class="badge-pill">Precision</div>
+                  <h3>Quantitative Precision</h3>
+                  <p class="muted">Strictly mathematical algorithms eliminating emotion and optimizing timing across crypto, stock equities, and real estate assets.</p>
+                </div>
+                <div class="feature-card carousel-slide">
+                  <div class="badge-pill">Security</div>
+                  <h3>Institutional Security</h3>
+                  <p class="muted">Multi-layered wallet encryption, automated audit logging, and strict security controls protecting investor capital 24/7.</p>
+                </div>
+                <div class="feature-card carousel-slide">
+                  <div class="badge-pill">Transparency</div>
+                  <h3>Guaranteed Returns & Transparency</h3>
+                  <p class="muted">Predictable daily profit accruals, live portfolio tracking, and instant client payouts with zero hidden fees.</p>
+                </div>
+                <div class="feature-card carousel-slide">
+                  <div class="badge-pill">Intelligence</div>
+                  <h3>24/7 Market Intelligence</h3>
+                  <p class="muted">Monitor crypto, equities, and alternative assets from a unified live feed designed for speed and clarity.</p>
+                </div>
+              </div>
+              <div class="carousel-controls">
+                <button type="button" class="carousel-nav-btn prev" aria-label="Previous Feature">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <div class="carousel-dots">
+                  <button type="button" class="carousel-dot active" data-slide="0" aria-label="Slide 1"></button>
+                  <button type="button" class="carousel-dot" data-slide="1" aria-label="Slide 2"></button>
+                  <button type="button" class="carousel-dot" data-slide="2" aria-label="Slide 3"></button>
+                  <button type="button" class="carousel-dot" data-slide="3" aria-label="Slide 4"></button>
+                </div>
+                <button type="button" class="carousel-nav-btn next" aria-label="Next Feature">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-heading" style="margin-top: 3rem; text-align: center;">
+            <div style="max-width: 820px; margin: 0 auto;">
+              <div class="eyebrow" style="color: #34d399; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem;">OUR EXPERTS</div>
+              <h2 class="section-title" style="font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 0.8rem;">WE ARE <span style="color: #34d399; font-family: Georgia, serif; font-style: italic;">FRIENDLY &amp; PROFESSIONAL</span></h2>
+              <p class="section-subtitle" style="font-size: 1.08rem; line-height: 1.7; color: var(--muted); margin: 0 auto;">
+                Bitfury tech Investment was founded in 2017 by a group of skilled financial analysts, fund managers and research scientists with the mission to deliver superior long and short term returns at the lowest possible risk bracket.
+              </p>
+            </div>
+          </div>
+
+          <div class="director-grid" style="margin-top: 2rem;">
+            <article class="director-card" data-exec="robb-baldwin">
+              <div class="director-card-img-wrap">
+                <span class="exec-badge">Executive Leadership</span>
+                <img src="https://bitfurytechlimited.com/assets/file/item01.png" alt="Robb Baldwin, President and CEO" />
+                <div class="director-overlay-actions">
+                  <button type="button" class="btn-exec-view" data-exec="robb-baldwin">View Full Profile</button>
+                </div>
+              </div>
+              <div class="director-body">
+                <div class="title">President and CEO</div>
+                <h3>Robb Baldwin</h3>
+                <p class="exec-specialty">Quantitative Strategy &amp; Model Governance</p>
+                <div class="exec-card-footer">
+                  <span class="exec-exp-pill">15+ Yrs Exp</span>
+                  <button type="button" class="exec-bio-btn" data-exec="robb-baldwin">Read Bio →</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="director-card" data-exec="rob-dilbone">
+              <div class="director-card-img-wrap">
+                <span class="exec-badge">Portfolio Operations</span>
+                <img src="https://bitfurytechlimited.com/assets/file/item02.png" alt="Rob Dilbone, Managing Director" />
+                <div class="director-overlay-actions">
+                  <button type="button" class="btn-exec-view" data-exec="rob-dilbone">View Full Profile</button>
+                </div>
+              </div>
+              <div class="director-body">
+                <div class="title">Managing Director</div>
+                <h3>Rob Dilbone</h3>
+                <p class="exec-specialty">Institutional Client Relations &amp; Asset Execution</p>
+                <div class="exec-card-footer">
+                  <span class="exec-exp-pill">12+ Yrs Exp</span>
+                  <button type="button" class="exec-bio-btn" data-exec="rob-dilbone">Read Bio →</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="director-card" data-exec="cris-frankel">
+              <div class="director-card-img-wrap">
+                <span class="exec-badge">Business Strategy</span>
+                <img src="https://bitfurytechlimited.com/assets/file/item03.png" alt="Cris Frankel, VP of Business Development" />
+                <div class="director-overlay-actions">
+                  <button type="button" class="btn-exec-view" data-exec="cris-frankel">View Full Profile</button>
+                </div>
+              </div>
+              <div class="director-body">
+                <div class="title">VP of Business Development</div>
+                <h3>Cris Frankel</h3>
+                <p class="exec-specialty">Global Partnerships &amp; Investor Onboarding</p>
+                <div class="exec-card-footer">
+                  <span class="exec-exp-pill">10+ Yrs Exp</span>
+                  <button type="button" class="exec-bio-btn" data-exec="cris-frankel">Read Bio →</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="director-card" data-exec="scott-victoria">
+              <div class="director-card-img-wrap">
+                <span class="exec-badge">Global Operations</span>
+                <img src="https://bitfurytechlimited.com/assets/file/item04.jpg" alt="Scott Victoria, Chief Operating Officer" />
+                <div class="director-overlay-actions">
+                  <button type="button" class="btn-exec-view" data-exec="scott-victoria">View Full Profile</button>
+                </div>
+              </div>
+              <div class="director-body">
+                <div class="title">Chief Operating Officer</div>
+                <h3>Scott Victoria</h3>
+                <p class="exec-specialty">Infrastructure Security &amp; Compliance</p>
+                <div class="exec-card-footer">
+                  <span class="exec-exp-pill">14+ Yrs Exp</span>
+                  <button type="button" class="exec-bio-btn" data-exec="scott-victoria">Read Bio →</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="section-heading" style="margin-top: 2rem;">
+            <div>
+              <h2 class="section-title">What our investors say</h2>
+              <p class="section-subtitle">Trusted feedback from clients who value performance, clear communication, and dependable execution.</p>
+            </div>
+          </div>
+          
+          <!-- Animated Testimonials Carousel -->
+          <div class="carousel-wrapper" id="testimonial-carousel">
+            <div class="carousel-track">
+              <div class="testimonial-card carousel-slide active">
+                <div class="quote-icon">“</div>
+                <p>“I have never trusted any investment platform ever before, but Bitfury tech Investments changed everything. They manage my assets, funds and everything in between.”</p>
+                <div class="testimonial-author">
+                  <div class="avatar-circle">BT</div>
+                  <div>
+                    <strong>Verified Client</strong>
+                    <div class="muted">Investor since 2023</div>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-card carousel-slide">
+                <div class="quote-icon">“</div>
+                <p>“Promised returns were attractive. Actual returns were even better. I appreciate the many insights shared in each trading session report and look forward to continued investments together.”</p>
+                <div class="testimonial-author">
+                  <div class="avatar-circle">MK</div>
+                  <div>
+                    <strong>Portfolio Client</strong>
+                    <div class="muted">Active Trader</div>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-card carousel-slide">
+                <div class="quote-icon">“</div>
+                <p>“Not sure how or where I heard about Bitfury tech Investments, but I am really happy I found them. They keep exceeding my expectation. For me, deposits and withdrawals are very quick and no fees.”</p>
+                <div class="testimonial-author">
+                  <div class="avatar-circle">DS</div>
+                  <div>
+                    <strong>Institutional Investor</strong>
+                    <div class="muted">Crypto Strategy</div>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-card carousel-slide">
+                <div class="quote-icon">“</div>
+                <p>“The automated daily payouts and real-time portfolio dashboard give me complete visibility over my real estate and crypto investments with total peace of mind.”</p>
+                <div class="testimonial-author">
+                  <div class="avatar-circle">AR</div>
+                  <div>
+                    <strong>Global Investor</strong>
+                    <div class="muted">Real Estate Tier</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-controls">
+              <button type="button" class="carousel-nav-btn prev" aria-label="Previous Testimonial">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div class="carousel-dots">
+                <button type="button" class="carousel-dot active" data-slide="0" aria-label="Slide 1"></button>
+                <button type="button" class="carousel-dot" data-slide="1" aria-label="Slide 2"></button>
+                <button type="button" class="carousel-dot" data-slide="2" aria-label="Slide 3"></button>
+                <button type="button" class="carousel-dot" data-slide="3" aria-label="Slide 4"></button>
+              </div>
+              <button type="button" class="carousel-nav-btn next" aria-label="Next Testimonial">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Our Payment Partners Section (Animated Slides Carousel) -->
+          <div class="payment-partners-section">
+            <h2 class="payment-partners-title">OUR PAYMENT PARTNERS</h2>
+            <div class="partners-slider-wrapper">
+              <button type="button" class="partners-nav-btn prev" id="partners-prev-btn" aria-label="Previous Partner">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              
+              <div class="partners-slider-container">
+                <div class="partners-marquee-track" id="partners-marquee-track">
+                  <!-- Set 1 -->
+                  <div class="partner-card">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path d="M22.5 13.5c.3-2.1-1.3-3.2-3.5-3.9l.7-2.9-1.8-.4-.7 2.8c-.5-.1-.9-.2-1.4-.3l.7-2.8-1.8-.4-.7 2.8-3.6-.9-.7 1.8s1.3.3 1.3.3c.7.2.9.6.8 1l-.8 3.3c0 0 .1 0 .2.1h-.2l-1.2 4.7c-.1.2-.4.6-.9.5 0 0-1.3-.3-1.3-.3l-.9 2 3.4.85c.6.15 1.3.3 1.9.45l-.7 2.9 1.8.45.7-2.8c.5.15 1 .3 1.5.4l-.7 2.8 1.8.45.7-2.9c3 .6 5.3.3 6.2-2.4.8-2.2 0-3.5-1.6-4.3 1.2-.3 2.1-1.1 2.3-2.8zm-4.1 5.8c-.5 2.2-4.2 1-5.4.7l1-3.9c1.2.3 5 1 4.4 3.2zm.5-5.8c-.5 2-3.6.9-4.6.7l.9-3.5c1 .3 4.2.8 3.7 2.8z" fill="#FFF"/></svg>
+                    <span class="partner-name bitcoin">bitcoin</span>
+                  </div>
+                  <div class="partner-card">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><rect width="32" height="32" rx="6" fill="#0AC18E"/><path d="M22 13.5c.3-1.8-1.1-2.7-3-3.3l.6-2.4-1.5-.4-.6 2.4c-.4-.1-.8-.2-1.2-.3l.6-2.4-1.5-.4-.6 2.4-3.1-.8-.6 1.5s1.1.3 1.1.3c.6.15.7.5.7.8l-.7 2.8c0 0 .1 0 .2 0h-.2l-1 4c-.1.2-.3.5-.8.4 0 0-1.1-.3-1.1-.3l-.8 1.7 2.9.7c.5.1 1.1.2 1.6.4l-.6 2.5 1.5.4.6-2.4c.4.1.8.2 1.3.3l-.6 2.4 1.5.4.6-2.5c2.6.5 4.5.3 5.3-2 .7-1.9 0-3-1.4-3.7 1-.3 1.8-1 2-2.4zm-3.5 5c-.4 1.9-3.6.9-4.6.6l.8-3.3c1 .3 4.2.8 3.8 2.7zm.4-5c-.4 1.7-3.1.8-3.9.6l.8-3c.8.2 3.5.7 3.1 2.4z" fill="#FFF"/></svg>
+                    <span class="partner-name bitcoincash">BitcoinCash</span>
+                  </div>
+                  <div class="partner-card">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#C2A633"/><path d="M11 9h5.2c3.5 0 5.8 2.1 5.8 5.5 0 1.8-.7 3.2-1.9 4.2 1.3.8 2.1 2.3 2.1 4.3 0 3.6-2.5 5.8-6.2 5.8H11V9zm3.2 7.2h2.2c1.7 0 2.8-.9 2.8-2.3 0-1.5-1.1-2.3-2.8-2.3h-2.2v4.6zm0 10.2h2.5c1.9 0 3.1-1 3.1-2.6 0-1.6-1.2-2.6-3.1-2.6h-2.5v5.2z" fill="#FFF"/><path d="M8 17h16v2.5H8z" fill="#FFF"/></svg>
+                    <span class="partner-name dogecoin">DOGECOIN</span>
+                  </div>
+                  <div class="partner-card">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><path d="M16 4l-9.5 13.5L16 22l9.5-4.5L16 4z" fill="#627EEA"/><path d="M16 4v18l9.5-4.5L16 4z" fill="#454A75"/><path d="M16 23.5l-9.5-5.5L16 28l9.5-10-9.5 5.5z" fill="#627EEA"/><path d="M16 23.5V28l9.5-10L16 23.5z" fill="#454A75"/></svg>
+                    <span class="partner-name ethereum">ETHEREUM</span>
+                  </div>
+                  <div class="partner-card">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#345D9D"/><path d="M14.2 22.5l1.2-4.6-2.1.8.5-1.8 2.1-.8 2.2-8.5h3.6l-1.6 6.3 2.1-.8-.5 1.8-2.1.8-1 3.8h6.2l-.7 2.8H14.2z" fill="#FFF"/></svg>
+                    <span class="partner-name litecoin">LITECOIN</span>
+                  </div>
+                  <div class="partner-card ssl-card">
+                    <div class="ssl-badge">
+                      <div class="ssl-lock">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="#0F172A"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                      </div>
+                      <div class="ssl-text">
+                        <div class="ssl-sub">SECURED BY</div>
+                        <div class="ssl-main"><span class="plus">+</span> positive<span class="ssl-bold">SSL</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Set 2 (Duplicated for seamless continuous infinite loop) -->
+                  <div class="partner-card" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path d="M22.5 13.5c.3-2.1-1.3-3.2-3.5-3.9l.7-2.9-1.8-.4-.7 2.8c-.5-.1-.9-.2-1.4-.3l.7-2.8-1.8-.4-.7 2.8-3.6-.9-.7 1.8s1.3.3 1.3.3c.7.2.9.6.8 1l-.8 3.3c0 0 .1 0 .2.1h-.2l-1.2 4.7c-.1.2-.4.6-.9.5 0 0-1.3-.3-1.3-.3l-.9 2 3.4.85c.6.15 1.3.3 1.9.45l-.7 2.9 1.8.45.7-2.8c.5.15 1 .3 1.5.4l-.7 2.8 1.8.45.7-2.9c3 .6 5.3.3 6.2-2.4.8-2.2 0-3.5-1.6-4.3 1.2-.3 2.1-1.1 2.3-2.8zm-4.1 5.8c-.5 2.2-4.2 1-5.4.7l1-3.9c1.2.3 5 1 4.4 3.2zm.5-5.8c-.5 2-3.6.9-4.6.7l.9-3.5c1 .3 4.2.8 3.7 2.8z" fill="#FFF"/></svg>
+                    <span class="partner-name bitcoin">bitcoin</span>
+                  </div>
+                  <div class="partner-card" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><rect width="32" height="32" rx="6" fill="#0AC18E"/><path d="M22 13.5c.3-1.8-1.1-2.7-3-3.3l.6-2.4-1.5-.4-.6 2.4c-.4-.1-.8-.2-1.2-.3l.6-2.4-1.5-.4-.6 2.4-3.1-.8-.6 1.5s1.1.3 1.1.3c.6.15.7.5.7.8l-.7 2.8c0 0 .1 0 .2 0h-.2l-1 4c-.1.2-.3.5-.8.4 0 0-1.1-.3-1.1-.3l-.8 1.7 2.9.7c.5.1 1.1.2 1.6.4l-.6 2.5 1.5.4.6-2.4c.4.1.8.2 1.3.3l-.6 2.4 1.5.4.6-2.5c2.6.5 4.5.3 5.3-2 .7-1.9 0-3-1.4-3.7 1-.3 1.8-1 2-2.4zm-3.5 5c-.4 1.9-3.6.9-4.6.6l.8-3.3c1 .3 4.2.8 3.8 2.7zm.4-5c-.4 1.7-3.1.8-3.9.6l.8-3c.8.2 3.5.7 3.1 2.4z" fill="#FFF"/></svg>
+                    <span class="partner-name bitcoincash">BitcoinCash</span>
+                  </div>
+                  <div class="partner-card" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#C2A633"/><path d="M11 9h5.2c3.5 0 5.8 2.1 5.8 5.5 0 1.8-.7 3.2-1.9 4.2 1.3.8 2.1 2.3 2.1 4.3 0 3.6-2.5 5.8-6.2 5.8H11V9zm3.2 7.2h2.2c1.7 0 2.8-.9 2.8-2.3 0-1.5-1.1-2.3-2.8-2.3h-2.2v4.6zm0 10.2h2.5c1.9 0 3.1-1 3.1-2.6 0-1.6-1.2-2.6-3.1-2.6h-2.5v5.2z" fill="#FFF"/><path d="M8 17h16v2.5H8z" fill="#FFF"/></svg>
+                    <span class="partner-name dogecoin">DOGECOIN</span>
+                  </div>
+                  <div class="partner-card" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><path d="M16 4l-9.5 13.5L16 22l9.5-4.5L16 4z" fill="#627EEA"/><path d="M16 4v18l9.5-4.5L16 4z" fill="#454A75"/><path d="M16 23.5l-9.5-5.5L16 28l9.5-10-9.5 5.5z" fill="#627EEA"/><path d="M16 23.5V28l9.5-10L16 23.5z" fill="#454A75"/></svg>
+                    <span class="partner-name ethereum">ETHEREUM</span>
+                  </div>
+                  <div class="partner-card" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#345D9D"/><path d="M14.2 22.5l1.2-4.6-2.1.8.5-1.8 2.1-.8 2.2-8.5h3.6l-1.6 6.3 2.1-.8-.5 1.8-2.1.8-1 3.8h6.2l-.7 2.8H14.2z" fill="#FFF"/></svg>
+                    <span class="partner-name litecoin">LITECOIN</span>
+                  </div>
+                  <div class="partner-card ssl-card" aria-hidden="true">
+                    <div class="ssl-badge">
+                      <div class="ssl-lock">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="#0F172A"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                      </div>
+                      <div class="ssl-text">
+                        <div class="ssl-sub">SECURED BY</div>
+                        <div class="ssl-main"><span class="plus">+</span> positive<span class="ssl-bold">SSL</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="partners-nav-btn next" id="partners-next-btn" aria-label="Next Partner">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-main-grid">
+          <!-- Col 1: Brand & About -->
+          <div class="footer-col">
+            <div class="brand">
+              <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
+              <span><span class="brand-mark">Bit</span>furytech</span>
+            </div>
+            <p class="footer-desc">
+              Bitfury tech Investment is an algorithm trading firm dedicated to producing exceptional results for it's investors by strictly adhering to mathematical and statistical methods. Our mission is simple, Bitfury tech Investment creates and promotes thought leading investment allocations that deliver exceptional results.
+            </p>
+          </div>
+
+          <!-- Col 2: Useful Links / Dedicated Navigation Page -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Site Navigation</h3>
+            <div class="footer-links">
+              <a href="navigation.html" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.4); border-radius: 8px; padding: 0.5rem 0.9rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Site Navigation Page
+              </a>
+              <a href="navigation.html">Open Full Directory →</a>
+            </div>
+          </div>
+
+          <!-- Col 3: Contact Info -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Contact Info</h3>
+            <div class="footer-contact-list">
+              <div class="contact-item">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-7.5-8-12a8 8 0 1116 0c0 4.5-8 12-8 12z"/><circle cx="12" cy="9" r="3"/></svg>
+                <span>12 Wren Walk, Tilbury, England, RM18 8EU</span>
+              </div>
+              <div class="contact-item">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                <span>+Vip Member</span>
+              </div>
+              <div class="contact-item">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:info@trustpay.tax">info@trustpay.tax</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 4: Newsletter -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Newsletter</h3>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to our newsletter!'); this.reset();">
+              <input type="email" class="newsletter-input" placeholder="Enter your email*" required />
+              <button type="submit" class="newsletter-btn">
+                <span>Subscribe</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- SSL Encryption Banner -->
+        <div class="footer-ssl-banner">
+          <div class="ssl-badge-wrap">
+            <div class="ssl-shield-badge">
+              <div class="ssl-shield-inner-check">
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="none"><path d="M20 6L9 17l-5-5" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="ssl-text-block">
+              <span class="ssl-title-large">SECURE</span>
+              <span class="ssl-subtitle-large">SSL ENCRYPTION</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Commission Block -->
+        <div class="footer-commission-block">
+          <div class="commission-logo-wrap">
+            <img src="financial-commission-logo.svg" alt="The Financial Commission" class="financial-commission-img" />
+          </div>
+          <p class="commission-text">
+            Bitfury tech Investment is a member of The Financial Commission, an international organization engaged in the resolution of disputes within the financial services industry in the Forex market.
+          </p>
+        </div>
+
+        <!-- SEC Regulatory Disclosure Block -->
+        <div class="footer-sec-block">
+          <img src="sec-logo.svg" alt="US Securities And Exchange Commission" class="sec-logo-header" />
+          <p class="sec-writeup-text">
+            Bitfury tech Investment is regulated by the US Securities and Exchange Commission. The mission of the SEC is to protect investors; maintain fair, orderly, and efficient markets; and facilitate capital formation. Bitfury tech Investment is an investment company that . Direct access to over 50 financial markets through one account. Any information contained on this website is provided to you for informational purposes only and should not be regarded as an offer or solicitation of an offer to buy or sell any investments or related services that may be referenced here. Investing in certain instruments, including stocks, options, futures, foreign currencies, and bonds involve a high level of risk. Trading on margin comes with substantial risk as well. You must be aware of these risks before opening an account to trade. The income you may get from online investing may go down as well as up. Bitfury tech Investment is a registered investment dealer, a member of the United States Securities and Exchange Commission (SEC), the Investment Industry Regulatory Organization of Canada (IIROC) and a member of the Canadian Investor Protection Fund (CIPF), the benefits of which are limited to the activities undertaken by Bitfury tech Investment.
+          </p>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="footer-bottom" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>Copyright © Bitfury tech Investment <span class="footer-year"></span>. All rights reserved.</div>
+          <button type="button" class="btn-terms-footer open-terms-modal-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Terms &amp; Conditions
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "Bitfurytech",
+  "description": "Bitfurytech investment platform with dashboards, market intelligence, and admin controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan Specification & Execution Scope | Bitfurytech Limited</title>
+    <meta name="description" content="Detailed institutional execution scope, capital safeguards, investment ranges, and operational terms for Bitfurytech Limited algorithmic plans." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container navbar">
+        <a href="index.html" class="brand">
+          <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
+          <span><span class="brand-mark">Bit</span>furytech</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html" data-page="index.html" data-i18n="nav_home">Home</a>
+          <a href="about.html" data-page="about.html" data-i18n="nav_about">About</a>
+          <a href="services.html" data-page="services.html" data-i18n="nav_services">Services</a>
+          <a href="investment.html" data-page="investment.html" data-i18n="nav_plans">Plans</a>
+          <a href="market.html" data-page="market.html" data-i18n="nav_markets">Markets</a>
+          <a href="navigation.html" data-page="navigation.html" data-i18n="nav_navigation">Navigation</a>
+          <a href="contact.html" data-page="contact.html" data-i18n="nav_contact">Contact</a>
+          <a href="login.html" class="btn btn-primary" data-i18n="nav_login">Login</a>
+          <a href="register.html" class="btn btn-secondary" data-i18n="nav_register">Register</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container section" style="padding-top: 2rem; padding-bottom: 4rem;">
+      <!-- Page Navigation Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <div class="eyebrow" style="color: #34d399; font-weight: 800; letter-spacing: 0.12em;">INSTITUTIONAL STRATEGY SPECIFICATION</div>
+          <h1 style="margin-top: 0.2rem; font-size: 2.2rem;">Plan Specification &amp; Execution Scope</h1>
+        </div>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <a href="investment.html" class="btn btn-secondary" style="padding: 0.7rem 1.2rem;">← All Investment Plans</a>
+          <a href="dashboard.html" class="btn btn-primary" style="padding: 0.7rem 1.2rem;">Launch Investor Dashboard</a>
+        </div>
+      </div>
+
+      <!-- Interactive Plan Switcher Tabs -->
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 16px; padding: 0.8rem; margin-bottom: 2rem;">
+        <div class="eyebrow" style="margin-bottom: 0.6rem; padding-left: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">SELECT INVESTMENT PLAN SPECIFICATION:</div>
+        <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.4rem; scrollbar-width: thin;" id="plan-spec-tabs">
+          <button type="button" class="btn btn-secondary spec-tab-btn active" data-spec-plan="crypto" style="white-space: nowrap; font-weight: 700;">🪙 Crypto Growth Strategy</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="stock" style="white-space: nowrap; font-weight: 700;">📈 Stock Market Strategy</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="realestate" style="white-space: nowrap; font-weight: 700;">🏙️ Real Estate Strategy</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="beginners" style="white-space: nowrap; font-weight: 700;">🌱 Beginners Plan</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="prime" style="white-space: nowrap; font-weight: 700;">⚡ Prime Plan</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="executive" style="white-space: nowrap; font-weight: 700;">💼 Executive Plan</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="master" style="white-space: nowrap; font-weight: 700;">👑 Master Plan</button>
+          <button type="button" class="btn btn-secondary spec-tab-btn" data-spec-plan="prime_executive" style="white-space: nowrap; font-weight: 700;">🏢 Prime Executive Plan</button>
+        </div>
+      </div>
+
+      <!-- Main Dedicated Plan Details Container (Rendered dynamically) -->
+      <div id="plan-spec-details-container" class="surface-card" style="padding: 2.2rem; border-left: 5px solid #34d399; background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(15, 23, 42, 0.98) 100%); margin-bottom: 3rem; border-radius: 20px;">
+        <!-- Dynamic content injected here by JavaScript -->
+      </div>
+
+      <!-- All Plans Comparison Section -->
+      <div style="margin-top: 3.5rem;">
+        <div style="text-align: center; max-width: 760px; margin: 0 auto 2rem;">
+          <div class="eyebrow" style="color: #38bdf8; font-weight: 800;">PORTFOLIO DIRECTORY</div>
+          <h2 style="font-size: 1.8rem; margin-top: 0.3rem;">Explore All Capital Execution Scopes</h2>
+          <p class="muted" style="font-size: 0.98rem; line-height: 1.6;">
+            Compare operational execution scopes across all 8 Bitfurytech investment strategies and select the plan that fits your capital allocation targets.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;" id="all-spec-plans-grid">
+          <!-- Dynamic plan cards preview -->
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-main-grid">
+          <!-- Col 1: Brand & About -->
+          <div class="footer-col">
+            <div class="brand">
+              <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
+              <span><span class="brand-mark">Bit</span>furytech</span>
+            </div>
+            <p class="footer-desc">
+              Bitfury tech Investment is an algorithm trading firm dedicated to producing exceptional results for its investors by strictly adhering to mathematical and statistical methods.
+            </p>
+          </div>
+
+          <!-- Col 2: Navigation Directory -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Site Navigation</h3>
+            <div class="footer-links">
+              <a href="navigation.html" style="color: #34d399; font-weight: 700;">Site Navigation Directory</a>
+              <a href="index.html">Home</a>
+              <a href="investment.html">Investment Plans</a>
+              <a href="plan-details.html" style="color: #38bdf8;">Plan Specifications</a>
+              <a href="about.html">About Us</a>
+              <a href="contact.html">Contact Us</a>
+            </div>
+          </div>
+
+          <!-- Col 3: Contact Info -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Contact Info</h3>
+            <div class="footer-contact-list">
+              <div class="contact-item">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-7.5-8-12a8 8 0 1116 0c0 4.5-8 12-8 12z"/><circle cx="12" cy="9" r="3"/></svg>
+                <span>12 Wren Walk, Tilbury, England, RM18 8EU</span>
+              </div>
+              <div class="contact-item">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:info@trustpay.tax">info@trustpay.tax</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 4: Newsletter -->
+          <div class="footer-col">
+            <h3 class="footer-heading">Newsletter</h3>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to our newsletter!'); this.reset();">
+              <input type="email" class="newsletter-input" placeholder="Enter your email*" required />
+              <button type="submit" class="newsletter-btn">
+                <span>Subscribe</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>Copyright © Bitfury tech Investment <span class="footer-year"></span>. All rights reserved.</div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+      // Standalone Plan Specification Page Renderer
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('plan-spec-details-container');
+        const tabsContainer = document.getElementById('plan-spec-tabs');
+        const gridContainer = document.getElementById('all-spec-plans-grid');
+
+        if (!container || !window.CORPORATE_INCOME_DATA) return;
+
+        // Get plan key from URL params or default to 'crypto' or 'realestate'
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentPlanKey = urlParams.get('plan') || 'crypto';
+        if (!window.CORPORATE_INCOME_DATA[currentPlanKey]) {
+          currentPlanKey = 'crypto';
+        }
+
+        function renderSelectedPlan(planKey) {
+          const plan = window.CORPORATE_INCOME_DATA[planKey] || window.CORPORATE_INCOME_DATA.crypto;
+          currentPlanKey = planKey;
+
+          // Update tabs active state
+          if (tabsContainer) {
+            tabsContainer.querySelectorAll('.spec-tab-btn').forEach(btn => {
+              if (btn.getAttribute('data-spec-plan') === planKey) {
+                btn.classList.add('active');
+                btn.style.background = 'var(--accent)';
+                btn.style.color = '#0f172a';
+                btn.style.borderColor = 'var(--accent)';
+              } else {
+                btn.classList.remove('active');
+                btn.style.background = 'rgba(255,255,255,0.05)';
+                btn.style.color = '#e2e8f0';
+                btn.style.borderColor = 'var(--border)';
+              }
+            });
+          }
+
+          // Update URL without full reload for smooth bookmarking
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', `plan-details.html?plan=${planKey}`);
+          }
+
+          container.innerHTML = `
+            <div>
+              <!-- HEADER BADGE & TITLE -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                  <span class="badge badge-accent" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 0.8rem; background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3);">
+                    PLAN SPECIFICATION &amp; EXECUTION SCOPE
+                  </span>
+                  <h2 style="margin-top: 0.5rem; margin-bottom: 0.2rem; font-size: 2.2rem; color: #ffffff; font-weight: 800;">${plan.title}</h2>
+                  <p class="muted" style="font-size: 1.05rem; margin: 0; color: #94a3b8; font-weight: 500;">${plan.segment}</p>
+                </div>
+                <div style="text-align: right; background: rgba(0,0,0,0.3); padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px solid var(--border);">
+                  <span class="muted" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Execution Status</span>
+                  <div style="color: #34d399; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; justify-content: flex-end; margin-top: 0.2rem;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; display: inline-block;"></span> Active Quantitative Allocation
+                  </div>
+                </div>
+              </div>
+
+              <!-- DASHBOARD SESSION NOTICE (Matches screenshot) -->
+              <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 0.9rem; font-size: 0.95rem; color: #a7f3d0; line-height: 1.5;">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; color: #10b981;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <div>
+                  <strong>Dashboard Session Notice:</strong> Fixed interest rates, daily return accruals, and interactive profit calculators are displayed inside your <strong>Investor Dashboard</strong> when selecting a plan.
+                </div>
+              </div>
+
+              <!-- PLAN PARAMETERS GRID (Ranges & Safeguards) -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 1.8rem;">
+                <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(91, 215, 255, 0.3); padding: 1.25rem; border-radius: 14px; border-left: 4px solid var(--accent);">
+                  <span style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;">SPECIFIC INVESTMENT RANGE</span>
+                  <div style="font-size: 1.45rem; font-weight: 800; color: #ffffff; margin-top: 0.3rem; letter-spacing: -0.01em;">${plan.range}</div>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(16, 185, 129, 0.35); padding: 1.25rem; border-radius: 14px; border-left: 4px solid #10b981;">
+                  <span style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;">CAPITAL PRINCIPAL SECURITY</span>
+                  <div style="font-size: 1.3rem; font-weight: 800; color: #10b981; margin-top: 0.3rem;">${plan.capitalProtection}</div>
+                </div>
+              </div>
+
+              <!-- OPERATIONAL EXECUTION TERMS -->
+              <div style="background: rgba(255, 255, 255, 0.025); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; margin-bottom: 1.8rem;">
+                <h3 style="margin: 0 0 0.8rem; font-size: 0.95rem; color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;">
+                  Operational Execution Terms
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; font-size: 0.95rem;">
+                  <div><span style="color: var(--text-muted);">Payout Schedule:</span> <strong style="color: #ffffff;">${plan.payoutSchedule}</strong></div>
+                  <div><span style="color: var(--text-muted);">Referral Dividend:</span> <strong style="color: #ffffff;">${plan.referralBonus}</strong></div>
+                </div>
+              </div>
+
+              <!-- WHAT THIS PLAN INVOLVES & HOW CAPITAL IS DEPLOYED -->
+              <div style="margin-bottom: 1.8rem;">
+                <h3 style="margin: 0 0 0.6rem; font-size: 1.1rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; font-weight: 800;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  What This Plan Involves &amp; How Capital Is Deployed
+                </h3>
+                <p class="muted" style="font-size: 1.02rem; line-height: 1.7; margin: 0; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); padding: 1.2rem; border-radius: 14px; border-left: 4px solid var(--accent); color: #e2e8f0;">
+                  ${plan.howCompanyMakesMoney}
+                </p>
+              </div>
+
+              ${plan.tierBreakdown && plan.tierBreakdown.length > 0 ? `
+                <!-- SECTOR & COMPANY EXECUTION ACROSS PLAN TIERS -->
+                <div style="margin-bottom: 1.8rem;">
+                  <h3 style="margin: 0 0 0.7rem; font-size: 1.1rem; color: #5bd7ff; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/><path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"/><circle cx="8" cy="12" r="2"/></svg>
+                    Execution Breakdown Across Investment Tiers
+                  </h3>
+                  <div style="display: flex; flex-direction: column; gap: 0.8rem; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem;">
+                    ${plan.tierBreakdown.map(tb => `
+                      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 0.9rem 1.1rem; border-left: 3px solid #10b981;">
+                        <div style="font-size: 0.95rem; font-weight: 800; color: #34d399; margin-bottom: 0.3rem;">
+                          ${tb.tier}
+                        </div>
+                        <div style="font-size: 0.92rem; color: #cbd5e1; line-height: 1.55;">
+                          ${tb.desc}
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- EXECUTION SCOPE & OPERATIONAL MECHANICS -->
+              <div style="margin-bottom: 1.8rem;">
+                <h3 style="margin: 0 0 0.5rem; font-size: 1.05rem; color: var(--accent-2); font-weight: 800;">
+                  Execution Scope &amp; Operational Strategy
+                </h3>
+                <p class="muted" style="font-size: 0.98rem; line-height: 1.65; margin: 0; background: rgba(255, 255, 255, 0.02); padding: 1.1rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); color: #cbd5e1;">
+                  ${plan.workInsight}
+                </p>
+              </div>
+
+              <!-- CAPITAL PROTECTION & RISK OVERSIGHT -->
+              <div style="margin-bottom: 2rem;">
+                <h3 style="margin: 0 0 0.5rem; font-size: 1.05rem; color: #ffffff; font-weight: 800;">Capital Safeguards &amp; Risk Controls</h3>
+                <p class="muted" style="font-size: 0.98rem; line-height: 1.6; margin: 0; color: #cbd5e1; background: rgba(16, 185, 129, 0.04); padding: 1.1rem; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">${plan.riskManagement}</p>
+              </div>
+
+              <!-- BOTTOM ACTION BUTTONS -->
+              <div style="display: flex; gap: 1rem; border-top: 1px solid var(--border); padding-top: 1.5rem; flex-wrap: wrap;">
+                <a href="investment.html" class="btn btn-secondary" style="flex: 1; text-align: center; padding: 0.9rem; min-width: 200px;">
+                  ← Back to Investment Plans
+                </a>
+                <a href="register.html" class="btn btn-primary invest-now-btn" data-plan="${plan.id}" style="flex: 1; text-align: center; padding: 0.9rem; min-width: 220px; font-weight: 700;">
+                  Select Plan &amp; Open Dashboard →
+                </a>
+              </div>
+            </div>
+          `;
+        }
+
+        // Render initially selected plan
+        renderSelectedPlan(currentPlanKey);
+
+        // Bind tab buttons
+        if (tabsContainer) {
+          tabsContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-spec-plan]');
+            if (btn) {
+              const planKey = btn.getAttribute('data-spec-plan');
+              renderSelectedPlan(planKey);
+              window.scrollTo({ top: container.offsetTop - 100, behavior: 'smooth' });
+            }
+          });
+        }
+
+        // Render all plans comparison cards grid
+        if (gridContainer) {
+          const keys = Object.keys(window.CORPORATE_INCOME_DATA);
+          gridContainer.innerHTML = keys.map(key => {
+            const p = window.CORPORATE_INCOME_DATA[key];
+            const isCurrent = key === currentPlanKey;
+            return `
+              <div class="surface-card" style="padding: 1.4rem; border-radius: 14px; border: 1px solid ${isCurrent ? '#34d399' : 'rgba(255,255,255,0.08)'}; display: flex; flex-direction: column; justify-space-between;">
+                <div>
+                  <span class="badge badge-accent" style="font-size: 0.72rem; margin-bottom: 0.4rem;">${p.segment}</span>
+                  <h3 style="margin: 0.2rem 0; font-size: 1.25rem; color: #fff;">${p.title}</h3>
+                  <div style="font-size: 0.95rem; font-weight: 700; color: #34d399; margin-bottom: 0.8rem;">Range: ${p.range}</div>
+                  <p class="muted" style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.2rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    ${p.howCompanyMakesMoney}
+                  </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                  <button type="button" class="btn btn-secondary btn-sm spec-view-btn" data-plan-key="${key}" style="flex: 1; text-align: center;">View Scope</button>
+                  <a href="register.html" class="btn btn-primary btn-sm invest-now-btn" data-plan="${key}" style="flex: 1; text-align: center;">Invest Now</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          gridContainer.addEventListener('click', (e) => {
+            const viewBtn = e.target.closest('.spec-view-btn');
+            if (viewBtn) {
+              const key = viewBtn.getAttribute('data-plan-key');
+              renderSelectedPlan(key);
+              window.scrollTo({ top: container.offsetTop - 100, behavior: 'smooth' });
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

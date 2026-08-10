@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitfurytech Investor Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function() {
+        var savedTheme = localStorage.getItem('bitfurytech_theme') || 'dark';
+        if (savedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('theme-light');
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="container navbar">
+        <a href="index.html" class="brand">
+          <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
+          <span><span class="brand-mark">Bit</span>furytech</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="investment.html">Public Plans</a>
+          <a href="market.html" data-i18n="nav_markets">Markets</a>
+          <a href="contact.html" data-i18n="nav_contact">Support</a>
+          <button type="button" class="theme-toggle-btn" aria-label="Switch Color Theme" title="Toggle Dashboard Theme">
+            <span class="theme-toggle-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-toggle-label">Navy Theme</span>
+          </button>
+          <button class="btn btn-secondary" data-logout data-i18n="nav_logout">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container dashboard-shell" data-dashboard>
+      <!-- Mobile / Tablet Dashboard Menu Header Bar -->
+      <div class="dash-mobile-bar">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <button class="dash-menu-toggle-btn" id="dash-menu-toggle-btn" type="button" aria-label="Toggle Dashboard Navigation Menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          </button>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Portal Menu</div>
+            <div style="font-weight: 800; font-size: 1.05rem;" class="dash-mobile-title">Dashboard Navigation</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <button type="button" class="theme-toggle-btn" style="padding: 0.4rem 0.65rem; font-size: 0.75rem;" aria-label="Switch Color Theme">
+            <span class="theme-toggle-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-toggle-label">Navy</span>
+          </button>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">Live</span>
+        </div>
+      </div>
+
+      <div class="dash-sidebar-overlay" id="dash-sidebar-overlay"></div>
+
+      <!-- Sidebar Navigation -->
+      <aside class="panel sidebar" id="dashboard-sidebar">
+        <div class="eyebrow" data-i18n="dashboard_heading">Investor portal</div>
+        <h2 style="margin: 0.2rem 0 0.6rem;">Hello, <span data-user-name>Investor</span></h2>
+        
+        <!-- Theme Switcher Box in Sidebar -->
+        <div class="dash-theme-box" style="margin: 0.4rem 0 1.2rem; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 0.6rem 0.85rem;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--muted);">Dashboard Theme</span>
+          <button type="button" class="theme-toggle-btn" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;">
+            <span class="theme-toggle-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-toggle-label">Navy</span>
+          </button>
+        </div>
+
+        <div class="nav-stack" id="dashboard-nav">
+          <div class="nav-section-label">Main Navigation</div>
+
+          <button class="dash-nav-btn active" data-tab="overview">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
+          </button>
+
+          <button class="dash-nav-btn" data-tab="deposit">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Deposit
+          </button>
+
+          <button class="dash-nav-btn" data-tab="withdraw">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Withdraw
+          </button>
+
+          <button class="dash-nav-btn" data-tab="active-investments">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Active Investment
+          </button>
+
+          <button class="dash-nav-btn" data-tab="plans">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            New Investment
+          </button>
+
+          <button class="dash-nav-btn" data-tab="profile">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile Setting
+          </button>
+
+          <div class="nav-section-label" style="margin-top: 0.8rem;">Tools &amp; History</div>
+
+          <button class="dash-nav-btn" data-tab="transactions">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Transactions
+          </button>
+
+          <button class="dash-nav-btn" data-tab="calculator">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+            Profit Calculator
+          </button>
+
+          <button class="dash-nav-btn" data-tab="currency">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="18"/></svg>
+            Currency Converter
+          </button>
+
+          <button class="dash-nav-btn" data-tab="referrals">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Referral Earnings
+          </button>
+
+          <button class="dash-nav-btn" data-tab="notifications">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Official Mail &amp; Alerts
+          </button>
+
+          <button class="dash-nav-btn" data-tab="learn-more">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Learn More &amp; About Us
+          </button>
+
+          <a href="navigation.html" class="dash-nav-btn" style="text-decoration: none; color: #34d399; font-weight: 700;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Navigation Directory
+          </a>
+
+          <!-- Account Accordion Menu (matching design from screenshot 2) -->
+          <div class="account-accordion" id="account-accordion">
+            <button type="button" class="account-accordion-header" id="account-accordion-toggle">
+              <span>Account</span>
+              <span class="acc-chevron" id="acc-chevron">▲</span>
+            </button>
+            <div class="account-accordion-menu" id="account-menu">
+              <button class="acc-menu-btn" data-tab="profile">Profile Setting</button>
+              <button class="acc-menu-btn" data-tab="transfer">Transfer Balance</button>
+              <button class="acc-menu-btn" data-tab="password">Change Password</button>
+              <button class="acc-menu-btn" data-tab="support">Support Ticket</button>
+              <button class="acc-menu-btn" data-tab="promo">Promotional Tool</button>
+              <button class="acc-menu-btn" data-tab="2fa">2FA Security</button>
+              <button class="acc-menu-btn logout-item" data-logout>Logout</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Dashboard Grid Content -->
+      <section class="dashboard-grid">
+        <!-- Top Greeting Header Bar (Matching screenshot) -->
+        <div class="user-greeting-header-bar">
+          <div class="user-info-cluster">
+            <div class="user-avatar-circle">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 14c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z"/>
+              </svg>
+            </div>
+            <div class="user-greeting-text">
+              <h2 style="margin:0; font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Hi, <span data-user-name>Investor</span></h2>
+            </div>
+          </div>
+          <div class="header-action-cluster">
+            <button class="header-icon-btn" type="button" data-switch-tab="support" title="Customer Support">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </button>
+            <button class="header-icon-btn notification-btn" type="button" data-switch-tab="notifications" title="Notifications &amp; Alerts">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notification-badge-pill">99+</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Balance Container Card (Exact layout from screenshot) -->
+        <div class="available-balance-card">
+          <div class="balance-card-top">
+            <div class="balance-label-group">
+              <span class="verified-shield-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              </span>
+              <span class="balance-title">Available Balance</span>
+              <button class="eye-toggle-btn" type="button" id="toggle-balance-eye" title="Toggle balance visibility">
+                <svg id="eye-icon-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg id="eye-icon-closed" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <button class="trans-history-link" type="button" data-switch-tab="transactions">
+              Transaction History &rsaquo;
+            </button>
+          </div>
+
+          <div class="balance-card-main-row">
+            <div class="balance-amount-display" data-switch-tab="deposit">
+              <h1 id="stat-total-available-balance" class="balance-amount">$10.00</h1>
+              <span class="balance-arrow">&rsaquo;</span>
+            </div>
+            <button class="btn-add-money-purple" type="button" data-switch-tab="deposit">
+              Add Money
+            </button>
+          </div>
+
+          <div class="balance-card-sub-row" data-switch-tab="active-investments">
+            <div class="sub-row-left">
+              <span class="coins-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 4.02 2 6.5s4.48 4.5 10 4.5 10-2.02 10-4.5S17.52 2 12 2zm0 6.5c-4.41 0-8-1.34-8-2.5s3.59-2.5 8-2.5 8 1.34 8 2.5-3.59 2.5-8 2.5z"/><path d="M2 9v3.5c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5V9c0 1.16-3.59 2.5-8 2.5S4 10.16 2 9z"/><path d="M2 14.5V18c0 2.48 4.48 4.5 10 4.5s10-2.02 10-4.5v-3.5c0 1.16-3.59 2.5-8 2.5s-8-1.34-8-2.5z"/></svg>
+              </span>
+              <span class="earnings-label">Yesterday's Earnings: <strong class="earnings-amount" id="stat-yesterday-earnings">+$0.14</strong></span>
+            </div>
+            <span class="sub-row-arrow">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- 4-Card Action Grid (Matching screenshot bottom action row) -->
+        <div class="fintech-action-grid">
+          <button class="fintech-action-card" type="button" data-switch-tab="withdraw">
+            <div class="action-card-icon-box bank-icon-bg">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 3L2 8h20l-10-5z"/></svg>
+              <span class="fee-badge">0 Fee</span>
+            </div>
+            <span class="action-card-title">To Bank</span>
+          </button>
+
+          <button class="fintech-action-card" type="button" data-switch-tab="deposit">
+            <div class="action-card-icon-box wallet-icon-bg">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M7 10h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H7"/><circle cx="16" cy="12" r="1.5"/></svg>
+            </div>
+            <span class="action-card-title">To Wallet</span>
+          </button>
+
+          <button class="fintech-action-card" type="button" data-switch-tab="plans">
+            <div class="action-card-icon-box savings-icon-bg">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 5c-1.5 0-2.8 1.2-3 2.5-.2-1.3-1.5-2.5-3-2.5s-2.8 1.2-3 2.5C9.8 6.2 8.5 5 7 5 4.8 5 3 6.8 3 9c0 5.25 9 11 9 11s9-5.75 9-11c0-2.2-1.8-4-4-4z"/><circle cx="12" cy="11" r="2"/></svg>
+            </div>
+            <span class="action-card-title">Savings</span>
+          </button>
+
+          <button class="fintech-action-card" type="button" data-switch-tab="active-investments">
+            <div class="action-card-icon-box cards-icon-bg">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/></svg>
+            </div>
+            <span class="action-card-title">Cards</span>
+          </button>
+        </div>
+
+        <!-- Detailed Stat Cards Row -->
+        <div class="stat-card-row">
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Deposit Wallet Balance</span>
+              <h3 id="stat-deposit-wallet">$10.00</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Interest Wallet Balance</span>
+              <h3 id="stat-interest-wallet">$0.00</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat" data-switch-tab="active-investments" style="cursor: pointer;" title="View Active Investments">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Total Invest</span>
+              <h3 id="stat-total-invest">$0.00</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Total Deposit</span>
+              <h3 id="stat-total-deposit">$0.00</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Total Withdraw</span>
+              <h3 id="stat-total-withdraw">$0.00</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Referral Earnings</span>
+              <h3 id="stat-referral-earnings">$0.00</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 1: OVERVIEW -->
+        <div class="tab-content active" id="tab-overview">
+          <div class="panel highlight-banner">
+            <div class="banner-content">
+              <span class="badge badge-accent">Bitfury Tech Investment Engine</span>
+              <h2>Start Earning Daily Interest Today</h2>
+              <p class="muted">Your account was credited with a <strong>$10.00 Sign Up Bonus</strong> in your Deposit Wallet. Fund your wallet or invest directly into our institutional algorithmic trading & stock strategies to compound daily profits.</p>
+              <div class="banner-actions">
+                <button class="btn btn-primary" type="button" data-switch-tab="plans">Explore Investment Plans</button>
+                <button class="btn btn-secondary" type="button" data-switch-tab="deposit">Fund Deposit Wallet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Bar -->
+          <div class="dash-quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem;">
+            <button class="quick-action-pill" type="button" data-switch-tab="deposit" style="padding: 0.85rem 1rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; color: #34d399; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              Deposit
+            </button>
+            <button class="quick-action-pill" type="button" data-switch-tab="withdraw" style="padding: 0.85rem 1rem; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 14px; color: #f87171; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Withdraw
+            </button>
+            <button class="quick-action-pill" type="button" data-switch-tab="active-investments" style="padding: 0.85rem 1rem; background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 14px; color: #c084fc; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              Active Investment
+            </button>
+            <button class="quick-action-pill" type="button" data-switch-tab="plans" style="padding: 0.85rem 1rem; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px; color: #38bdf8; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              New Investment
+            </button>
+            <button class="quick-action-pill" type="button" data-switch-tab="profile" style="padding: 0.85rem 1rem; background: rgba(250, 204, 21, 0.12); border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 14px; color: #facc15; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Profile Setting
+            </button>
+          </div>
+
+          <!-- Real-Time Yield Countdown Bar -->
+          <div class="panel yield-countdown-banner" style="background: linear-gradient(135deg, rgba(6, 78, 59, 0.4), rgba(10, 26, 47, 0.8)); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: center; color: #34d399;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div style="font-size: 0.78rem; color: #34d399; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Next Daily Interest Yield Payout</div>
+                  <div style="font-size: 1.25rem; font-weight: 800; color: #ffffff;" id="yield-countdown-timer">18h 42m 15s</div>
+                </div>
+              </div>
+              <div style="flex: 1; max-width: 320px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem;">
+                  <span>Daily Yield Cycle</span>
+                  <span id="yield-progress-pct" style="color: #34d399; font-weight: 700;">78% Complete</span>
+                </div>
+                <div style="height: 8px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden;">
+                  <div id="yield-progress-bar" style="height: 100%; width: 78%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 999px; transition: width 1s linear;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Portfolio Growth Analytics Chart Panel -->
+          <div class="panel" style="margin-bottom: 1.5rem;">
+            <div class="panel-header">
+              <div>
+                <h3 style="margin: 0;">Portfolio Performance Analytics</h3>
+                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.85rem;">Daily returns & cumulative portfolio value progression</p>
+              </div>
+              <div class="chart-timeframe-selector" id="chart-timeframe-btns" style="display: flex; gap: 0.3rem; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 10px; border: 1px solid var(--border);">
+                <button class="btn-timeframe active" data-timeframe="7D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: rgba(16, 185, 129, 0.25); color: #34d399; font-weight: 700; font-size: 0.78rem; cursor: pointer;">7D</button>
+                <button class="btn-timeframe" data-timeframe="30D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">30D</button>
+                <button class="btn-timeframe" data-timeframe="90D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">90D</button>
+                <button class="btn-timeframe" data-timeframe="1Y" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">1Y</button>
+              </div>
+            </div>
+
+            <div class="portfolio-chart-container" style="position: relative; height: 210px; width: 100%; margin-top: 1rem; background: rgba(0,0,0,0.25); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); padding: 12px;">
+              <svg id="portfolio-growth-chart" width="100%" height="100%" viewBox="0 0 600 180" preserveAspectRatio="none" style="overflow: visible;">
+                <!-- Rendered dynamically via JS -->
+              </svg>
+            </div>
+
+            <div class="chart-legend-row" style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 0.8rem; font-size: 0.82rem; color: var(--muted);">
+              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #34d399; display: inline-block;"></span> Total Portfolio Value</span>
+              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #38bdf8; display: inline-block;"></span> Interest Yields</span>
+              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #a855f7; display: inline-block;"></span> Deposit Wallet</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Active Investments Overview</h3>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="active-investments">View All Active Investments</button>
+                <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans">+ New Investment</button>
+              </div>
+            </div>
+            <table class="table" id="overview-active-investments">
+              <thead>
+                <tr>
+                  <th>Plan Name</th>
+                  <th>Amount Invested</th>
+                  <th>Daily Return Rate</th>
+                  <th>Accrued Profit</th>
+                  <th>Status</th>
+                  <th>Agreement</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="6" class="text-center muted">No active investments found. Click "Explore Investment Plans" to activate your first strategy.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Recent Transactions</h3>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm download-statement-btn" type="button" style="display: inline-flex; align-items: center; gap: 0.35rem;">📄 Account Statement (PDF)</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="transactions">View All</button>
+              </div>
+            </div>
+            <table class="table" id="overview-transactions">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Trx ID</th>
+                  <th>Amount</th>
+                  <th>Wallet</th>
+                  <th>Details</th>
+                  <th>Status</th>
+                  <th>Post Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: INVESTMENT PLANS -->
+        <div class="tab-content" id="tab-plans">
+          <div class="panel">
+            <div class="panel-header-block">
+              <div class="eyebrow">Institutional Investment Strategies</div>
+              <h2>Select an Investment Plan</h2>
+              <p class="muted">Bitfury Tech deploys algorithmic quantitative trading, stock market equity indexing, and commercial real estate to generate daily dividends.</p>
+            </div>
+
+            <div class="dash-plan-grid">
+              <!-- 1. BEGINNERS PLAN -->
+              <div class="dash-plan-card">
+                <div class="dash-plan-badge">Entry Tier</div>
+                <div class="dash-plan-header">
+                  <span class="plan-cat">Micro-Cap Quantitative Segment</span>
+                  <h3>Beginners Plan</h3>
+                  <div class="plan-return-rate">1.00% <span>/ Fixed Daily</span></div>
+                  <div class="plan-sub-rate">30.0% Estimated Monthly Yield</div>
+                </div>
+                <div class="dash-plan-features">
+                  <div class="feature-item"><span>Segment Work:</span> <strong>Micro-Cap Quantitative Trading</strong></div>
+                  <div class="feature-item"><span>Min Deposit:</span> <strong>$100.00</strong></div>
+                  <div class="feature-item"><span>Max Deposit:</span> <strong>$4,999.00</strong></div>
+                  <div class="feature-item"><span>Payout Schedule:</span> <strong>Daily Interest Accrual</strong></div>
+                  <div class="feature-item"><span>Capital Guarantee:</span> <strong>100% Guaranteed</strong></div>
+                  <div class="feature-item"><span>Referral Dividend:</span> <strong>6.0% Bonus</strong></div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-secondary btn-sm open-income-modal" data-plan="beginners" style="flex: 1;">Learn More</button>
+                  <button class="btn btn-primary btn-sm open-invest-modal" data-plan-id="beginners" data-plan-name="Beginners Plan" data-plan-rate="1.00" data-plan-min="100" data-plan-max="4999" style="flex: 1;">Invest Now</button>
+                </div>
+              </div>
+
+              <!-- 2. PRIME PLAN -->
+              <div class="dash-plan-card featured-card">
+                <div class="dash-plan-badge badge-prime">Popular</div>
+                <div class="dash-plan-header">
+                  <span class="plan-cat">Institutional Tech Equities Segment</span>
+                  <h3>Prime Plan</h3>
+                  <div class="plan-return-rate">1.50% <span>/ Fixed Daily</span></div>
+                  <div class="plan-sub-rate">45.0% Estimated Monthly Yield</div>
+                </div>
+                <div class="dash-plan-features">
+                  <div class="feature-item"><span>Segment Work:</span> <strong>Tech Equities & Index Arbitrage</strong></div>
+                  <div class="feature-item"><span>Min Deposit:</span> <strong>$5,000.00</strong></div>
+                  <div class="feature-item"><span>Max Deposit:</span> <strong>$19,999.00</strong></div>
+                  <div class="feature-item"><span>Payout Schedule:</span> <strong>Daily Interest Accrual</strong></div>
+                  <div class="feature-item"><span>Capital Guarantee:</span> <strong>100% Guaranteed</strong></div>
+                  <div class="feature-item"><span>Referral Dividend:</span> <strong>6.0% Bonus</strong></div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-secondary btn-sm open-income-modal" data-plan="prime" style="flex: 1;">Learn More</button>
+                  <button class="btn btn-primary btn-sm open-invest-modal" data-plan-id="prime" data-plan-name="Prime Plan" data-plan-rate="1.50" data-plan-min="5000" data-plan-max="19999" style="flex: 1;">Invest Now</button>
+                </div>
+              </div>
+
+              <!-- 3. EXECUTIVE PLAN -->
+              <div class="dash-plan-card">
+                <div class="dash-plan-badge badge-exec">Executive</div>
+                <div class="dash-plan-header">
+                  <span class="plan-cat">Private Equity & Credit Segment</span>
+                  <h3>Executive Plan</h3>
+                  <div class="plan-return-rate">2.00% <span>/ Fixed Daily</span></div>
+                  <div class="plan-sub-rate">60.0% Estimated Monthly Yield</div>
+                </div>
+                <div class="dash-plan-features">
+                  <div class="feature-item"><span>Segment Work:</span> <strong>Private Equity & Credit Arbitrage</strong></div>
+                  <div class="feature-item"><span>Min Deposit:</span> <strong>$20,000.00</strong></div>
+                  <div class="feature-item"><span>Max Deposit:</span> <strong>$49,999.00</strong></div>
+                  <div class="feature-item"><span>Payout Schedule:</span> <strong>Daily Interest Accrual</strong></div>
+                  <div class="feature-item"><span>Capital Guarantee:</span> <strong>100% Guaranteed</strong></div>
+                  <div class="feature-item"><span>Referral Dividend:</span> <strong>6.0% Bonus</strong></div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-secondary btn-sm open-income-modal" data-plan="executive" style="flex: 1;">Learn More</button>
+                  <button class="btn btn-primary btn-sm open-invest-modal" data-plan-id="executive" data-plan-name="Executive Plan" data-plan-rate="2.00" data-plan-min="20000" data-plan-max="49999" style="flex: 1;">Invest Now</button>
+                </div>
+              </div>
+
+              <!-- 4. MASTER PLAN -->
+              <div class="dash-plan-card">
+                <div class="dash-plan-badge badge-master">High Yield</div>
+                <div class="dash-plan-header">
+                  <span class="plan-cat">Commercial Assets & Infrastructure</span>
+                  <h3>Master Plan</h3>
+                  <div class="plan-return-rate">2.50% <span>/ Fixed Daily</span></div>
+                  <div class="plan-sub-rate">75.0% Estimated Monthly Yield</div>
+                </div>
+                <div class="dash-plan-features">
+                  <div class="feature-item"><span>Segment Work:</span> <strong>Commercial Real Estate & Infrastructure</strong></div>
+                  <div class="feature-item"><span>Min Deposit:</span> <strong>$50,000.00</strong></div>
+                  <div class="feature-item"><span>Max Deposit:</span> <strong>$99,999.00</strong></div>
+                  <div class="feature-item"><span>Payout Schedule:</span> <strong>Daily Interest Accrual</strong></div>
+                  <div class="feature-item"><span>Capital Guarantee:</span> <strong>100% Guaranteed</strong></div>
+                  <div class="feature-item"><span>Referral Dividend:</span> <strong>6.0% Bonus</strong></div>
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-secondary btn-sm open-income-modal" data-plan="master" style="flex: 1;">Learn More</button>
+                  <button class="btn btn-primary btn-sm open-invest-modal" data-plan-id="master" data-plan-name="Master Plan" data-plan-rate="2.50" data-plan-min="50000" data-plan-max="99999" style="flex: 1;">Invest Now</button>
+                </div>
+              </div>
+
+              <!-- 5. PRIME EXECUTIVE PLAN -->
+              <div class="dash-plan-card" style="grid-column: span 2; border-color: rgba(91, 215, 255, 0.5); background: linear-gradient(135deg, rgba(14, 28, 56, 0.95), rgba(8, 16, 34, 0.98));">
+                <div class="dash-plan-badge badge-premium">VIP Institutional</div>
+                <div class="dash-plan-header">
+                  <span class="plan-cat">Bespoke Sovereign & VIP Desk Segment</span>
+                  <h3>Prime Executive Plan</h3>
+                  <div class="plan-return-rate" style="font-size: 2rem;">3.20% <span>/ Fixed Daily</span></div>
+                  <div class="plan-sub-rate">96.0% Estimated Monthly Yield • VIP Desk Oversight</div>
+                </div>
+                <div class="dash-plan-features" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem;">
+                  <div class="feature-item"><span>Segment Work:</span> <strong>Sovereign Debt Arbitrage & OTC Liquidity</strong></div>
+                  <div class="feature-item"><span>Min Deposit:</span> <strong>$100,000.00</strong></div>
+                  <div class="feature-item"><span>Max Deposit:</span> <strong>$1,000,000.00</strong></div>
+                  <div class="feature-item"><span>Payout Schedule:</span> <strong>Real-Time 24-Hour Accruals</strong></div>
+                  <div class="feature-item"><span>Capital Guarantee:</span> <strong>100% SEC Regulated Reserve</strong></div>
+                  <div class="feature-item"><span>Manager:</span> <strong>Dedicated Senior Portfolio Manager</strong></div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.2rem;">
+                  <button type="button" class="btn btn-secondary open-income-modal" data-plan="prime_executive" style="flex: 1;">Learn More (Corporate Income Model)</button>
+                  <button class="btn btn-primary open-invest-modal" data-plan-id="prime_executive" data-plan-name="Prime Executive Plan" data-plan-rate="3.20" data-plan-min="100000" data-plan-max="1000000" style="flex: 1;">Invest Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ACTIVE INVESTMENTS -->
+        <div class="tab-content" id="tab-active-investments">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Your Running Investments</h2>
+                <p class="muted">Daily profits are computed in real time and automatically distributed into your Interest Wallet.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans">+ New Investment</button>
+            </div>
+
+            <table class="table" id="full-active-investments-table">
+              <thead>
+                <tr>
+                  <th>Plan Name</th>
+                  <th>Amount Invested</th>
+                  <th>Daily Return %</th>
+                  <th>Est. Daily Profit</th>
+                  <th>Accrued Profit</th>
+                  <th>Date Started</th>
+                  <th>Status</th>
+                  <th>Agreement PDF</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="8" class="text-center muted">No active investments yet. Select a plan to start earning.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: PROFIT CALCULATOR -->
+        <div class="tab-content" id="tab-calculator">
+          <div class="panel">
+            <h2>Investment Yield & ROI Calculator</h2>
+            <p class="muted">Estimate your daily, monthly, and total returns across Bitfury Tech investment plans.</p>
+
+            <div class="calculator-grid">
+              <div class="calc-inputs-card">
+                <div class="form-group">
+                  <label for="calc-plan-select">Select Investment Plan</label>
+                  <select id="calc-plan-select">
+                    <option value="stock" data-rate="1.08" data-min="1000" data-max="19999">STOCK Plan (1.08% Daily)</option>
+                    <option value="prime" data-rate="1.60" data-min="20000" data-max="49999">PRIME Plan (1.60% Daily)</option>
+                    <option value="executive" data-rate="1.98" data-min="50000" data-max="99999">EXECUTIVE Plan (1.98% Daily)</option>
+                    <option value="premium" data-rate="2.60" data-min="100000" data-max="1000000">PREMIUM Plan (2.60% Daily)</option>
+                    <option value="crypto" data-rate="1.25" data-min="500" data-max="15000">Crypto Growth (1.25% Daily)</option>
+                    <option value="realestate" data-rate="1.80" data-min="10000" data-max="500000">Real Estate (1.80% Daily)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="calc-amount-input">Investment Amount ($)</label>
+                  <input type="number" id="calc-amount-input" value="5000" min="100" step="100" />
+                  <small class="muted" id="calc-limit-hint">Limits: $1,000 - $19,999</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="calc-days-input">Duration (Days)</label>
+                  <input type="number" id="calc-days-input" value="30" min="1" max="365" />
+                </div>
+              </div>
+
+              <div class="calc-results-card">
+                <h3>Projected Performance</h3>
+
+                <div class="calc-metric-box">
+                  <span class="calc-label">Daily Profit Return</span>
+                  <strong class="calc-value green-text" id="calc-daily-profit">$54.00</strong>
+                </div>
+
+                <div class="calc-metric-box">
+                  <span class="calc-label">Total Projected Return</span>
+                  <strong class="calc-value green-text" id="calc-total-return">$1,620.00</strong>
+                </div>
+
+                <div class="calc-metric-box">
+                  <span class="calc-label">Total Principal + Profit</span>
+                  <strong class="calc-value" id="calc-grand-total">$6,620.00</strong>
+                </div>
+
+                <button class="btn btn-primary w-full" id="calc-invest-now-btn">Invest With This Amount</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: DEPOSIT WALLET -->
+        <div class="tab-content" id="tab-deposit">
+          <div class="panel" style="border: 1px solid rgba(168, 85, 247, 0.3); background: linear-gradient(135deg, rgba(124, 58, 237, 0.06) 0%, rgba(15, 23, 42, 0.95) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <div>
+                <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-weight: 700;">OFFICIAL CRYPTO GATEWAY</span>
+                <h2 style="margin: 0.3rem 0 0; color: #ffffff;">Cryptocurrency Deposit Portal</h2>
+                <p class="muted" style="margin: 0.2rem 0 0;">Select your preferred coin, scan QR or copy the admin address below, and submit your blockchain transaction hash.</p>
+              </div>
+              <span class="badge badge-accent">24/7 Automated Gateway Active</span>
+            </div>
+
+            <!-- Cryptocurrency Coin Selection Grid -->
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; font-weight: 700; color: #cbd5e1; margin-bottom: 0.6rem;">1. Select Cryptocurrency Coin &amp; Network</label>
+              <div id="deposit-coin-selector-grid" class="fintech-action-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.65rem;">
+                <!-- Coin selector items populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Selected Coin Gateway Details Box -->
+            <div id="deposit-gateway-active-box" class="panel" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(168, 85, 247, 0.35); padding: 1.25rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                <div style="background: #ffffff; padding: 0.5rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
+                  <img id="deposit-qr-code-img" src="https://api.qrserver.com/v1/create-qr-code/?data=bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001&size=160x160" alt="Crypto Deposit QR Code" width="140" height="140" style="display: block;" />
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+                    <span id="deposit-active-coin-symbol" style="font-size: 1.4rem; font-weight: 800; color: #c084fc;">₿</span>
+                    <h3 id="deposit-active-coin-title" style="margin: 0; color: #ffffff; font-size: 1.2rem;">Bitcoin (BTC)</h3>
+                    <span id="deposit-active-network-badge" class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-size: 0.75rem;">Bitcoin Network</span>
+                  </div>
+                  <p class="muted" style="margin: 0 0 0.6rem; font-size: 0.88rem;">Send your crypto deposit to the official company admin recipient address below:</p>
+
+                  <div style="display: flex; gap: 0.5rem; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 0.4rem 0.6rem;">
+                    <input type="text" id="deposit-active-wallet-address-input" readonly value="bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001" style="background: transparent; border: none; font-family: monospace; color: #38bdf8; font-size: 0.9rem; flex: 1; outline: none; width: 100%; cursor: text;" aria-label="Official Deposit Crypto Wallet Address" />
+                    <code id="deposit-active-wallet-address" style="display: none;">bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001</code>
+                    <button type="button" id="copy-deposit-address-btn" class="btn btn-secondary btn-sm" style="flex-shrink: 0; font-size: 0.8rem; padding: 0.4rem 0.85rem; font-weight: 700; border-color: #38bdf8; color: #38bdf8;" aria-label="Copy cryptocurrency wallet address to clipboard">
+                      📋 Copy Address
+                    </button>
+                  </div>
+                  <div id="deposit-memo-row" style="margin-top: 0.5rem; display: none; font-size: 0.85rem; color: #facc15;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; background: rgba(250, 204, 21, 0.1); border: 1px dashed rgba(250, 204, 21, 0.4); border-radius: 8px; padding: 0.4rem 0.6rem;">
+                      <span style="flex: 1;">⚠️ Destination Memo / Tag Required: <strong id="deposit-memo-value">1089241</strong></span>
+                      <button type="button" id="copy-deposit-memo-btn" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-color: #facc15; color: #facc15;" aria-label="Copy destination memo or tag to clipboard">
+                        📋 Copy Memo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deposit Form -->
+            <form data-deposit-form class="deposit-form-styled">
+              <input type="hidden" id="deposit-selected-method" name="method" value="Bitcoin (BTC ₿)" />
+              <input type="hidden" id="deposit-selected-coin-code" name="coinCode" value="BTC" />
+              <input type="hidden" id="deposit-selected-coin-symbol" name="coinSymbol" value="₿" />
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="deposit-amount">2. Enter Deposit Amount ($ USD)</label>
+                  <input id="deposit-amount" type="number" min="10" placeholder="1000" required />
+                  <div id="deposit-crypto-rate-estimate" style="margin-top: 0.3rem; font-size: 0.85rem; color: #34d399; font-weight: 600;">
+                    Estimated Crypto Equivalent: <span id="deposit-est-val">0.0000 ₿</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="deposit-reference">3. Blockchain Transaction Hash / TXID / Reference</label>
+                  <input id="deposit-reference" placeholder="Paste your blockchain TX Hash or payment reference" required />
+                </div>
+              </div>
+
+              <button class="btn btn-primary" type="submit" style="width: 100%; padding: 0.85rem; font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); border: none;">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Confirm &amp; Submit Crypto Deposit Request
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <h3>Your Deposit Requests History</h3>
+            <table class="table" id="deposit-history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount ($ USD)</th>
+                  <th>Crypto Coin &amp; Method</th>
+                  <th>Transaction Reference / TXID</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="5" class="text-center muted">No deposits recorded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 6: WITHDRAW FUNDS -->
+        <div class="tab-content" id="tab-withdraw">
+          <div class="panel" style="border: 1px solid rgba(52, 211, 153, 0.3); background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(15, 23, 42, 0.95) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <div>
+                <span class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-weight: 700;">INSTANT CRYPTO PAYOUTS</span>
+                <h2 style="margin: 0.3rem 0 0; color: #ffffff;">Withdraw Capital &amp; Profit Yields</h2>
+                <p class="muted" style="margin: 0.2rem 0 0;">Transfer funds directly to your verified cryptocurrency wallet address in any supported coin.</p>
+              </div>
+              <span class="badge badge-accent" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">⚡ 0% Withdrawal Fee</span>
+            </div>
+
+            <form id="withdraw-form" class="deposit-form-styled">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="withdraw-wallet-type">1. Select Source Wallet</label>
+                  <select id="withdraw-wallet-type" required>
+                    <option value="interest">Interest Wallet (<span id="withdraw-interest-avail">$0.00</span>)</option>
+                    <option value="deposit">Deposit Wallet (<span id="withdraw-deposit-avail">$10.00</span>)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="withdraw-amount">2. Amount ($ USD)</label>
+                  <input type="number" id="withdraw-amount" min="10" placeholder="100" required />
+                  <div id="withdraw-crypto-rate-estimate" style="margin-top: 0.3rem; font-size: 0.85rem; color: #34d399; font-weight: 600;">
+                    Estimated Payout: <span id="withdraw-est-val">0.0000 ₮</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="withdraw-method">3. Cryptocurrency Payout Coin</label>
+                  <select id="withdraw-method" required>
+                    <option value="Tether USDT (TRC20 ₮)" data-symbol="₮" data-code="USDT_TRC20">₮ Tether USDT (TRC20)</option>
+                    <option value="Tether USDT (ERC20 ₮)" data-symbol="₮" data-code="USDT_ERC20">₮ Tether USDT (ERC20)</option>
+                    <option value="Bitcoin (BTC ₿)" data-symbol="₿" data-code="BTC">₿ Bitcoin (BTC)</option>
+                    <option value="Ethereum (ETH Ξ)" data-symbol="Ξ" data-code="ETH">Ξ Ethereum (ETH)</option>
+                    <option value="Litecoin (LTC Ł)" data-symbol="Ł" data-code="LTC">Ł Litecoin (LTC)</option>
+                    <option value="Solana (SOL ☀️)" data-symbol="☀️" data-code="SOL">☀️ Solana (SOL)</option>
+                    <option value="Tron (TRX 🗲)" data-symbol="🗲" data-code="TRX">🗲 Tron (TRX)</option>
+                    <option value="Binance Coin (BNB 🪙)" data-symbol="🪙" data-code="BNB">🪙 Binance Coin (BNB)</option>
+                    <option value="Ripple (XRP ✕)" data-symbol="✕" data-code="XRP">✕ Ripple (XRP)</option>
+                    <option value="Dogecoin (DOGE Ɖ)" data-symbol="Ɖ" data-code="DOGE">Ɖ Dogecoin (DOGE)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="withdraw-details">4. Destination Recipient Wallet Address</label>
+                  <input type="text" id="withdraw-details" placeholder="Enter your recipient crypto wallet address" required />
+                </div>
+              </div>
+
+              <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.2rem; font-size: 0.85rem; color: #cbd5e1; display: flex; align-items: center; gap: 0.6rem;">
+                <span style="font-size: 1.2rem; color: #facc15;">⚠️</span>
+                <span>Please ensure your recipient address matches the selected cryptocurrency network standard to avoid loss of funds.</span>
+              </div>
+
+              <button class="btn btn-primary" type="submit" style="width: 100%; padding: 0.85rem; font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, #10b981 0%, #047857 100%); border: none;">
+                💸 Request Crypto Withdrawal
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <h3>Withdrawal Request History</h3>
+            <table class="table" id="withdrawal-history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount ($ USD)</th>
+                  <th>Source Wallet</th>
+                  <th>Payout Coin &amp; Method</th>
+                  <th>Recipient Wallet Address</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="6" class="text-center muted">No withdrawal requests found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 7: TRANSACTIONS LOG -->
+        <div class="tab-content" id="tab-transactions">
+          <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.8rem;">
+              <div>
+                <h2>Complete Transaction History</h2>
+                <p class="muted">Log of all sign-up bonuses, deposits, investment activations, interest payouts, and withdrawals.</p>
+              </div>
+              <button class="btn btn-primary btn-sm download-statement-btn" type="button" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+                Download Account Statement (PDF)
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0 1.2rem;">
+              <div style="flex: 1; min-width: 220px; position: relative;">
+                <input type="text" id="trx-search-input" placeholder="Search Trx ID or details..." style="width: 100%; padding: 0.65rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.9rem;" />
+              </div>
+              <div style="width: 180px;">
+                <select id="trx-type-filter" style="width: 100%; padding: 0.65rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 0.9rem;">
+                  <option value="all">All Transaction Types</option>
+                  <option value="deposit">Deposits</option>
+                  <option value="investment">Investments</option>
+                  <option value="interest">Interest Payouts</option>
+                  <option value="withdrawal">Withdrawals</option>
+                  <option value="bonus">Sign Up Bonuses</option>
+                </select>
+              </div>
+            </div>
+
+            <table class="table" id="full-transactions-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Trx ID</th>
+                  <th>Amount</th>
+                  <th>Wallet</th>
+                  <th>Details</th>
+                  <th>Status</th>
+                  <th>Post Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="7" class="text-center muted">Loading transactions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 8: REFERRALS -->
+        <div class="tab-content" id="tab-referrals">
+          <div class="panel">
+            <h2>Referral Program & Earnings</h2>
+            <p class="muted">Earn <strong>6% referral commissions</strong> on every active investment made by users who join using your referral link.</p>
+
+            <div class="referral-box">
+              <label>Your Personal Referral Link</label>
+              <div class="referral-input-group">
+                <input type="text" id="ref-link-input" readonly value="https://bitfurytechlimited.com/register.html?ref=investor99" />
+                <button class="btn btn-primary btn-sm" id="copy-ref-link">Copy Link</button>
+              </div>
+            </div>
+
+            <div class="stats-grid" style="margin-top: 1.5rem;">
+              <div class="stat">
+                <div class="value" id="ref-count">0</div>
+                <div class="muted">Referred Investors</div>
+              </div>
+              <div class="stat">
+                <div class="value" id="ref-bonus-total">$0.00</div>
+                <div class="muted">Total Referral Commissions</div>
+              </div>
+              <div class="stat">
+                <div class="value">6%</div>
+                <div class="muted">Commission Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 9: PROFILE SETTING -->
+        <div class="tab-content" id="tab-profile">
+          <div class="panel">
+            <h2>Investor Profile Settings</h2>
+            <p class="muted">Manage your personal account details, contact information, and default crypto withdrawal addresses.</p>
+
+            <form id="profile-settings-form" class="deposit-form-styled">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prof-fullname">Full Name</label>
+                  <input type="text" id="prof-fullname" placeholder="Investor Name" required />
+                </div>
+                <div class="form-group">
+                  <label for="prof-email">Email Address</label>
+                  <input type="email" id="prof-email" placeholder="investor@example.com" readonly />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prof-phone">Mobile Phone</label>
+                  <input type="tel" id="prof-phone" placeholder="+1 (555) 000-1234" />
+                </div>
+                <div class="form-group">
+                  <label for="prof-country">Country of Residence</label>
+                  <input type="text" id="prof-country" placeholder="United States" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="prof-btc-wallet">Default BTC Deposit / Payout Address</label>
+                <input type="text" id="prof-btc-wallet" placeholder="1BitfuryTechBtcWallet992837482x" />
+              </div>
+
+              <div class="form-group">
+                <label for="prof-usdt-wallet">Default USDT (TRC20) Payout Address</label>
+                <input type="text" id="prof-usdt-wallet" placeholder="TBitfuryTechUsdtTrc20Address883" />
+              </div>
+
+              <button class="btn btn-primary" type="submit">Save Profile Changes</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 10: TRANSFER BALANCE -->
+        <div class="tab-content" id="tab-transfer">
+          <div class="panel">
+            <h2>Internal Wallet Balance Transfer</h2>
+            <p class="muted">Transfer accumulated profits from your Interest Wallet directly to your Deposit Wallet to reinvest in new strategy plans.</p>
+
+            <form id="transfer-balance-form" class="deposit-form-styled">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="trans-source">Source Wallet</label>
+                  <select id="trans-source" required>
+                    <option value="interest">Interest Wallet</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="trans-dest">Destination Wallet</label>
+                  <select id="trans-dest" required>
+                    <option value="deposit">Deposit Wallet</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="trans-amount">Amount to Transfer ($ USD)</label>
+                <input type="number" id="trans-amount" min="1" step="0.01" placeholder="100.00" required />
+              </div>
+
+              <button class="btn btn-primary" type="submit">Execute Transfer</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 11: CHANGE PASSWORD -->
+        <div class="tab-content" id="tab-password">
+          <div class="panel">
+            <h2>Change Security Password</h2>
+            <p class="muted">Ensure your account remains safe with a strong, updated password.</p>
+
+            <form id="change-password-form" class="deposit-form-styled">
+              <div class="form-group">
+                <label for="pwd-current">Current Password</label>
+                <input type="password" id="pwd-current" required placeholder="••••••••" />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pwd-new">New Password</label>
+                  <input type="password" id="pwd-new" required minlength="6" placeholder="••••••••" />
+                </div>
+                <div class="form-group">
+                  <label for="pwd-confirm">Confirm New Password</label>
+                  <input type="password" id="pwd-confirm" required minlength="6" placeholder="••••••••" />
+                </div>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Update Password</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 12: SUPPORT TICKET -->
+        <div class="tab-content" id="tab-support">
+          <div class="panel">
+            <h2>Support & Inquiry Tickets</h2>
+            <p class="muted">Have questions regarding a transaction, plan, or deposit? Open a ticket directly with our 24/7 institutional desk.</p>
+
+            <form id="support-ticket-form" class="deposit-form-styled">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="ticket-subject">Subject / Topic</label>
+                  <input type="text" id="ticket-subject" placeholder="Deposit / Withdrawal assistance" required />
+                </div>
+                <div class="form-group">
+                  <label for="ticket-priority">Priority</label>
+                  <select id="ticket-priority">
+                    <option value="Medium">Medium</option>
+                    <option value="High">High Priority</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ticket-message">Detailed Message</label>
+                <textarea id="ticket-message" rows="4" style="width:100%; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:#fff;" placeholder="Describe your issue or query..." required></textarea>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Open Support Ticket</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 13: PROMOTIONAL TOOL -->
+        <div class="tab-content" id="tab-promo">
+          <div class="panel">
+            <h2>Promotional Banners & Marketing Materials</h2>
+            <p class="muted">Use these high-converting banners and text links to promote Bitfurytech and earn 6% affiliate commissions.</p>
+
+            <div class="promo-card" style="margin-top: 1rem; background: rgba(255,255,255,0.03); border:1px solid var(--border); padding:1.2rem; border-radius:16px;">
+              <h4>Standard Banner (728x90)</h4>
+              <div style="background:#0a1a2f; border:1px solid #16a34a; padding:1.5rem; text-align:center; margin:0.8rem 0; border-radius:12px;">
+                <h3 style="color:#34d399; margin:0;">BITFURYTECH — Institutional Investment Solutions</h3>
+                <p style="margin:0.2rem 0 0; font-size:0.85rem; color:#8899a6;">Up to 2.60% Daily Returns | Guaranteed Capital Back</p>
+              </div>
+              <label class="muted" style="font-size:0.8rem;">Embed HTML Code:</label>
+              <textarea id="promo-banner-code" readonly rows="2" style="width:100%; font-family:monospace; font-size:0.8rem; padding:0.5rem; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:8px; color:#34d399;"><a href="https://bitfurytechlimited.com/register.html?ref=investor99"><img src="https://bitfurytechlimited.com/assets/banner728x90.gif" alt="Bitfurytech Investments" /></a></textarea>
+              <div style="margin-top: 0.6rem; text-align: right;">
+                <button type="button" class="btn btn-secondary btn-sm" id="copy-promo-banner-btn">📋 Copy Embed Code</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 14: 2FA SECURITY -->
+        <div class="tab-content" id="tab-2fa">
+          <div class="panel">
+            <h2>Two-Factor Authentication (2FA)</h2>
+            <p class="muted">Enhance your account security using Google Authenticator or Authy 2FA protection.</p>
+
+            <div class="surface-card" style="padding:1.5rem; margin-top:1rem; display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap;">
+              <div style="width:120px; height:120px; background:#ffffff; padding:8px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                <svg viewBox="0 0 100 100" width="100" height="100">
+                  <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
+                  <rect x="10" y="10" width="30" height="30" fill="#000000" />
+                  <rect x="60" y="10" width="30" height="30" fill="#000000" />
+                  <rect x="10" y="60" width="30" height="30" fill="#000000" />
+                  <rect x="50" y="50" width="15" height="15" fill="#000000" />
+                  <rect x="70" y="70" width="20" height="20" fill="#000000" />
+                </svg>
+              </div>
+
+              <div style="flex: 1;">
+                <h4>Authenticator Secret Key</h4>
+                <code style="background:rgba(0,0,0,0.4); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--border); color:#34d399; display:inline-block; margin:0.4rem 0;">BITF-9928-3748-2834-2FA</code>
+                <p class="muted" style="font-size:0.85rem; margin-top:0.4rem;">Status: <span class="badge" id="2fa-status-badge" style="background:rgba(16,185,129,0.2); color:#34d399;">2FA ENABLED</span></p>
+                <div style="margin-top: 0.8rem;">
+                  <button type="button" class="btn btn-primary" id="toggle-2fa-btn">Toggle 2FA Protection</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: REAL-TIME CURRENCY CONVERTER -->
+        <div class="tab-content" id="tab-currency">
+          <div class="panel highlight-banner" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(13, 27, 42, 0.95) 100%); border-left: 4px solid #34d399; margin-bottom: 1.5rem;">
+            <div class="banner-content">
+              <span class="badge badge-accent" style="background: rgba(16, 185, 129, 0.25); color: #34d399;">Live FX &amp; Crypto Rates</span>
+              <h2 style="margin-top: 0.4rem; margin-bottom: 0.4rem; color: #ffffff;">Real-Time Multi-Currency Exchange Converter</h2>
+              <p class="muted" style="line-height: 1.6; font-size: 0.98rem; margin: 0;">
+                Convert your portfolio balances, deposit projections, and withdrawal estimations live across major global fiat currencies (USD, EUR, GBP, CAD, AUD, JPY, NGN, INR) and top crypto assets (BTC, ETH, USDT, SOL). Exchange rates update live.
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Converter Form Box -->
+            <div class="panel" style="border: 1px solid rgba(52, 211, 153, 0.3); background: rgba(13, 27, 42, 0.85);">
+              <div class="panel-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.8rem; margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.25rem; color: #ffffff;">Currency Exchange Calculator</h3>
+                <span class="badge" id="fx-status-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">Live Rates Active</span>
+              </div>
+
+              <form id="dash-fx-converter-form">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label for="fx-amount-input">Amount to Convert</label>
+                  <input type="number" id="fx-amount-input" value="1000" min="0.01" step="any" required style="font-size: 1.15rem; font-weight: 700; color: #ffffff; padding: 0.85rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 10px;" />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.6rem; align-items: center; margin-bottom: 1.25rem;">
+                  <div class="form-group" style="margin: 0;">
+                    <label for="fx-from-select">From</label>
+                    <select id="fx-from-select" style="padding: 0.75rem 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.9rem;">
+                      <option value="USD" selected>USD - US Dollar ($)</option>
+                      <option value="EUR">EUR - Euro (€)</option>
+                      <option value="GBP">GBP - British Pound (£)</option>
+                      <option value="CAD">CAD - Canadian Dollar ($)</option>
+                      <option value="AUD">AUD - Australian Dollar ($)</option>
+                      <option value="JPY">JPY - Japanese Yen (¥)</option>
+                      <option value="NGN">NGN - Nigerian Naira (₦)</option>
+                      <option value="INR">INR - Indian Rupee (₹)</option>
+                      <option value="ZAR">ZAR - South African Rand (R)</option>
+                      <option value="AED">AED - UAE Dirham (د.إ)</option>
+                      <option value="BTC">BTC - Bitcoin (₿)</option>
+                      <option value="ETH">ETH - Ethereum (Ξ)</option>
+                      <option value="USDT">USDT - Tether (₮)</option>
+                      <option value="SOL">SOL - Solana (◎)</option>
+                    </select>
+                  </div>
+
+                  <button type="button" id="fx-swap-btn" title="Swap Currencies" style="margin-top: 1.4rem; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(52, 211, 153, 0.4); color: #34d399; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 1 21 5 17 9"/><line x1="3" y1="5" x2="21" y2="5"/><polyline points="7 23 3 19 7 15"/><line x1="21" y1="19" x2="3" y2="19"/></svg>
+                  </button>
+
+                  <div class="form-group" style="margin: 0;">
+                    <label for="fx-to-select">To</label>
+                    <select id="fx-to-select" style="padding: 0.75rem 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-weight: 700; font-size: 0.9rem;">
+                      <option value="USD">USD - US Dollar ($)</option>
+                      <option value="EUR" selected>EUR - Euro (€)</option>
+                      <option value="GBP">GBP - British Pound (£)</option>
+                      <option value="CAD">CAD - Canadian Dollar ($)</option>
+                      <option value="AUD">AUD - Australian Dollar ($)</option>
+                      <option value="JPY">JPY - Japanese Yen (¥)</option>
+                      <option value="NGN">NGN - Nigerian Naira (₦)</option>
+                      <option value="INR">INR - Indian Rupee (₹)</option>
+                      <option value="ZAR">ZAR - South African Rand (R)</option>
+                      <option value="AED">AED - UAE Dirham (د.إ)</option>
+                      <option value="BTC">BTC - Bitcoin (₿)</option>
+                      <option value="ETH">ETH - Ethereum (Ξ)</option>
+                      <option value="USDT">USDT - Tether (₮)</option>
+                      <option value="SOL">SOL - Solana (◎)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Conversion Output Display Box -->
+                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); border-radius: 14px; padding: 1.25rem; text-align: center; margin-bottom: 1.2rem;">
+                  <div class="muted" style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem;">Converted Result</div>
+                  <div id="fx-converted-amount" style="font-size: 2rem; font-weight: 900; color: #34d399; font-family: var(--font-mono, monospace); line-height: 1.1;">
+                    €920.00 EUR
+                  </div>
+                  <div id="fx-unit-rate" style="font-size: 0.88rem; color: #cbd5e1; margin-top: 0.5rem; font-weight: 600;">
+                    1 USD = 0.9200 EUR
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                  <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; height: 44px; font-size: 0.9rem;">
+                    Sync Live Market Rates
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="fx-apply-to-deposit-btn" style="flex: 1; justify-content: center; height: 44px; font-size: 0.9rem;">
+                    Deposit Converted Sum
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Portfolio Balance in Multi-Currencies -->
+            <div class="panel" style="border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(13, 27, 42, 0.85);">
+              <div class="panel-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.8rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.2rem; color: #ffffff;">Your Portfolio Valuation</h3>
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">Multi-Currency View</span>
+              </div>
+              <p class="muted" style="font-size: 0.88rem; margin-bottom: 1rem;">Live market conversion of your total wallet balances ($<span data-user-balance-usd>10.00</span>):</p>
+              
+              <div id="fx-portfolio-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;">
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">USD ($)</div>
+                  <div id="fx-bal-usd" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-top: 0.2rem;">$10.00</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">EUR (€)</div>
+                  <div id="fx-bal-eur" style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; margin-top: 0.2rem;">€9.20</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">GBP (£)</div>
+                  <div id="fx-bal-gbp" style="font-size: 1.1rem; font-weight: 800; color: #c084fc; margin-top: 0.2rem;">£7.90</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">CAD ($)</div>
+                  <div id="fx-bal-cad" style="font-size: 1.1rem; font-weight: 800; color: #facc15; margin-top: 0.2rem;">$13.60</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">BTC (₿)</div>
+                  <div id="fx-bal-btc" style="font-size: 1rem; font-weight: 800; color: #f97316; margin-top: 0.2rem;">0.00015 ₿</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">ETH (Ξ)</div>
+                  <div id="fx-bal-eth" style="font-size: 1rem; font-weight: 800; color: #818cf8; margin-top: 0.2rem;">0.00380 Ξ</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">USDT (₮)</div>
+                  <div id="fx-bal-usdt" style="font-size: 1.1rem; font-weight: 800; color: #34d399; margin-top: 0.2rem;">10.00 ₮</div>
+                </div>
+                <div class="fx-rate-card" style="padding: 0.85rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">NGN (₦)</div>
+                  <div id="fx-bal-ngn" style="font-size: 1rem; font-weight: 800; color: #f43f5e; margin-top: 0.2rem;">₦15,800.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: LEARN MORE & ABOUT US -->
+        <div class="tab-content" id="tab-learn-more">
+          <div class="panel highlight-banner" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(10, 26, 47, 0.95) 100%); border-left: 4px solid var(--accent); margin-bottom: 1.5rem;">
+            <div class="banner-content">
+              <span class="badge badge-accent">Institutional Overview &amp; Corporate Portal</span>
+              <h2 style="margin-top: 0.4rem; margin-bottom: 0.6rem;">About Bitfurytech Limited (bitfurytechlimited.com)</h2>
+              <p class="muted" style="line-height: 1.7; font-size: 1.02rem;">
+                Bitfurytech Limited is an algorithm trading firm dedicated to producing exceptional results for its investors by strictly adhering to mathematical and statistical methods. Our mission is to create and promote thought-leading investment allocations that deliver sustainable risk-adjusted returns.
+              </p>
+              <div class="banner-actions">
+                <a href="about.html" class="btn btn-primary" target="_blank" rel="noopener">Open Full Public Portal</a>
+                <button class="btn btn-secondary" type="button" data-switch-tab="plans">Invest in Algo Plans</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Fact Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="panel" style="padding: 1.25rem; border-left: 3px solid #34d399;">
+              <div class="muted" style="font-size: 0.82rem; text-transform: uppercase;">Headquarters</div>
+              <strong style="font-size: 1.1rem; color: #fff;">London / Tilbury, UK</strong>
+              <p class="muted" style="font-size: 0.82rem; margin: 0.4rem 0 0;">12 Wren Walk, Tilbury, RM18 8EU</p>
+            </div>
+            <div class="panel" style="padding: 1.25rem; border-left: 3px solid #38bdf8;">
+              <div class="muted" style="font-size: 0.82rem; text-transform: uppercase;">SEC &amp; IIROC Regulation</div>
+              <strong style="font-size: 1.1rem; color: #38bdf8;">US SEC Compliant</strong>
+              <p class="muted" style="font-size: 0.82rem; margin: 0.4rem 0 0;">CIPF &amp; Financial Commission Member</p>
+            </div>
+            <div class="panel" style="padding: 1.25rem; border-left: 3px solid #facc15;">
+              <div class="muted" style="font-size: 0.82rem; text-transform: uppercase;">Methodology</div>
+              <strong style="font-size: 1.1rem; color: #facc15;">Quantitative Science</strong>
+              <p class="muted" style="font-size: 0.82rem; margin: 0.4rem 0 0;">Strict statistical execution without bias</p>
+            </div>
+            <div class="panel" style="padding: 1.25rem; border-left: 3px solid #c084fc;">
+              <div class="muted" style="font-size: 0.82rem; text-transform: uppercase;">Payout Accrual</div>
+              <strong style="font-size: 1.1rem; color: #c084fc;">Daily Auto-Yield</strong>
+              <p class="muted" style="font-size: 0.82rem; margin: 0.4rem 0 0;">Instant wallet payout distribution</p>
+            </div>
+          </div>
+
+          <!-- Board of Directors Section inside Dashboard Learn More -->
+          <div class="panel" style="margin-bottom: 1.5rem;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+              <div class="eyebrow" style="color: #34d399; font-weight: 800; letter-spacing: 0.12em;">OUR EXPERTS</div>
+              <h2 style="font-size: 1.8rem; font-weight: 900; margin-top: 0.2rem; margin-bottom: 0.4rem;">WE ARE <span style="color: #34d399; font-family: Georgia, serif; font-style: italic;">FRIENDLY &amp; PROFESSIONAL</span></h2>
+              <p class="muted" style="font-size: 0.95rem; max-width: 720px; margin: 0 auto; line-height: 1.6;">
+                Bitfury tech Investment was founded in 2017 by a group of skilled financial analysts, fund managers and research scientists with the mission to deliver superior long and short term returns at the lowest possible risk bracket.
+              </p>
+            </div>
+            <div class="director-grid" style="margin-top: 1rem;">
+              <article class="director-card" data-exec="robb-baldwin">
+                <div class="director-card-img-wrap">
+                  <span class="exec-badge">Executive Leadership</span>
+                  <img src="https://bitfurytechlimited.com/assets/file/item01.png" alt="Robb Baldwin" />
+                  <div class="director-overlay-actions">
+                    <button type="button" class="btn-exec-view" data-exec="robb-baldwin">View Profile</button>
+                  </div>
+                </div>
+                <div class="director-body">
+                  <div class="title">President and CEO</div>
+                  <h3>Robb Baldwin</h3>
+                  <p class="exec-specialty">Quantitative Strategy &amp; Model Governance</p>
+                  <div class="exec-card-footer">
+                    <span class="exec-exp-pill">15+ Yrs Exp</span>
+                    <button type="button" class="exec-bio-btn" data-exec="robb-baldwin">Read Bio →</button>
+                  </div>
+                </div>
+              </article>
+              <article class="director-card" data-exec="rob-dilbone">
+                <div class="director-card-img-wrap">
+                  <span class="exec-badge">Portfolio Operations</span>
+                  <img src="https://bitfurytechlimited.com/assets/file/item02.png" alt="Rob Dilbone" />
+                  <div class="director-overlay-actions">
+                    <button type="button" class="btn-exec-view" data-exec="rob-dilbone">View Profile</button>
+                  </div>
+                </div>
+                <div class="director-body">
+                  <div class="title">Managing Director</div>
+                  <h3>Rob Dilbone</h3>
+                  <p class="exec-specialty">Institutional Client Relations &amp; Execution</p>
+                  <div class="exec-card-footer">
+                    <span class="exec-exp-pill">12+ Yrs Exp</span>
+                    <button type="button" class="exec-bio-btn" data-exec="rob-dilbone">Read Bio →</button>
+                  </div>
+                </div>
+              </article>
+              <article class="director-card" data-exec="cris-frankel">
+                <div class="director-card-img-wrap">
+                  <span class="exec-badge">Business Strategy</span>
+                  <img src="https://bitfurytechlimited.com/assets/file/item03.png" alt="Cris Frankel" />
+                  <div class="director-overlay-actions">
+                    <button type="button" class="btn-exec-view" data-exec="cris-frankel">View Profile</button>
+                  </div>
+                </div>
+                <div class="director-body">
+                  <div class="title">VP of Business Development</div>
+                  <h3>Cris Frankel</h3>
+                  <p class="exec-specialty">Global Partnerships &amp; Onboarding</p>
+                  <div class="exec-card-footer">
+                    <span class="exec-exp-pill">10+ Yrs Exp</span>
+                    <button type="button" class="exec-bio-btn" data-exec="cris-frankel">Read Bio →</button>
+                  </div>
+                </div>
+              </article>
+              <article class="director-card" data-exec="scott-victoria">
+                <div class="director-card-img-wrap">
+                  <span class="exec-badge">Global Operations</span>
+                  <img src="https://bitfurytechlimited.com/assets/file/item04.jpg" alt="Scott Victoria" />
+                  <div class="director-overlay-actions">
+                    <button type="button" class="btn-exec-view" data-exec="scott-victoria">View Profile</button>
+                  </div>
+                </div>
+                <div class="director-body">
+                  <div class="title">Chief Operating Officer</div>
+                  <h3>Scott Victoria</h3>
+                  <p class="exec-specialty">Infrastructure Security &amp; Compliance</p>
+                  <div class="exec-card-footer">
+                    <span class="exec-exp-pill">14+ Yrs Exp</span>
+                    <button type="button" class="exec-bio-btn" data-exec="scott-victoria">Read Bio →</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Corporate Video Section inside Dashboard -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Bitfurytech Corporate Presentation Video</h3>
+            </div>
+            <div class="video-card" style="border-radius: 14px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 16/9; max-width: 800px; margin: 1rem auto 0;">
+              <iframe 
+                src="https://www.youtube.com/embed/QYE14pQ6NeQ?rel=0&modestbranding=1" 
+                title="Bitfurytech Official Company Video" 
+                frameborder="0" 
+                style="width: 100%; height: 100%; min-height: 360px;"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+
+          <!-- TAB: Official Mail & Alerts -->
+          <div class="tab-content" id="tab-notifications">
+            <div class="panel" style="border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(13, 27, 42, 0.95) 100%);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
+                <div>
+                  <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">OFFICIAL MAILBOX</span>
+                  <h2 style="margin: 0.3rem 0 0; color: #ffffff;">Official Company Communications &amp; Notifications</h2>
+                  <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.9rem;">Verified dispatch center. Official sender address: <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong></p>
+                </div>
+                <button class="btn btn-secondary" type="button" id="refresh-notifications-btn">🔄 Refresh Inbox</button>
+              </div>
+
+              <div id="user-notifications-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="text-center muted" style="padding: 2rem 0;">Loading official mail notifications...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- INVEST MODAL OVERLAY -->
+    <div class="modal-overlay" id="invest-modal">
+      <div class="modal-content">
+        <button class="modal-close" id="close-invest-modal">&times;</button>
+        <div class="modal-header">
+          <span class="eyebrow" id="modal-plan-cat">Stock Market</span>
+          <h2 id="modal-plan-title">STOCK Plan</h2>
+          <p class="muted">Daily Return: <strong class="green-text" id="modal-plan-rate">1.08%</strong></p>
+        </div>
+
+        <form id="invest-action-form">
+          <input type="hidden" id="modal-plan-id" value="" />
+
+          <div class="form-group">
+            <label for="invest-wallet-source">Select Payment Wallet</label>
+            <select id="invest-wallet-source" required>
+              <option value="deposit">Deposit Wallet (<span id="modal-dep-bal">$10.00</span>)</option>
+              <option value="interest">Interest Wallet (<span id="modal-int-bal">$0.00</span>)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="invest-amount-input">Investment Amount ($)</label>
+            <input type="number" id="invest-amount-input" required min="100" placeholder="1000" />
+            <small class="muted" id="modal-limit-text">Limits: $1,000.00 - $19,999.00</small>
+          </div>
+
+          <div class="modal-calc-preview">
+            <div class="preview-row">
+              <span>Estimated Daily Return:</span>
+              <strong class="green-text" id="modal-daily-return-calc">$0.00</strong>
+            </div>
+            <div class="preview-row">
+              <span>Estimated Monthly Return:</span>
+              <strong class="green-text" id="modal-monthly-return-calc">$0.00</strong>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-secondary" type="button" id="cancel-invest-modal">Cancel</button>
+            <button class="btn btn-primary" type="submit" id="confirm-invest-btn">Confirm & Activate Plan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- INVESTMENT AGREEMENT PDF MODAL OVERLAY -->
+    <div class="modal-overlay" id="agreement-modal">
+      <div class="modal-content printable-doc" style="max-width: 820px; border-radius: 16px; background: #ffffff; color: #0f172a; padding: 2.2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+        <button class="modal-close no-print" id="close-agreement-modal" style="color: #64748b;">&times;</button>
+        
+        <!-- Printable Header -->
+        <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7;">
+              B
+            </div>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">BitfuryTech Investment Management Ltd.</div>
+              <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Regulated Quantitative Fund &amp; Wealth Management • Reg #11482910</div>
+              <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP, United Kingdom</div>
+            </div>
+          </div>
+          <div style="text-align: right;" class="doc-meta-header">
+            <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL DEED</span>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Contract Ref: <strong id="agr-doc-ref" style="color: #0f172a; font-family: monospace;">BF-AGR-2026-98124</strong></div>
+            <div style="font-size: 0.75rem; color: #64748b;">Issue Date: <strong id="agr-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.45rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 0.25rem;">MASTER INVESTMENT AGREEMENT</h2>
+          <div style="font-size: 0.85rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.08em;">&amp; CAPITAL GUARANTEE INDEMNITY CERTIFICATE</div>
+        </div>
+
+        <!-- Parties Box -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem;">
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY A (FUND MANAGER)</div>
+            <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;">BitfuryTech Investment Management Ltd.</div>
+            <div style="font-size: 0.78rem; color: #475569;">UK Registered &amp; SEC Compliant Firm</div>
+            <div style="font-size: 0.78rem; color: #475569;">Email: support@bitfurytechlimited.com</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY B (INVESTOR)</div>
+            <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;" id="agr-user-name">Investor</div>
+            <div style="font-size: 0.78rem; color: #475569;" id="agr-user-email">investor@example.com</div>
+            <div style="font-size: 0.78rem; color: #475569;">Investor ID: <span id="agr-user-id" style="font-family: monospace; font-weight: 700;">USR-10001</span></div>
+          </div>
+        </div>
+
+        <!-- Investment Parameters Table -->
+        <div style="margin-bottom: 1.5rem;">
+          <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">SCHEDULE A: INVESTMENT PLAN PARAMETERS</div>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.85rem;">
+            <thead>
+              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                <th style="padding: 0.6rem 0.8rem; border-right: 1px solid #cbd5e1;">Specification</th>
+                <th style="padding: 0.6rem 0.8rem;">Agreed Terms &amp; Values</th>
+              </tr>
+            </thead>
+            <tbody style="color: #334155;">
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc; width: 40%;">Investment Strategy Plan</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-plan-name">Beginners Plan</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Principal Invested Capital</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #15803d;" id="agr-plan-amount">$1,000.00 USD</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Contracted Daily Return Rate</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0284c7;" id="agr-plan-rate">1.00% Fixed Daily Yield</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Expected Daily Interest Dividends</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-daily-profit">$10.00 USD / Day</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Commencement &amp; Activation Date</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 700;" id="agr-start-date">August 9, 2026</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Capital Protection Assurance</td>
+                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #166534;">100% Fully Backed by BitfuryTech Reserve Surety</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Terms & Legal Clauses -->
+        <div style="font-size: 0.78rem; color: #475569; line-height: 1.5; margin-bottom: 1.5rem; background: #f8fafc; border-left: 3px solid #0284c7; padding: 0.85rem 1rem; border-radius: 0 8px 8px 0;">
+          <strong style="color: #0f172a; display: block; margin-bottom: 0.3rem;">OPERATIONAL &amp; LEGAL COVENANTS:</strong>
+          <ol style="margin: 0; padding-left: 1.1rem; line-height: 1.5;">
+            <li><strong>Daily Dividend Credit:</strong> Yields accumulate continuously and are automatically distributed into the Investor's Interest Wallet every 24 hours.</li>
+            <li><strong>Principal Guarantee:</strong> BitfuryTech guarantees 100% preservation of the Principal Invested Capital under European Capital Surety regulations.</li>
+            <li><strong>Withdrawal Liquidity:</strong> The Investor reserves unconditional right to initiate withdrawal requests for accumulated profits directly through the investor portal.</li>
+            <li><strong>Binding Signature:</strong> Executed digitally under the Electronic Communications Act 2000 and UNCITRAL Model Law on Electronic Signatures.</li>
+          </ol>
+        </div>
+
+        <!-- Signatures & Official Stamp -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid #cbd5e1; flex-wrap: wrap; gap: 1rem;">
+          <div style="text-align: center; min-width: 180px;">
+            <div style="font-family: 'Brush Script MT', cursive, Georgia, serif; font-size: 1.6rem; color: #0369a1; font-weight: 700; line-height: 1; margin-bottom: 0.2rem;">Alexander Vance</div>
+            <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">ALEXANDER VANCE</div>
+            <div style="font-size: 0.68rem; color: #64748b;">Chief Investment Officer (CIO)</div>
+            <div style="font-size: 0.65rem; color: #0284c7; font-weight: 700;">BitfuryTech Management Ltd.</div>
+          </div>
+
+          <!-- Corporate Seal Stamp Badge -->
+          <div style="text-align: center;">
+            <div style="width: 82px; height: 82px; border: 3px double #0284c7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; background: rgba(2, 132, 199, 0.05); color: #0284c7; font-size: 0.58rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin: 0 auto;">
+              <span>★ BITFURYTECH ★</span>
+              <span style="font-size: 0.5rem; color: #0f172a; margin: 2px 0;">SEAL OF GUARANTEE</span>
+              <span>100% SECURED</span>
+            </div>
+            <div style="font-size: 0.65rem; color: #64748b; margin-top: 0.3rem;">Audit Stamp #BF-88219</div>
+          </div>
+
+          <div style="text-align: center; min-width: 180px;">
+            <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 0.4rem; padding-top: 0.6rem;" id="agr-user-sig-name">Investor</div>
+            <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">INVESTOR ACCEPTANCE</div>
+            <div style="font-size: 0.68rem; color: #64748b;">Digitally Signed &amp; Authenticated</div>
+            <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">IP &amp; 2FA Verified Signature</div>
+          </div>
+        </div>
+
+        <!-- Action Bar (hidden when printing) -->
+        <div class="modal-actions no-print" style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+          <button class="btn btn-secondary" type="button" id="close-agreement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">Close</button>
+          <button class="btn btn-primary" type="button" id="print-agreement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save PDF Agreement
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT STATEMENT PDF MODAL OVERLAY -->
+    <div class="modal-overlay" id="statement-modal">
+      <div class="modal-content printable-doc" style="max-width: 860px; border-radius: 16px; background: #ffffff; color: #0f172a; padding: 2.2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+        <button class="modal-close no-print" id="close-statement-modal" style="color: #64748b;">&times;</button>
+        
+        <!-- Printable Header -->
+        <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7;">
+              B
+            </div>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">BitfuryTech Investment Management Ltd.</div>
+              <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Official Investor Financial Ledger &amp; Account Statement</div>
+              <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP • Reg #11482910</div>
+            </div>
+          </div>
+          <div style="text-align: right;" class="doc-meta-header">
+            <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL STATEMENT</span>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Statement Ref: <strong id="stmt-doc-ref" style="color: #0f172a; font-family: monospace;">BF-STMT-2026-0809</strong></div>
+            <div style="font-size: 0.75rem; color: #64748b;">Generated On: <strong id="stmt-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 0.2rem;">OFFICIAL ACCOUNT FINANCIAL STATEMENT</h2>
+          <div style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Comprehensive Ledger &amp; Investment Portfolio Report</div>
+        </div>
+
+        <!-- Account Details & Financial Summary -->
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <!-- Account Info -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">ACCOUNT HOLDER INFORMATION</div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="stmt-user-name">Investor</div>
+            <div style="font-size: 0.8rem; color: #475569;" id="stmt-user-email">investor@example.com</div>
+            <div style="font-size: 0.78rem; color: #475569; margin-top: 0.2rem;">Account ID: <span id="stmt-user-id" style="font-family: monospace; font-weight: 700;">USR-10001</span></div>
+            <div style="font-size: 0.78rem; color: #475569;">Account Status: <span style="color: #16a34a; font-weight: 700;">Active / Verified</span></div>
+          </div>
+
+          <!-- Financial Position -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">PORTFOLIO BALANCE POSITION</div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem;">
+              <div>
+                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Total Portfolio Value</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a;" id="stmt-total-val">$0.00</div>
+              </div>
+              <div>
+                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Active Invested Capital</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #0284c7;" id="stmt-active-invest">$0.00</div>
+              </div>
+              <div>
+                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Deposit Wallet</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #0f172a;" id="stmt-dep-bal">$0.00</div>
+              </div>
+              <div>
+                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Interest Dividends Wallet</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #16a34a;" id="stmt-int-bal">$0.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Investments Summary -->
+        <div style="margin-bottom: 1.5rem;" id="stmt-investments-section">
+          <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ACTIVE INVESTMENT CONTRACTS</div>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.8rem;" id="stmt-investments-table">
+            <thead>
+              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                <th style="padding: 0.5rem 0.65rem;">Plan Name</th>
+                <th style="padding: 0.5rem 0.65rem;">Invested Amount</th>
+                <th style="padding: 0.5rem 0.65rem;">Daily Yield %</th>
+                <th style="padding: 0.5rem 0.65rem;">Accrued Profit</th>
+                <th style="padding: 0.5rem 0.65rem;">Start Date</th>
+                <th style="padding: 0.5rem 0.65rem;">Status</th>
+              </tr>
+            </thead>
+            <tbody style="color: #334155;">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Itemized Transactions Table -->
+        <div style="margin-bottom: 1.5rem;">
+          <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ITEMIZED TRANSACTION LEDGER</div>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.78rem;" id="stmt-transactions-table">
+            <thead>
+              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                <th style="padding: 0.5rem 0.6rem;">Date</th>
+                <th style="padding: 0.5rem 0.6rem;">Reference ID</th>
+                <th style="padding: 0.5rem 0.6rem;">Transaction Details</th>
+                <th style="padding: 0.5rem 0.6rem;">Wallet</th>
+                <th style="padding: 0.5rem 0.6rem;">Amount</th>
+                <th style="padding: 0.5rem 0.6rem;">Status</th>
+                <th style="padding: 0.5rem 0.6rem;">Post Balance</th>
+              </tr>
+            </thead>
+            <tbody style="color: #334155;">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Footer Notice & Audit Stamp -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 1rem; font-size: 0.72rem; color: #64748b; flex-wrap: wrap; gap: 0.8rem;">
+          <div>
+            <strong>BitfuryTech Investment Management Ltd.</strong><br/>
+            Official Audit Verification Code: <span style="font-family: monospace; font-weight: 700; color: #0f172a;">BF-AUDIT-2026-9810</span>
+          </div>
+          <div style="text-align: right;">
+            Official Electronic Record • Generated automatically from secure database.<br/>
+            Confirmed &amp; Verified Official Report
+          </div>
+        </div>
+
+        <!-- Action Bar (hidden when printing) -->
+        <div class="modal-actions no-print" style="margin-top: 1.8rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+          <button class="btn btn-secondary" type="button" id="close-statement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">Close</button>
+          <button class="btn btn-primary" type="button" id="print-statement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save PDF Statement
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Bottom-Sticky Navigation Bar -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation Bar">
+      <button class="mobile-bottom-nav-btn dash-nav-btn active" data-tab="overview" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Overview</span>
+      </button>
+
+      <button class="mobile-bottom-nav-btn dash-nav-btn" data-tab="deposit" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span>Deposit</span>
+      </button>
+
+      <button class="mobile-bottom-nav-btn dash-nav-btn" data-tab="plans" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span>Invest</span>
+      </button>
+
+      <button class="mobile-bottom-nav-btn dash-nav-btn" data-tab="withdraw" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        <span>Withdraw</span>
+      </button>
+
+      <button class="mobile-bottom-nav-btn dash-nav-btn" data-tab="profile" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+    <footer>
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>© <span id="year"></span> Bitfurytech. All rights reserved.</div>
+        <button type="button" class="btn-terms-footer open-terms-modal-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Terms &amp; Conditions
+        </button>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
