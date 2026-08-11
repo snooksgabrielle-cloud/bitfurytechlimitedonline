@@ -370,7 +370,8 @@ export const db = {
   async get(sql, params = []) {
     const instance = await initDb();
     const stmt = instance.prepare(sql);
-    const p = Array.isArray(params) ? params : [params];
+    const rawP = Array.isArray(params) ? params : [params];
+    const p = rawP.map((val) => (val === undefined ? null : val));
     stmt.bind(p);
     let row = null;
     if (stmt.step()) {
@@ -383,7 +384,8 @@ export const db = {
   async all(sql, params = []) {
     const instance = await initDb();
     const stmt = instance.prepare(sql);
-    const p = Array.isArray(params) ? params : [params];
+    const rawP = Array.isArray(params) ? params : [params];
+    const p = rawP.map((val) => (val === undefined ? null : val));
     stmt.bind(p);
     const results = [];
     while (stmt.step()) {
@@ -395,7 +397,8 @@ export const db = {
 
   async run(sql, params = []) {
     const instance = await initDb();
-    const p = Array.isArray(params) ? params : [params];
+    const rawP = Array.isArray(params) ? params : [params];
+    const p = rawP.map((val) => (val === undefined ? null : val));
     instance.run(sql, p);
 
     const resId = instance.exec('SELECT last_insert_rowid() as id');

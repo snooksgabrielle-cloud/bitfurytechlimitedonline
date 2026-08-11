@@ -162,7 +162,7 @@ async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, s
     );
   }
 
-  console.log(`[AUTOMATED TRANSACTION ALERT EMAIL DISPATCHED] From: ${sender} -> To: ${recipient} | Subject: ${subject}`);
+  console.log(`Email dispatched from ${sender} to ${recipient}: ${subject}`);
   return { mailId: mailResult.lastID, sender, recipient, subject };
 }
 
@@ -2157,7 +2157,7 @@ async function performWebsiteOperationsBackup(triggerType = '24h_cron') {
     if (manifest.length > 60) manifest = manifest.slice(0, 60);
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf8');
 
-    console.log(`✅ [24H BACKUP SUCCESS] Website operations archive saved: ${jsonFileName} (${fileSizeKB} KB, Trigger: ${triggerType})`);
+    console.log(`Backup saved: ${jsonFileName} (${fileSizeKB} KB, Trigger: ${triggerType})`);
 
     // Dispatch official admin email notice
     try {
@@ -2204,7 +2204,7 @@ function init24HourBackupScheduler() {
               const elapsed = Date.now() - lastTime;
               if (elapsed < TWENTY_FOUR_HOURS_MS) {
                 shouldRunNow = false;
-                console.log(`ℹ️ [24H BACKUP SCHEDULER] Last backup was run ${(elapsed / (1000 * 60 * 60)).toFixed(1)} hours ago. Next scheduled run in ${((TWENTY_FOUR_HOURS_MS - elapsed) / (1000 * 60 * 60)).toFixed(1)} hours.`);
+                console.log(`Last backup run ${(elapsed / (1000 * 60 * 60)).toFixed(1)} hours ago. Next run in ${((TWENTY_FOUR_HOURS_MS - elapsed) / (1000 * 60 * 60)).toFixed(1)} hours.`);
               }
             }
           }
@@ -2214,18 +2214,18 @@ function init24HourBackupScheduler() {
       }
 
       if (shouldRunNow) {
-        console.log('🚀 [24H BACKUP SCHEDULER] Executing initial/24-hour website & investor operations backup...');
+        console.log('Executing initial 24-hour website backup...');
         await performWebsiteOperationsBackup('24h_cron');
         lastAutomatedBackupTime = Date.now();
       }
     } catch (e) {
-      console.error('Error in 24h backup scheduler check:', e.message);
+      console.error('Error in backup scheduler check:', e.message);
     }
   }, 10000);
 
   setInterval(async () => {
     try {
-      console.log('⏰ [24H CRON] Running scheduled 24-hour website operations & investor backup...');
+      console.log('Running scheduled 24-hour backup...');
       await performWebsiteOperationsBackup('24h_cron');
       lastAutomatedBackupTime = Date.now();
     } catch (e) {
@@ -2347,6 +2347,14 @@ app.post('/api/admin/backup/restore', async (req, res) => {
   }
 });
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+});
+
 app.get('/:page', (req, res, next) => {
   const page = req.params.page;
   if (page.includes('.')) {
@@ -2357,6 +2365,15 @@ app.get('/:page', (req, res, next) => {
     return res.sendFile(filePath);
   }
   next();
+});
+
+// Express global error handling middleware
+app.use((err, req, res, _next) => {
+  console.error('Global Express Error:', err.stack || err.message || err);
+  if (res.headersSent) {
+    return;
+  }
+  res.status(500).json({ ok: false, error: 'Internal server processing error' });
 });
 
 app.get('*', (_req, res) => {
