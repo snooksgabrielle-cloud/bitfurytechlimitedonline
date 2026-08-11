@@ -73,6 +73,10 @@ export async function initDb() {
         usdt_wallet TEXT DEFAULT '',
         two_factor_enabled INTEGER DEFAULT 0,
         status TEXT DEFAULT 'active',
+        avatar TEXT DEFAULT '',
+        username TEXT UNIQUE DEFAULT '',
+        reset_token TEXT DEFAULT '',
+        reset_expires INTEGER DEFAULT 0,
         created_at TEXT NOT NULL
       );
 
@@ -107,6 +111,10 @@ export async function initDb() {
         amount REAL NOT NULL,
         daily_rate REAL NOT NULL,
         status TEXT NOT NULL DEFAULT 'active',
+        payouts_count INTEGER DEFAULT 0,
+        last_payout_at TEXT,
+        duration_days INTEGER DEFAULT 30,
+        capital_returned INTEGER DEFAULT 0,
         created_at TEXT NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
       );
@@ -130,6 +138,20 @@ export async function initDb() {
         name TEXT NOT NULL,
         email TEXT NOT NULL,
         message TEXT NOT NULL,
+        subject TEXT DEFAULT 'General Inquiry',
+        status TEXT DEFAULT 'unread',
+        reply_message TEXT DEFAULT '',
+        replied_at TEXT DEFAULT '',
+        created_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS visitor_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT,
+        user_agent TEXT,
+        path TEXT,
+        referrer TEXT,
+        user_id INTEGER,
         created_at TEXT NOT NULL
       );
 
@@ -240,7 +262,19 @@ export async function initDb() {
       'ALTER TABLE users ADD COLUMN usdt_wallet TEXT DEFAULT ""',
       'ALTER TABLE users ADD COLUMN two_factor_enabled INTEGER DEFAULT 0',
       'ALTER TABLE users ADD COLUMN status TEXT DEFAULT "active"',
-      'ALTER TABLE transactions ADD COLUMN status TEXT DEFAULT "completed"'
+      'ALTER TABLE users ADD COLUMN avatar TEXT DEFAULT ""',
+      'ALTER TABLE users ADD COLUMN username TEXT DEFAULT ""',
+      'ALTER TABLE users ADD COLUMN reset_token TEXT DEFAULT ""',
+      'ALTER TABLE users ADD COLUMN reset_expires INTEGER DEFAULT 0',
+      'ALTER TABLE transactions ADD COLUMN status TEXT DEFAULT "completed"',
+      'ALTER TABLE investments ADD COLUMN payouts_count INTEGER DEFAULT 0',
+      'ALTER TABLE investments ADD COLUMN last_payout_at TEXT',
+      'ALTER TABLE investments ADD COLUMN duration_days INTEGER DEFAULT 30',
+      'ALTER TABLE investments ADD COLUMN capital_returned INTEGER DEFAULT 0',
+      'ALTER TABLE contacts ADD COLUMN subject TEXT DEFAULT "General Inquiry"',
+      'ALTER TABLE contacts ADD COLUMN status TEXT DEFAULT "unread"',
+      'ALTER TABLE contacts ADD COLUMN reply_message TEXT DEFAULT ""',
+      'ALTER TABLE contacts ADD COLUMN replied_at TEXT DEFAULT ""'
     ];
     for (const alterSql of alterCols) {
       try {
@@ -250,34 +284,43 @@ export async function initDb() {
       }
     }
 
-    // Check admin
+    // Check & update admin user credentials
     try {
-      const adminEmail = 'admin@bitfurytech.com';
-      const stmt = sqliteDb.prepare('SELECT id FROM users WHERE email = ?');
-      stmt.bind([adminEmail]);
+      const adminUsername = 'admin619042';
+      const adminEmail = 'admin619042@bitfurytech.com';
+      const adminPassword = 'Amkelechi@2';
+      const hashedPass = hashPassword(adminPassword);
+
+      const stmt = sqliteDb.prepare('SELECT id FROM users WHERE username = ? OR email = ? OR role = "admin"');
+      stmt.bind([adminUsername, adminEmail]);
       let hasAdmin = false;
+      let adminId = null;
       if (stmt.step()) {
         hasAdmin = true;
+        adminId = stmt.getAsObject().id;
       }
       stmt.free();
 
       if (!hasAdmin) {
-        const adminPassword = 'Admin@1234';
         sqliteDb.run(
-          'INSERT INTO users (full_name, email, password_hash, role, auth_token, deposit_balance, interest_balance, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          'INSERT INTO users (full_name, email, username, password_hash, role, auth_token, deposit_balance, interest_balance, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
           [
             'System Administrator',
             adminEmail,
-            hashPassword(adminPassword),
+            adminUsername,
+            hashedPass,
             'admin',
             createToken(),
-            1000.0,
+            10000.0,
             0.0,
             new Date().toISOString()
           ]
         );
       } else {
-        sqliteDb.run('UPDATE users SET password_hash = ? WHERE email = ?', [hashPassword('Admin@1234'), adminEmail]);
+        sqliteDb.run(
+          'UPDATE users SET username = ?, email = ?, password_hash = ?, role = "admin" WHERE id = ?',
+          [adminUsername, adminEmail, hashedPass, adminId]
+        );
       }
     } catch (e) {
       console.warn('⚠️ Error seeding admin user:', e.message);

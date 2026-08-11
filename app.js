@@ -891,11 +891,15 @@ function handleAuthFormSubmit(event) {
   const button = form.querySelector('button[type="submit"]');
   const isRegister = form.id === 'register-form';
   const emailVal = form.querySelector('#email')?.value?.trim() || '';
+  const usernameVal = form.querySelector('#username')?.value?.trim() || '';
   const passwordVal = form.querySelector('#password')?.value || '';
   const fullNameVal = isRegister ? form.querySelector('#fullName')?.value?.trim() || '' : '';
+  const countryCodeVal = isRegister ? form.querySelector('#countryCode')?.value || '+1' : '';
+  const phoneVal = isRegister ? form.querySelector('#phone')?.value?.trim() || '' : '';
+  const fullPhone = phoneVal ? `${countryCodeVal} ${phoneVal}`.trim() : '';
 
   if (!emailVal || !passwordVal || (isRegister && !fullNameVal)) {
-    createMessage(form, isRegister ? 'Please provide your full name, email address, and password.' : 'Please enter your email address and password.');
+    createMessage(form, isRegister ? 'Please provide your full name, email address, and password.' : 'Please enter your username or email address and password.');
     return;
   }
 
@@ -908,10 +912,12 @@ function handleAuthFormSubmit(event) {
     ? {
         fullName: fullNameVal,
         email: emailVal,
+        username: usernameVal,
         password: passwordVal,
+        phone: fullPhone,
       }
     : {
-        email: emailVal,
+        usernameOrEmail: emailVal,
         password: passwordVal,
       };
 
@@ -972,6 +978,8 @@ function initForms() {
     registerForm.addEventListener('submit', handleAuthFormSubmit);
   }
 
+  initForgotPasswordHandlers();
+
   document.querySelectorAll('[data-logout]').forEach((button) => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
@@ -979,6 +987,126 @@ function initForms() {
       window.location.href = 'index.html';
     });
   });
+}
+
+function initForgotPasswordHandlers() {
+  const toggleBtn = document.getElementById('toggle-forgot-pass-btn');
+  const closeBtn = document.getElementById('close-forgot-pass-btn');
+  const forgotCard = document.getElementById('forgot-password-card');
+  const requestCodeForm = document.getElementById('request-reset-code-form');
+  const confirmResetForm = document.getElementById('confirm-reset-password-form');
+
+  if (toggleBtn && forgotCard) {
+    toggleBtn.addEventListener('click', () => {
+      forgotCard.style.display = forgotCard.style.display === 'none' ? 'block' : 'none';
+      if (forgotCard.style.display === 'block') {
+        forgotCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }
+
+  if (closeBtn && forgotCard) {
+    closeBtn.addEventListener('click', () => {
+      forgotCard.style.display = 'none';
+    });
+  }
+
+  if (requestCodeForm) {
+    requestCodeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const identifierInput = document.getElementById('reset-identifier');
+      const sendBtn = document.getElementById('send-code-btn');
+      const identifier = identifierInput?.value?.trim();
+
+      if (!identifier) {
+        showToast('❌ Please enter your username or email address.', false);
+        return;
+      }
+
+      const origHtml = sendBtn.innerHTML;
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '📩 Sending Verification Code...';
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          showToast(`✅ ${data.message}`, true);
+          const sentMsg = document.getElementById('reset-code-sent-msg');
+          if (sentMsg) {
+            sentMsg.textContent = `A 6-digit verification code has been sent to ${data.email || 'your registered email'}. Enter it below along with your new password.`;
+          }
+          if (confirmResetForm) {
+            confirmResetForm.style.display = 'block';
+            confirmResetForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        } else {
+          showToast(`❌ ${data.error || 'Failed to send reset code.'}`, false);
+        }
+      } catch (err) {
+        showToast('❌ Network error processing password reset.', false);
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = origHtml;
+      }
+    });
+  }
+
+  if (confirmResetForm) {
+    confirmResetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const identifier = document.getElementById('reset-identifier')?.value?.trim();
+      const resetCode = document.getElementById('reset-code')?.value?.trim();
+      const newPassword = document.getElementById('new-password')?.value?.trim();
+      const confirmBtn = document.getElementById('confirm-reset-btn');
+
+      if (!identifier || !resetCode || !newPassword) {
+        showToast('❌ Please enter the verification code and new password.', false);
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showToast('❌ New password must be at least 6 characters long.', false);
+        return;
+      }
+
+      const origHtml = confirmBtn.innerHTML;
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '🔄 Updating Password...';
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, resetCode, newPassword })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          showToast(`✅ ${data.message}`, true);
+          // Autofill login form
+          const loginEmailInput = document.querySelector('form#auth-form #email');
+          const loginPassInput = document.querySelector('form#auth-form #password');
+          if (loginEmailInput) loginEmailInput.value = identifier;
+          if (loginPassInput) loginPassInput.value = newPassword;
+
+          if (forgotCard) forgotCard.style.display = 'none';
+        } else {
+          showToast(`❌ ${data.error || 'Password reset failed.'}`, false);
+        }
+      } catch (err) {
+        showToast('❌ Network error resetting password.', false);
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = origHtml;
+      }
+    });
+  }
 }
 
 function renderPortfolioGrowthChart(depositBal, interestBal, totalInvest, timeframe = '7D') {
@@ -1160,6 +1288,86 @@ function animateCountUp(targetEl, targetVal, options = {}) {
   });
 }
 window.animateCountUp = animateCountUp;
+
+window.currentSelectedAvatar = '';
+
+function updateUserAvatarUI(avatarUrl, fullName = 'Investor') {
+  const avatarContainers = document.querySelectorAll('.user-avatar-circle');
+  const initial = (fullName || 'I').trim().charAt(0).toUpperCase();
+
+  avatarContainers.forEach((container) => {
+    if (avatarUrl && avatarUrl.trim()) {
+      container.innerHTML = `<img src="${avatarUrl}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;" />`;
+    } else {
+      container.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 14c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z"/></svg>`;
+    }
+  });
+
+  const imgPreview = document.getElementById('prof-avatar-img-preview');
+  const fallbackEl = document.getElementById('prof-avatar-fallback');
+  const removeBtn = document.getElementById('remove-profile-photo-btn');
+
+  if (imgPreview && fallbackEl) {
+    if (avatarUrl && avatarUrl.trim()) {
+      imgPreview.src = avatarUrl;
+      imgPreview.style.display = 'block';
+      fallbackEl.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    } else {
+      imgPreview.src = '';
+      imgPreview.style.display = 'none';
+      fallbackEl.textContent = initial || 'I';
+      fallbackEl.style.display = 'block';
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+  }
+}
+window.updateUserAvatarUI = updateUserAvatarUI;
+
+function initProfileAvatarControls() {
+  const avatarFileInput = document.getElementById('prof-avatar-file-input');
+  const removeBtn = document.getElementById('remove-profile-photo-btn');
+
+  if (avatarFileInput && !avatarFileInput.dataset.bound) {
+    avatarFileInput.dataset.bound = 'true';
+    avatarFileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ Please select a valid image file (PNG, JPG, WebP).', false);
+        return;
+      }
+
+      if (file.size > 8 * 1024 * 1024) {
+        showToast('❌ Image size is too large. Please select an image under 8MB.', false);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (evt) {
+        const base64Data = evt.target.result;
+        window.currentSelectedAvatar = base64Data;
+        const nameVal = document.getElementById('prof-fullname')?.value || 'Investor';
+        updateUserAvatarUI(base64Data, nameVal);
+        showToast('📷 Photo selected! Click "Save Profile Changes" to update.', true);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (removeBtn && !removeBtn.dataset.bound) {
+    removeBtn.dataset.bound = 'true';
+    removeBtn.addEventListener('click', () => {
+      window.currentSelectedAvatar = '';
+      if (avatarFileInput) avatarFileInput.value = '';
+      const nameVal = document.getElementById('prof-fullname')?.value || 'Investor';
+      updateUserAvatarUI('', nameVal);
+      showToast('🗑️ Photo removed. Save profile to finalize changes.', true);
+    });
+  }
+}
+window.initProfileAvatarControls = initProfileAvatarControls;
 
 async function loadDashboardData() {
   const dashboard = document.querySelector('[data-dashboard]');
@@ -1459,10 +1667,35 @@ async function loadDashboardData() {
     if (data.user) {
       if (document.getElementById('prof-fullname')) document.getElementById('prof-fullname').value = data.user.fullName || '';
       if (document.getElementById('prof-email')) document.getElementById('prof-email').value = data.user.email || '';
-      if (document.getElementById('prof-phone')) document.getElementById('prof-phone').value = data.user.phone || '';
       if (document.getElementById('prof-country')) document.getElementById('prof-country').value = data.user.country || '';
       if (document.getElementById('prof-btc-wallet')) document.getElementById('prof-btc-wallet').value = data.user.btcWallet || '';
       if (document.getElementById('prof-usdt-wallet')) document.getElementById('prof-usdt-wallet').value = data.user.usdtWallet || '';
+
+      if (data.user.phone) {
+        const rawPhone = data.user.phone.trim();
+        const ccSelect = document.getElementById('prof-country-code');
+        const phoneInput = document.getElementById('prof-phone');
+        if (ccSelect && phoneInput) {
+          const match = rawPhone.match(/^(\+\d+)\s*(.*)$/);
+          if (match) {
+            if (Array.from(ccSelect.options).some((opt) => opt.value === match[1])) {
+              ccSelect.value = match[1];
+            }
+            phoneInput.value = match[2];
+          } else {
+            phoneInput.value = rawPhone;
+          }
+        } else if (phoneInput) {
+          phoneInput.value = rawPhone;
+        }
+      }
+
+      if (data.user.avatar) {
+        window.currentSelectedAvatar = data.user.avatar;
+        updateUserAvatarUI(data.user.avatar, data.user.fullName);
+      } else {
+        updateUserAvatarUI('', data.user.fullName);
+      }
 
       const badge2FA = document.getElementById('2fa-status-badge');
       if (badge2FA) {
@@ -1476,7 +1709,14 @@ async function loadDashboardData() {
           badge2FA.style.color = '#f87171';
         }
       }
+
+      // Display Admin link in investor header if user role is admin
+      const headerAdminLink = document.getElementById('header-admin-link');
+      if (headerAdminLink && data.user.role === 'admin') {
+        headerAdminLink.style.display = 'inline-flex';
+      }
     }
+    initProfileAvatarControls();
 
     // Referrals Data
     if (document.getElementById('ref-count')) document.getElementById('ref-count').textContent = '0';
@@ -1507,7 +1747,7 @@ async function loadDashboardData() {
 
 // Dashboard Tabs & Interactions Setup
 function initDashboardControls() {
-  const allTabBtns = document.querySelectorAll('.dash-nav-btn, .acc-menu-btn');
+  const allTabBtns = document.querySelectorAll('.dash-nav-btn, .acc-menu-btn, .investor-nav-item');
   const tabContents = document.querySelectorAll('.tab-content');
 
   const switchTab = (tabId) => {
@@ -1854,15 +2094,20 @@ function initDashboardControls() {
     }
   });
 
+  initProfileAvatarControls();
+
   const profForm = document.getElementById('profile-settings-form');
   if (profForm) {
     profForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fullName = document.getElementById('prof-fullname')?.value || '';
-      const phone = document.getElementById('prof-phone')?.value || '';
+      const countryCode = document.getElementById('prof-country-code')?.value || '';
+      const rawPhone = document.getElementById('prof-phone')?.value?.trim() || '';
+      const phone = rawPhone ? `${countryCode} ${rawPhone}`.trim() : '';
       const country = document.getElementById('prof-country')?.value || '';
       const btcWallet = document.getElementById('prof-btc-wallet')?.value || '';
       const usdtWallet = document.getElementById('prof-usdt-wallet')?.value || '';
+      const avatar = window.currentSelectedAvatar !== undefined ? window.currentSelectedAvatar : '';
 
       try {
         const res = await fetch('/api/user/profile', {
@@ -1871,7 +2116,7 @@ function initDashboardControls() {
             'Content-Type': 'application/json',
             ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
           },
-          body: JSON.stringify({ fullName, phone, country, btcWallet, usdtWallet })
+          body: JSON.stringify({ fullName, phone, country, btcWallet, usdtWallet, avatar })
         });
         const resData = await res.json();
         if (res.ok && resData.ok) {
@@ -1879,6 +2124,10 @@ function initDashboardControls() {
           if (resData.user) {
             const userNameEl = document.querySelector('[data-user-name]');
             if (userNameEl) userNameEl.textContent = resData.user.fullName || 'Investor';
+            if (resData.user.avatar !== undefined) {
+              window.currentSelectedAvatar = resData.user.avatar;
+              updateUserAvatarUI(resData.user.avatar, resData.user.fullName);
+            }
           }
         } else {
           showToast(`❌ ${resData.error || 'Failed to save profile.'}`, false);
@@ -2671,6 +2920,17 @@ async function loadAdminData() {
     if (document.getElementById('admin-pending-deposits-count')) document.getElementById('admin-pending-deposits-count').textContent = String(pendingDeposits.length);
     if (document.getElementById('admin-pending-withdrawals-count')) document.getElementById('admin-pending-withdrawals-count').textContent = String(pendingWithdrawals.length);
 
+    // Update Visitors & Investor Messages Stat Elements
+    if (document.getElementById('admin-visitors-stat')) document.getElementById('admin-visitors-stat').textContent = `${stats.totalVisitorsCount || '0'} Hits`;
+    if (document.getElementById('admin-unread-messages-stat')) document.getElementById('admin-unread-messages-stat').textContent = `${stats.unreadMessagesCount || '0'} Notice`;
+
+    if (document.getElementById('admin-total-visitors-badge')) document.getElementById('admin-total-visitors-badge').textContent = `${stats.totalVisitorsCount || '0'} Total Visits`;
+    if (document.getElementById('admin-today-visitors-badge')) document.getElementById('admin-today-visitors-badge').textContent = `${stats.todayVisitorsCount || '0'} Today`;
+    if (document.getElementById('admin-unique-visitors-badge')) document.getElementById('admin-unique-visitors-badge').textContent = `${stats.uniqueVisitorsCount || '0'} Unique IPs`;
+
+    if (document.getElementById('admin-unread-messages-badge')) document.getElementById('admin-unread-messages-badge').textContent = `${stats.unreadMessagesCount || '0'} Unread Notices`;
+    if (document.getElementById('admin-contacts-count')) document.getElementById('admin-contacts-count').textContent = `${(data.contacts || []).length} Total Messages`;
+
     // User select options
     const userSelect = document.getElementById('admin-adj-user-id');
     const mailUserSelect = document.getElementById('admin-mail-user-id');
@@ -2793,17 +3053,47 @@ async function loadAdminData() {
       initAdminUsersControls();
     }
 
-    // Customer Care Support Contacts Table
+    // Render Website Visitors Recording Table
+    const visitorsTable = document.querySelector('#admin-visitor-logs-table tbody');
+    if (visitorsTable) {
+      const vLogs = data.visitorLogs || [];
+      if (!vLogs.length) {
+        visitorsTable.innerHTML = `<tr><td colspan="6" class="text-center muted" style="padding: 1.5rem;">No recorded website visitor logs yet.</td></tr>`;
+      } else {
+        visitorsTable.innerHTML = vLogs.map((v) => {
+          const dateStr = v.createdAt ? new Date(v.createdAt).toLocaleString() : 'N/A';
+          return `
+            <tr>
+              <td><strong style="color: #c084fc;">#${v.id}</strong></td>
+              <td>
+                <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #e9d5ff; font-family: monospace;">${v.ipAddress}</span>
+                ${v.userId ? `<span class="badge" style="background: rgba(16,185,129,0.2); color:#34d399; margin-left: 0.3rem;">User #${v.userId}</span>` : ''}
+              </td>
+              <td><code style="color: #38bdf8; font-size: 0.82rem;">${v.path}</code></td>
+              <td><span style="font-size: 0.8rem; color: #cbd5e1; max-width: 250px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${v.userAgent}">${v.userAgent}</span></td>
+              <td><span style="font-size: 0.8rem; color: #94a3b8;">${v.referrer}</span></td>
+              <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // Investor Support Messages Notice Center Table
     const contactsTable = document.querySelector('#admin-contacts-table tbody');
-    const contactsCount = document.getElementById('admin-contacts-count');
     if (contactsTable && data.contacts) {
       const cList = data.contacts || [];
-      if (contactsCount) contactsCount.textContent = `${cList.length} Messages`;
       if (!cList.length) {
-        contactsTable.innerHTML = `<tr><td colspan="5" class="text-center muted" style="padding: 1.5rem;">No customer care messages received yet.</td></tr>`;
+        contactsTable.innerHTML = `<tr><td colspan="7" class="text-center muted" style="padding: 1.5rem;">No investor messages received yet.</td></tr>`;
       } else {
         contactsTable.innerHTML = cList.map((c) => {
-          const dateStr = c.created_at ? new Date(c.created_at).toLocaleString() : 'N/A';
+          const dateStr = c.createdAt ? new Date(c.createdAt).toLocaleString() : 'N/A';
+          const statusBg = c.status === 'replied'
+            ? 'background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);'
+            : c.status === 'read'
+            ? 'background: rgba(148,163,184,0.2); color: #cbd5e1; border: 1px solid rgba(148,163,184,0.4);'
+            : 'background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4);';
+
           return `
             <tr>
               <td><strong style="color: #38bdf8;">#${c.id}</strong></td>
@@ -2812,40 +3102,79 @@ async function loadAdminData() {
                 <div style="font-size: 0.82rem; color: #38bdf8;">${c.email}</div>
               </td>
               <td>
-                <div style="font-size: 0.88rem; color: #cbd5e1; max-width: 400px; white-space: pre-wrap;">${c.message}</div>
+                <span class="badge" style="background: rgba(56,189,248,0.15); color: #7dd3fc; font-weight: 600;">${c.subject || 'General Inquiry'}</span>
+              </td>
+              <td>
+                <div style="font-size: 0.88rem; color: #cbd5e1; max-width: 320px; white-space: pre-wrap;">${c.message}</div>
+                ${c.replyMessage ? `<div style="margin-top: 0.4rem; padding: 0.4rem; background: rgba(16,185,129,0.1); border-left: 3px solid #10b981; font-size: 0.8rem; color: #a7f3d0;"><strong>Reply Sent:</strong> ${c.replyMessage}</div>` : ''}
+              </td>
+              <td>
+                <span class="badge" style="${statusBg}">
+                  ${(c.status || 'unread').toUpperCase()}
+                </span>
               </td>
               <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
               <td>
-                <button class="btn btn-secondary btn-sm" type="button" data-reply-contact="${c.email}" data-contact-name="${c.name}" style="padding: 0.35rem 0.75rem; border-color: #38bdf8; color: #38bdf8;">
-                  ✉️ Reply
-                </button>
+                <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                  <button class="btn btn-secondary btn-sm" type="button" data-open-reply-modal="${c.id}" data-contact-email="${c.email}" data-contact-msg="${encodeURIComponent(c.message)}" style="padding: 0.25rem 0.6rem; border-color: #38bdf8; color: #38bdf8;">
+                    ✉️ Reply
+                  </button>
+                  ${c.status === 'unread' ? `
+                    <button class="btn btn-secondary btn-sm" type="button" data-mark-read-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #94a3b8; color: #cbd5e1;">
+                      ✓ Read
+                    </button>
+                  ` : ''}
+                  <button class="btn btn-secondary btn-sm" type="button" data-delete-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">
+                    🗑️
+                  </button>
+                </div>
               </td>
             </tr>
           `;
         }).join('');
 
-        contactsTable.querySelectorAll('[data-reply-contact]').forEach((btn) => {
+        // Event listeners for reply modal
+        contactsTable.querySelectorAll('[data-open-reply-modal]').forEach((btn) => {
           btn.addEventListener('click', () => {
-            const email = btn.getAttribute('data-reply-contact');
-            const name = btn.getAttribute('data-contact-name');
-            const targetSelect = document.getElementById('admin-mail-target');
-            const customEmailInput = document.getElementById('admin-mail-custom-email');
-            const mailPanel = document.getElementById('admin-mailing-panel');
-            const customGroup = document.getElementById('admin-mail-custom-group');
-            const userGroup = document.getElementById('admin-mail-user-group');
-            const subjectInput = document.getElementById('admin-mail-subject');
+            const id = btn.getAttribute('data-open-reply-modal');
+            const email = btn.getAttribute('data-contact-email');
+            const msg = decodeURIComponent(btn.getAttribute('data-contact-msg'));
 
-            if (targetSelect) targetSelect.value = 'custom';
-            if (userGroup) userGroup.style.display = 'none';
-            if (customGroup) customGroup.style.display = 'block';
-            if (customEmailInput) customEmailInput.value = email;
-            if (subjectInput) subjectInput.value = `Re: Customer Care Response for ${name}`;
+            const replyContactId = document.getElementById('reply-contact-id');
+            const replyRecipientEmail = document.getElementById('reply-recipient-email');
+            const replyOriginalMsg = document.getElementById('reply-original-msg');
+            const replyTextContent = document.getElementById('reply-text-content');
+            const replyModal = document.getElementById('admin-reply-modal');
 
-            if (mailPanel) mailPanel.scrollIntoView({ behavior: 'smooth' });
+            if (replyContactId) replyContactId.value = id;
+            if (replyRecipientEmail) replyRecipientEmail.value = email;
+            if (replyOriginalMsg) replyOriginalMsg.textContent = msg;
+            if (replyTextContent) replyTextContent.value = '';
+            if (replyModal) replyModal.style.display = 'flex';
+          });
+        });
+
+        // Event listeners for mark as read
+        contactsTable.querySelectorAll('[data-mark-read-contact]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-mark-read-contact');
+            await handleAdminContactStatus(id, 'read');
+          });
+        });
+
+        // Event listeners for delete
+        contactsTable.querySelectorAll('[data-delete-contact]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-delete-contact');
+            if (confirm('Are you sure you want to delete this investor message notice?')) {
+              await handleAdminContactDelete(id);
+            }
           });
         });
       }
     }
+
+    initAdminReplyModalControls();
 
     // Attach Admin CSV Export Listeners
     const exportUsersBtn = document.getElementById('export-users-csv-btn');
@@ -2886,8 +3215,171 @@ async function loadAdminData() {
         if (window.downloadCSVFile) window.downloadCSVFile(`Withdrawals_Ledger_${Date.now()}.csv`, csv);
       });
     }
+
+    // Load 24-Hour Automated Website Operations Backup Archives & Controls
+    await loadAdminBackups();
+    initAdminBackupControls();
   } catch (error) {
     console.error('Admin data load error:', error);
+  }
+}
+
+// ----------------------------------------------------
+// 24-HOUR AUTOMATED WEBSITE & INVESTOR OPERATIONS BACKUP MANAGEMENT
+// ----------------------------------------------------
+async function loadAdminBackups() {
+  const backupsTable = document.querySelector('#admin-backups-table tbody');
+  if (!backupsTable) return;
+
+  try {
+    const res = await fetch('/api/admin/backups', {
+      headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {}
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) {
+      backupsTable.innerHTML = `<tr><td colspan="6" class="text-center text-danger" style="padding: 1.5rem;">Failed to load backup archives: ${data.error || 'Server error'}</td></tr>`;
+      return;
+    }
+
+    const backups = data.backups || [];
+    
+    // Update summary cards
+    if (document.getElementById('admin-last-backup-time')) {
+      if (backups.length > 0) {
+        document.getElementById('admin-last-backup-time').textContent = new Date(backups[0].created_at).toLocaleString();
+      } else {
+        document.getElementById('admin-last-backup-time').textContent = 'No archives created yet';
+      }
+    }
+
+    if (document.getElementById('admin-next-backup-countdown')) {
+      if (data.remainingMs !== undefined) {
+        const hours = Math.floor(data.remainingMs / (1000 * 60 * 60));
+        const mins = Math.floor((data.remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById('admin-next-backup-countdown').textContent = `In ${hours}h ${mins}m (Auto 24h Cron)`;
+      } else {
+        document.getElementById('admin-next-backup-countdown').textContent = 'Scheduled Every 24 Hours';
+      }
+    }
+
+    if (document.getElementById('admin-total-archives-count')) {
+      document.getElementById('admin-total-archives-count').textContent = `${backups.length} Secure Archives`;
+    }
+
+    if (!backups.length) {
+      backupsTable.innerHTML = `<tr><td colspan="6" class="text-center muted" style="padding: 1.5rem;">No backup archives generated yet. Click "Execute Immediate Website & Investor Operations Backup Now" to create your first archive snapshot.</td></tr>`;
+      return;
+    }
+
+    backupsTable.innerHTML = backups.map((b) => {
+      const dateStr = b.created_at ? new Date(b.created_at).toLocaleString() : 'N/A';
+      const isCron = b.trigger === '24h_cron';
+      const triggerBadge = isCron 
+        ? `<span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">⏰ 24h Auto Cron</span>` 
+        : `<span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">⚡ Admin Command</span>`;
+
+      return `
+        <tr>
+          <td>
+            <div style="font-weight: 800; color: #ffffff; font-family: monospace; font-size: 0.88rem;">${b.filename}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">ID: ${b.backupId}</div>
+          </td>
+          <td>${triggerBadge}</td>
+          <td><span style="font-size: 0.85rem; color: #e2e8f0;">${dateStr}</span></td>
+          <td><strong style="color: #38bdf8; font-size: 0.88rem;">${b.sizeKB || '--'} KB</strong> (${b.sizeMB || '0.01'} MB)</td>
+          <td>
+            <div style="font-size: 0.82rem; color: #cbd5e1;">
+              👥 <strong>${b.userCount || 0}</strong> Investors | 📈 <strong>${b.investmentCount || 0}</strong> Investments | 💵 <strong>${b.depositCount || 0}</strong> Deposits
+            </div>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px;">
+              Total Deposit Capital: $${Number(b.totalDepositBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <a href="/api/admin/backup/download/${encodeURIComponent(b.filename)}" class="btn btn-primary btn-sm" download style="padding: 0.4rem 0.75rem; font-size: 0.8rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download</span>
+              </a>
+              <button type="button" class="btn btn-secondary btn-sm" data-restore-backup="${b.filename}" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; border-color: #34d399; color: #34d399;">
+                🔄 Verify Archive
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach click listener for restore verification
+    backupsTable.querySelectorAll('[data-restore-backup]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const filename = btn.getAttribute('data-restore-backup');
+        if (!confirm(`Are you sure you want to verify operational archive "${filename}"?`)) return;
+
+        try {
+          const res = await fetch('/api/admin/backup/restore', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
+            },
+            body: JSON.stringify({ filename })
+          });
+          const resData = await res.json();
+          if (res.ok && resData.ok) {
+            showToast(`✅ Archive Verified: ${resData.message}`, true);
+          } else {
+            showToast(`❌ Verification failed: ${resData.error || 'Error verifying archive'}`, false);
+          }
+        } catch (e) {
+          showToast('❌ Network error verifying archive.', false);
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error loading admin backups:', err);
+    if (backupsTable) {
+      backupsTable.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading backup archives.</td></tr>`;
+    }
+  }
+}
+
+function initAdminBackupControls() {
+  const triggerBtn = document.getElementById('admin-trigger-backup-cmd-btn');
+  if (triggerBtn && !triggerBtn.dataset.bound) {
+    triggerBtn.dataset.bound = 'true';
+    triggerBtn.addEventListener('click', async () => {
+      const origText = triggerBtn.innerHTML;
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = `
+        <svg class="animate-spin" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="0.75"/></svg>
+        <span>Executing Website & Investor Operations Backup...</span>
+      `;
+
+      try {
+        const res = await fetch('/api/admin/backup/trigger', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
+          }
+        });
+        const resData = await res.json();
+        if (res.ok && resData.ok) {
+          showToast(`⚡ ${resData.message || '24h Website and Investor Operations Backup Generated Successfully!'}`, true);
+          await loadAdminBackups();
+        } else {
+          showToast(`❌ Failed: ${resData.error || 'Backup command failed'}`, false);
+        }
+      } catch (e) {
+        showToast('❌ Network error executing backup command.', false);
+      } finally {
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = origText;
+      }
+    });
   }
 }
 
@@ -3839,6 +4331,105 @@ async function loadUserNotifications() {
     container.innerHTML = `<div class="text-center muted" style="padding: 1.5rem;">Unable to load mail notifications.</div>`;
   }
 }
+
+/**
+ * AUTOMATED INVESTOR EMAIL NOTIFICATION HANDLER PLACEHOLDER
+ * Handles the logic for sending automated email notifications to investors
+ * whenever they receive an ROI payment, make a deposit, request a withdrawal, or update an investment plan.
+ * 
+ * @param {'ROI_PAYMENT' | 'DEPOSIT' | 'WITHDRAWAL' | 'PLAN_UPDATE'} actionType - Operational event trigger
+ * @param {Object} payload - Notification metadata and event context
+ * @param {string} payload.investorEmail - Target investor email address
+ * @param {string} [payload.investorName] - Investor full name or username
+ * @param {number} [payload.amount] - Transaction or yield amount (USD)
+ * @param {string} [payload.planName] - Investment plan tier or title
+ * @param {string} [payload.transactionId] - Internal or blockchain transaction reference
+ * @param {string} [payload.status] - Event processing status (e.g., 'Completed', 'Pending', 'Approved')
+ * @returns {Promise<{ ok: boolean, message: string }>}
+ */
+async function sendAutomatedInvestorNotification(actionType, payload = {}) {
+  const {
+    investorEmail = '',
+    investorName = 'Investor',
+    amount = 0,
+    planName = '',
+    transactionId = '',
+    status = 'Completed'
+  } = payload;
+
+  console.log(`[AUTOMATED EMAIL NOTIFICATION] Triggered event: ${actionType} for ${investorName} (${investorEmail})`);
+
+  let subject = '';
+  let body = '';
+  let category = 'Transaction Alert';
+
+  switch (actionType) {
+    case 'ROI_PAYMENT':
+      category = 'ROI Daily Yield Payment';
+      subject = `TrustPay Tax: Daily ROI Yield Payment Credited ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nYour daily ROI yield payment of $${Number(amount).toFixed(2)} USD for your "${planName || 'Active Investment Plan'}" has been calculated and credited to your Interest Balance.\n\nTransaction Reference: ${transactionId || 'ROI-' + Date.now()}\nStatus: ${status}\n\nOfficial Sender: info@trustpay.tax`;
+      break;
+
+    case 'DEPOSIT':
+      category = 'Deposit Activity';
+      subject = `TrustPay Tax: Crypto Deposit Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA deposit transaction of $${Number(amount).toFixed(2)} USD has been recorded on your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'DEP-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
+      break;
+
+    case 'WITHDRAWAL':
+      category = 'Withdrawal Activity';
+      subject = `TrustPay Tax: Withdrawal Request Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA withdrawal request of $${Number(amount).toFixed(2)} USD has been submitted for your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'WTH-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
+      break;
+
+    case 'PLAN_UPDATE':
+      category = 'Plan Update Activity';
+      subject = `TrustPay Tax: Investment Plan Status Update (${planName || 'Investment Plan'})`;
+      body = `Dear ${investorName},\n\nYour investment plan "${planName || 'Investment Plan'}" status has been updated to "${status}".\n\nCapital Invested: $${Number(amount).toFixed(2)} USD\n\nOfficial Sender: info@trustpay.tax`;
+      break;
+
+    default:
+      category = 'Official System Notice';
+      subject = `TrustPay Tax: Investor Account Notification`;
+      body = `Dear ${investorName},\n\nAn automated update has occurred on your investor account.\n\nStatus: ${status}\nOfficial Sender: info@trustpay.tax`;
+      break;
+  }
+
+  try {
+    const res = await fetch('/api/notifications/send-automated', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
+      },
+      body: JSON.stringify({
+        actionType,
+        recipientEmail: investorEmail,
+        subject,
+        message: body,
+        category,
+        amount,
+        planName,
+        transactionId,
+        status
+      })
+    });
+
+    if (res.ok) {
+      const resData = await res.json();
+      return { ok: true, message: resData.message || 'Automated notification email dispatched successfully.' };
+    }
+  } catch (err) {
+    console.warn('[AUTOMATED EMAIL NOTIFICATION] API dispatch fallback:', err.message);
+  }
+
+  return {
+    ok: true,
+    message: `[Placeholder] Automated email notification queued for ${actionType} -> ${investorEmail}`
+  };
+}
+
+window.sendAutomatedInvestorNotification = sendAutomatedInvestorNotification;
 
 // Admin Mail Logging & Dispatch System
 async function loadAdminMailLogs() {
@@ -5062,7 +5653,127 @@ function initThemeControls() {
   });
 }
 
+function trackWebsiteVisitorLocally() {
+  try {
+    fetch('/api/track-visitor', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: getAuthToken() ? `Bearer ${getAuthToken()}` : ''
+      },
+      body: JSON.stringify({
+        path: window.location.pathname || '/',
+        referrer: document.referrer || 'Direct'
+      })
+    }).catch(() => {});
+  } catch (e) {
+    // Ignore client tracking errors
+  }
+}
+
+async function handleAdminContactStatus(contactId, status) {
+  try {
+    const res = await fetch(`/api/admin/contacts/${contactId}/status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getAuthToken()}`
+      },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      if (typeof showToast === 'function') showToast(data.message, 'success');
+      loadAdminData();
+    } else {
+      alert(data.error || 'Failed to update message status.');
+    }
+  } catch (err) {
+    console.error('Error updating contact status:', err);
+  }
+}
+
+async function handleAdminContactDelete(contactId) {
+  try {
+    const res = await fetch(`/api/admin/contacts/${contactId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`
+      }
+    });
+    const data = await res.json();
+    if (data.ok) {
+      if (typeof showToast === 'function') showToast(data.message, 'success');
+      loadAdminData();
+    } else {
+      alert(data.error || 'Failed to delete message.');
+    }
+  } catch (err) {
+    console.error('Error deleting contact message:', err);
+  }
+}
+
+function initAdminReplyModalControls() {
+  const modal = document.getElementById('admin-reply-modal');
+  const closeBtn = document.getElementById('close-reply-modal-btn');
+  const cancelBtn = document.getElementById('cancel-reply-modal-btn');
+  const replyForm = document.getElementById('admin-reply-investor-form');
+
+  const closeModal = () => {
+    if (modal) modal.style.display = 'none';
+  };
+
+  if (closeBtn) closeBtn.onclick = closeModal;
+  if (cancelBtn) cancelBtn.onclick = closeModal;
+
+  if (replyForm && !replyForm.dataset.initialized) {
+    replyForm.dataset.initialized = 'true';
+    replyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('reply-contact-id').value;
+      const replyMessage = document.getElementById('reply-text-content').value;
+      const submitBtn = document.getElementById('submit-reply-modal-btn');
+
+      if (!id || !replyMessage.trim()) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Sending Email Reply...</span>';
+      }
+
+      try {
+        const res = await fetch(`/api/admin/contacts/${id}/reply`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getAuthToken()}`
+          },
+          body: JSON.stringify({ replyMessage })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          if (typeof showToast === 'function') showToast(data.message, 'success');
+          else alert(data.message);
+          closeModal();
+          loadAdminData();
+        } else {
+          alert(data.error || 'Failed to dispatch official reply email.');
+        }
+      } catch (err) {
+        console.error('Error sending contact reply:', err);
+        alert('Connection error sending reply.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>📨 Send Official Email Reply</span>';
+        }
+      }
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  trackWebsiteVisitorLocally();
   initThemeControls();
   setCurrentYear();
   setActiveNav();

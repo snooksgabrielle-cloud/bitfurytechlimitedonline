@@ -18,25 +18,61 @@
     </script>
   </head>
   <body>
-    <header>
+    <header class="investor-header">
       <div class="container navbar">
-        <a href="index.html" class="brand">
+        <a href="dashboard.html" class="brand">
           <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
-          <span><span class="brand-mark">Bit</span>furytech</span>
+          <span><span class="brand-mark">Bit</span>furytech <span class="badge badge-portal-header">PORTAL</span></span>
         </a>
-        <nav class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="investment.html">Public Plans</a>
-          <a href="market.html" data-i18n="nav_markets">Markets</a>
-          <a href="contact.html" data-i18n="nav_contact">Support</a>
-          <button type="button" class="theme-toggle-btn" aria-label="Switch Color Theme" title="Toggle Dashboard Theme">
-            <span class="theme-toggle-icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            </span>
-            <span class="theme-toggle-label">Navy Theme</span>
+
+        <!-- Investor Portal Header Nav Bar -->
+        <nav class="nav-links investor-nav-links">
+          <button type="button" class="investor-nav-item active" data-tab="overview">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
           </button>
-          <button class="btn btn-secondary" data-logout data-i18n="nav_logout">Logout</button>
+          <button type="button" class="investor-nav-item" data-tab="deposit">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Deposit
+          </button>
+          <button type="button" class="investor-nav-item" data-tab="withdraw">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Withdraw
+          </button>
+          <button type="button" class="investor-nav-item" data-tab="active-investments">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Investments
+          </button>
+          <button type="button" class="investor-nav-item" data-tab="plans">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            New Plan
+          </button>
+          <button type="button" class="investor-nav-item" data-tab="transactions">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            History
+          </button>
+          <button type="button" class="investor-nav-item" data-tab="support">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Support
+          </button>
         </nav>
+
+        <div class="investor-header-actions" style="display: flex; gap: 0.6rem; align-items: center;">
+          <button type="button" class="theme-toggle-btn" style="padding: 0.4rem 0.7rem; font-size: 0.78rem;" aria-label="Switch Theme">
+            <span class="theme-toggle-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <span class="theme-toggle-label">Navy</span>
+          </button>
+
+          <a href="admin.html" id="header-admin-link" class="btn btn-secondary btn-sm" style="display: none; color: #c084fc; border-color: #c084fc; font-weight: 700; padding: 0.35rem 0.7rem; font-size: 0.78rem;">
+            Admin Portal
+          </a>
+
+          <button class="btn btn-secondary btn-sm investor-logout-btn" data-logout type="button">
+            Logout
+          </button>
+        </div>
       </div>
     </header>
 
@@ -386,33 +422,6 @@
             </div>
           </div>
 
-          <!-- Portfolio Growth Analytics Chart Panel -->
-          <div class="panel" style="margin-bottom: 1.5rem;">
-            <div class="panel-header">
-              <div>
-                <h3 style="margin: 0;">Portfolio Performance Analytics</h3>
-                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.85rem;">Daily returns & cumulative portfolio value progression</p>
-              </div>
-              <div class="chart-timeframe-selector" id="chart-timeframe-btns" style="display: flex; gap: 0.3rem; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 10px; border: 1px solid var(--border);">
-                <button class="btn-timeframe active" data-timeframe="7D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: rgba(16, 185, 129, 0.25); color: #34d399; font-weight: 700; font-size: 0.78rem; cursor: pointer;">7D</button>
-                <button class="btn-timeframe" data-timeframe="30D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">30D</button>
-                <button class="btn-timeframe" data-timeframe="90D" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">90D</button>
-                <button class="btn-timeframe" data-timeframe="1Y" style="padding: 0.3rem 0.7rem; border: none; border-radius: 6px; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.78rem; cursor: pointer;">1Y</button>
-              </div>
-            </div>
-
-            <div class="portfolio-chart-container" style="position: relative; height: 210px; width: 100%; margin-top: 1rem; background: rgba(0,0,0,0.25); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); padding: 12px;">
-              <svg id="portfolio-growth-chart" width="100%" height="100%" viewBox="0 0 600 180" preserveAspectRatio="none" style="overflow: visible;">
-                <!-- Rendered dynamically via JS -->
-              </svg>
-            </div>
-
-            <div class="chart-legend-row" style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 0.8rem; font-size: 0.82rem; color: var(--muted);">
-              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #34d399; display: inline-block;"></span> Total Portfolio Value</span>
-              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #38bdf8; display: inline-block;"></span> Interest Yields</span>
-              <span style="display: flex; align-items: center; gap: 0.4rem;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #a855f7; display: inline-block;"></span> Deposit Wallet</span>
-            </div>
-          </div>
 
           <div class="panel">
             <div class="panel-header">
@@ -688,7 +697,7 @@
               </div>
 
               <!-- 5. PRIME EXECUTIVE PLAN -->
-              <div class="dash-plan-card" style="grid-column: span 2; border-color: rgba(91, 215, 255, 0.5); background: linear-gradient(135deg, rgba(14, 28, 56, 0.95), rgba(8, 16, 34, 0.98));">
+              <div class="dash-plan-card" style="border-color: rgba(91, 215, 255, 0.5); background: linear-gradient(135deg, rgba(14, 28, 56, 0.95), rgba(8, 16, 34, 0.98));">
                 <div class="dash-plan-badge badge-premium">VIP Institutional</div>
                 <div class="dash-plan-header">
                   <span class="plan-cat">Bespoke Sovereign & VIP Desk Segment</span>
@@ -696,7 +705,7 @@
                   <div class="plan-return-rate" style="font-size: 2rem;">3.20% <span>/ Fixed Daily</span></div>
                   <div class="plan-sub-rate">96.0% Estimated Monthly Yield • VIP Desk Oversight</div>
                 </div>
-                <div class="dash-plan-features" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem;">
+                <div class="dash-plan-features">
                   <div class="feature-item"><span>Segment Work:</span> <strong>Sovereign Debt Arbitrage & OTC Liquidity</strong></div>
                   <div class="feature-item"><span>Min Deposit:</span> <strong>$100,000.00</strong></div>
                   <div class="feature-item"><span>Max Deposit:</span> <strong>$1,000,000.00</strong></div>
@@ -1149,9 +1158,31 @@
         <div class="tab-content" id="tab-profile">
           <div class="panel">
             <h2>Investor Profile Settings</h2>
-            <p class="muted">Manage your personal account details, contact information, and default crypto withdrawal addresses.</p>
+            <p class="muted">Manage your personal account details, profile picture, contact information, and default crypto withdrawal addresses.</p>
 
             <form id="profile-settings-form" class="deposit-form-styled">
+              <!-- Personal Profile Photo Upload Section -->
+              <div class="profile-avatar-upload-card" style="display: flex; align-items: center; gap: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <div class="profile-avatar-preview-container" style="position: relative; width: 88px; height: 88px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); border: 2.5px solid #38bdf8; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+                  <img id="prof-avatar-img-preview" src="" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+                  <div id="prof-avatar-fallback" style="font-size: 2.2rem; font-weight: 800; color: #ffffff;">I</div>
+                </div>
+                <div style="flex: 1; min-width: 220px;">
+                  <h4 style="margin: 0 0 0.25rem; color: #ffffff; font-size: 1.05rem; font-weight: 700;">Personal Profile Photo</h4>
+                  <p class="muted" style="margin: 0 0 0.8rem; font-size: 0.82rem; line-height: 1.4;">Upload a personal avatar photo (PNG, JPG, or WebP). Your profile photo will be displayed across your investor dashboard header and account desk.</p>
+                  <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+                    <label for="prof-avatar-file-input" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; margin: 0;">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <span>Upload Profile Photo</span>
+                    </label>
+                    <input type="file" id="prof-avatar-file-input" accept="image/*" style="display: none;" />
+                    <button type="button" id="remove-profile-photo-btn" class="btn btn-secondary" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; display: none;">
+                      Remove Photo
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="prof-fullname">Full Name</label>
@@ -1166,7 +1197,31 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="prof-phone">Mobile Phone</label>
-                  <input type="tel" id="prof-phone" placeholder="+1 (555) 000-1234" />
+                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <select id="prof-country-code" style="width: 125px; min-width: 115px; padding: 0.75rem 0.5rem; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-weight: 600; font-size: 0.88rem; cursor: pointer;">
+                      <option value="+1">🇺🇸 +1 (US)</option>
+                      <option value="+44">🇬🇧 +44 (UK)</option>
+                      <option value="+1">🇨🇦 +1 (CA)</option>
+                      <option value="+61">🇦🇺 +61 (AU)</option>
+                      <option value="+49">🇩🇪 +49 (DE)</option>
+                      <option value="+33">🇫🇷 +33 (FR)</option>
+                      <option value="+234">🇳🇬 +234 (NG)</option>
+                      <option value="+91">🇮🇳 +91 (IN)</option>
+                      <option value="+971">🇦🇪 +971 (AE)</option>
+                      <option value="+65">🇸🇬 +65 (SG)</option>
+                      <option value="+81">🇯🇵 +81 (JP)</option>
+                      <option value="+55">🇧🇷 +55 (BR)</option>
+                      <option value="+52">🇲🇽 +52 (MX)</option>
+                      <option value="+27">🇿🇦 +27 (ZA)</option>
+                      <option value="+34">🇪🇸 +34 (ES)</option>
+                      <option value="+39">🇮🇹 +39 (IT)</option>
+                      <option value="+31">🇳🇱 +31 (NL)</option>
+                      <option value="+41">🇨🇭 +41 (CH)</option>
+                      <option value="+46">🇸🇪 +46 (SE)</option>
+                      <option value="+82">🇰🇷 +82 (KR)</option>
+                    </select>
+                    <input type="tel" id="prof-phone" placeholder="(555) 000-1234" style="flex: 1;" />
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="prof-country">Country of Residence</label>

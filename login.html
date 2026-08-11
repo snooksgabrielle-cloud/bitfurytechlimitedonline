@@ -30,17 +30,59 @@
     <main class="container section">
       <div class="card form-card">
         <div class="eyebrow" data-i18n="secure_access">Secure access</div>
-        <h1 data-i18n="login_heading">Login to your account</h1>
-        <p class="muted" data-i18n="login_subtitle">Use your email and password to continue into your dashboard or admin workspace.</p>
+        <h1 data-i18n="login_heading">Login to your investor workspace</h1>
+        <p class="muted" data-i18n="login_subtitle">Enter your username or email address and password to log in to your portal or admin workspace.</p>
         <form id="auth-form">
-          <label for="email">Email address</label>
-          <input id="email" type="email" placeholder="you@example.com" required />
-          <label for="password">Password</label>
-          <input id="password" type="password" placeholder="••••••••" required />
-          <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 0.5rem;">Log In to Dashboard</button>
+          <label for="email">Username or Email address</label>
+          <input id="email" type="text" placeholder="Enter username or email address" required autocomplete="username" />
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; margin-top: 0.8rem;">
+            <label for="password" style="margin-bottom: 0;">Password</label>
+            <a href="javascript:void(0)" id="toggle-forgot-pass-btn" style="font-size: 0.85rem; color: #38bdf8; text-decoration: none; font-weight: 700;">Forgot Password?</a>
+          </div>
+          <input id="password" type="password" placeholder="••••••••" required autocomplete="current-password" />
+          
+          <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 1rem;">Log In to Portal</button>
         </form>
 
         <p class="muted" style="margin-top: 1rem;">Need an account? <a href="register.html" data-i18n="nav_register">Register</a></p>
+
+        <!-- FORGOTTEN PASSWORD CARD (Hidden by default, toggles on click) -->
+        <div id="forgot-password-card" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+            <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🔑</span> <span>Reset Forgotten Password</span>
+            </h3>
+            <button type="button" id="close-forgot-pass-btn" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+          </div>
+          <p class="muted" style="font-size: 0.88rem; margin-bottom: 1rem;">Enter your registered username or email address to receive a 6-digit verification code.</p>
+
+          <!-- Step 1: Request Code Form -->
+          <form id="request-reset-code-form">
+            <label for="reset-identifier">Registered Username or Email</label>
+            <input id="reset-identifier" type="text" placeholder="e.g. john_investor or you@example.com" required style="margin-bottom: 0.8rem;" />
+            <button type="submit" id="send-code-btn" class="btn btn-secondary" style="width: 100%; border-color: #38bdf8; color: #38bdf8; font-weight: 700;">
+              📩 Send Password Reset Code
+            </button>
+          </form>
+
+          <!-- Step 2: Verification Code & New Password Form (Hidden initially) -->
+          <form id="confirm-reset-password-form" style="display: none; margin-top: 1rem;">
+            <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; color: #38bdf8;" id="reset-code-sent-msg">
+              A 6-digit code was sent to your email. Check your inbox and enter it below.
+            </div>
+
+            <label for="reset-code">6-Digit Verification Code</label>
+            <input id="reset-code" type="text" placeholder="e.g. 582910" required maxlength="6" style="font-family: monospace; letter-spacing: 3px; font-size: 1.1rem; text-align: center;" />
+
+            <label for="new-password">New Password (min 6 characters)</label>
+            <input id="new-password" type="password" placeholder="••••••••" required minlength="6" />
+
+            <button type="submit" id="confirm-reset-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.8rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; font-weight: 800;">
+              ✅ Reset Password &amp; Update Account
+            </button>
+          </form>
+        </div>
       </div>
     </main>
 

@@ -7,42 +7,86 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
+    <header class="admin-header">
       <div class="container navbar">
         <a href="index.html" class="brand">
           <img src="logo.svg" alt="Bitfurytech Logo" class="brand-logo-img" />
-          <span><span class="brand-mark">Bit</span>furytech <span class="badge" style="background: rgba(16,185,129,0.2); color:#34d399; font-size:0.7rem;">ADMIN</span></span>
+          <span><span class="brand-mark">Bit</span>furytech <span class="badge badge-admin-header">ADMIN COMMAND</span></span>
         </a>
-        <nav class="nav-links">
-          <a href="dashboard.html" data-i18n="nav_dashboard">Investor Client View</a>
-          <a href="investment.html">Public Plans</a>
-          <a href="market.html">Markets</a>
-          <button class="btn btn-secondary" data-logout data-i18n="nav_logout">Logout</button>
+
+        <!-- Executive Admin Header Nav Bar -->
+        <nav class="nav-links admin-nav-links">
+          <a href="#admin-overview" class="admin-nav-item active">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
+          </a>
+          <a href="#admin-users-section" class="admin-nav-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Investors
+          </a>
+          <a href="#admin-queues-section" class="admin-nav-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Approvals
+          </a>
+          <a href="#admin-visitors-section" class="admin-nav-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Visitors &amp; Care
+          </a>
+          <a href="#admin-mailing-panel" class="admin-nav-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Dispatch Mail
+          </a>
+          <a href="#admin-backups-section" class="admin-nav-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Backups
+          </a>
         </nav>
+
+        <div class="admin-header-actions" style="display: flex; gap: 0.6rem; align-items: center;">
+          <a href="dashboard.html" class="btn btn-secondary btn-sm admin-portal-btn">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Client View
+          </a>
+          <button class="btn btn-secondary btn-sm admin-logout-btn" data-logout type="button">
+            Logout
+          </button>
+        </div>
       </div>
     </header>
 
     <main class="container dashboard-shell" data-admin>
       <!-- Sidebar Navigation -->
-      <aside class="panel sidebar">
+      <aside class="panel sidebar admin-ui-box">
         <div class="eyebrow" data-i18n="admin_heading">System Administration</div>
         <h2 style="margin: 0.2rem 0 0.8rem;">Hello, <span data-user-name>Administrator</span></h2>
         <div class="nav-stack">
-          <button class="dash-nav-btn active" type="button">
+          <a href="#admin-overview" class="dash-nav-btn active" style="text-decoration: none;">
             <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
             Admin Overview
-          </button>
-          <a href="dashboard.html" class="dash-nav-btn" style="text-decoration: none;">
+          </a>
+          <a href="#admin-users-section" class="dash-nav-btn" style="text-decoration: none;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Registered Investors
+          </a>
+          <a href="#admin-queues-section" class="dash-nav-btn" style="text-decoration: none;">
             <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Pending Queues
+          </a>
+          <a href="#admin-visitors-section" class="dash-nav-btn" style="text-decoration: none;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Traffic &amp; Investor Messages
+          </a>
+          <a href="#admin-mailing-panel" class="dash-nav-btn" style="text-decoration: none;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Official Email Dispatch
+          </a>
+          <a href="#admin-backups-section" class="dash-nav-btn" style="text-decoration: none;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Operations Backup Center
+          </a>
+          <a href="dashboard.html" class="dash-nav-btn" style="text-decoration: none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem; padding-top: 0.8rem; color: #34d399;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             Switch to Client View
-          </a>
-          <a href="market.html" class="dash-nav-btn" style="text-decoration: none;">
-            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            Market Intelligence
-          </a>
-          <a href="contact.html" class="dash-nav-btn" style="text-decoration: none;">
-            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Client Support
           </a>
           <button class="dash-nav-btn logout-item" data-logout type="button">
             <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -54,11 +98,11 @@
       <!-- Main Admin Content Grid -->
       <section class="dashboard-grid">
         <!-- Admin Header Banner -->
-        <div class="panel" style="border-left: 4px solid #34d399; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(10, 26, 47, 0.7) 100%);">
+        <div class="panel admin-ui-box box-green" id="admin-overview" style="border-left: 4px solid #34d399;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
               <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700; text-transform: uppercase;">Command Portal</span>
-              <h2 style="margin: 0.3rem 0 0.2rem; color: #ffffff;">Institutional Operations & Control Center</h2>
+              <h2 style="margin: 0.3rem 0 0.2rem; color: #ffffff;">Institutional Operations &amp; Control Center</h2>
               <p class="muted" style="margin: 0; font-size: 0.9rem;">Approve deposits, audit withdrawals, manage investor wallets, and execute daily interest distributions.</p>
             </div>
             <button class="btn btn-primary" type="button" id="admin-trigger-profit-btn" style="background: #16a34a; border-color: #22c55e;">
@@ -109,10 +153,30 @@
               <h3 id="admin-pending-withdrawals-count">0</h3>
             </div>
           </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Website Visitors</span>
+              <h3 id="admin-visitors-stat">0 Hits</h3>
+            </div>
+          </div>
+
+          <div class="stat-box green-stat">
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-title">Investor Messages</span>
+              <h3 id="admin-unread-messages-stat">0 Notice</h3>
+            </div>
+          </div>
         </div>
 
         <!-- Institutional System Health & Operational Status Monitor -->
-        <div class="panel" style="border: 1px solid rgba(16, 185, 129, 0.35); background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(13, 27, 42, 0.95) 100%);">
+        <div class="panel admin-ui-box box-green">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
             <div>
               <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">SYSTEM HEALTH &amp; ENGINE MONITOR</span>
@@ -125,7 +189,7 @@
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Node.js Server</span>
                 <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.7rem;">99.99% Uptime</span>
@@ -134,7 +198,7 @@
               <div style="font-size: 0.78rem; color: #34d399; margin-top: 0.2rem;">● Port 3000 Listening</div>
             </div>
 
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">SQLite Storage</span>
                 <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.7rem;">Auto-Lock Ready</span>
@@ -143,7 +207,7 @@
               <div style="font-size: 0.78rem; color: #38bdf8; margin-top: 0.2rem;">● Auto-Sync &amp; Recovery Active</div>
             </div>
 
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Yield Distribution</span>
                 <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-size: 0.7rem;">24h Cycle</span>
@@ -152,7 +216,7 @@
               <div style="font-size: 0.78rem; color: #c084fc; margin-top: 0.2rem;">● Next Payout Cycle Scheduled</div>
             </div>
 
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
                 <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Security Gateway</span>
                 <span class="badge" style="background: rgba(250, 204, 21, 0.2); color: #facc15; font-size: 0.7rem;">AES-256 Auth</span>
@@ -164,12 +228,12 @@
         </div>
 
         <!-- Official Company Mailing & Notification Interface -->
-        <div class="panel" id="admin-mailing-panel" style="border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(13, 27, 42, 0.95) 100%);">
+        <div class="panel admin-ui-box box-blue" id="admin-mailing-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
             <div>
               <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">OFFICIAL SENDER ACTIVE</span>
               <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Institutional Email Notification Dispatcher</h3>
-              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Official Sender & Support Mailbox: <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong></p>
+              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Official Sender &amp; Support Mailbox: <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong></p>
             </div>
             <div style="text-align: right;">
               <span class="badge badge-accent" id="mail-status-badge">info@trustpay.tax Ready</span>
@@ -179,7 +243,7 @@
           <form id="admin-mail-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; align-items: start; margin-top: 1rem;">
             <div class="form-group" style="margin: 0;">
               <label for="admin-mail-target">Recipient Target</label>
-              <select id="admin-mail-target" required style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-mail-target" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="all">📢 All Registered Investors (Broadcast)</option>
                 <option value="user">👤 Specific Investor Account</option>
                 <option value="custom">✉️ Custom Email Address</option>
@@ -188,19 +252,19 @@
 
             <div class="form-group" id="admin-mail-user-group" style="margin: 0; display: none;">
               <label for="admin-mail-user-id">Select Investor</label>
-              <select id="admin-mail-user-id" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-mail-user-id" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="">-- Choose Investor Account --</option>
               </select>
             </div>
 
             <div class="form-group" id="admin-mail-custom-group" style="margin: 0; display: none;">
               <label for="admin-mail-custom-email">Recipient Email Address</label>
-              <input type="email" id="admin-mail-custom-email" placeholder="investor@example.com" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              <input type="email" id="admin-mail-custom-email" placeholder="investor@example.com" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
             </div>
 
             <div class="form-group" style="margin: 0;">
               <label for="admin-mail-category">Notification Type</label>
-              <select id="admin-mail-category" required style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-mail-category" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="Official Announcement">📢 Official Announcement</option>
                 <option value="Profit Yield Update">📈 Profit Yield Update</option>
                 <option value="Security Alert">🛡️ Security Alert</option>
@@ -212,12 +276,12 @@
 
             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
               <label for="admin-mail-subject">Email Subject Line</label>
-              <input type="text" id="admin-mail-subject" required placeholder="e.g. TrustPay Tax: Important Portfolio Update & Profit Statement" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              <input type="text" id="admin-mail-subject" required placeholder="e.g. TrustPay Tax: Important Portfolio Update & Profit Statement" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
             </div>
 
             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
               <label for="admin-mail-message">Notification Message Body</label>
-              <textarea id="admin-mail-message" rows="4" required placeholder="Compose official notification message from info@trustpay.tax..." style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit;"></textarea>
+              <textarea id="admin-mail-message" rows="4" required placeholder="Compose official notification message from info@trustpay.tax..." style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit;"></textarea>
             </div>
 
             <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 1rem;">
@@ -231,46 +295,49 @@
           <!-- Email Logs Table -->
           <div style="margin-top: 1.8rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.2rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-              <h4 style="margin: 0; color: #ffffff;">Email Dispatch & Notification History Log</h4>
+              <h4 style="margin: 0; color: #ffffff;">Email Dispatch &amp; Notification History Log</h4>
               <button class="btn btn-secondary" type="button" id="refresh-mail-logs-btn" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;">🔄 Refresh Log</button>
             </div>
-            <table class="table" id="admin-mail-logs-table">
-              <thead>
-                <tr>
-                  <th>Log ID</th>
-                  <th>Sender</th>
-                  <th>Recipient</th>
-                  <th>Category</th>
-                  <th>Subject</th>
-                  <th>Status</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="7" class="text-center muted">Loading email dispatch history...</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-wrap">
+              <table class="table" id="admin-mail-logs-table">
+                <thead>
+                  <tr>
+                    <th>Log ID</th>
+                    <th>Sender</th>
+                    <th>Recipient</th>
+                    <th>Category</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="7" class="text-center muted">Loading email dispatch history...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <!-- Direct Wallet Adjustment Panel -->
-        <div class="panel">
-          <h3>Direct Investor Balance Adjustment</h3>
-          <p class="muted">Credit or debit any registered investor's Deposit Wallet or Interest Wallet with automatic transaction logging.</p>
+        <div class="panel admin-ui-box">
+          <span class="badge" style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-weight: 700;">DIRECT FUND OPERATIONS</span>
+          <h3 style="margin: 0.3rem 0 0;">Direct Investor Balance Adjustment</h3>
+          <p class="muted" style="margin-top: 0.2rem;">Credit or debit any registered investor's Deposit Wallet or Interest Wallet with automatic transaction logging.</p>
 
           <form id="admin-balance-adj-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end; margin-top: 1rem;">
             <div class="form-group" style="margin: 0;">
               <label for="admin-adj-user-id">Select Investor</label>
-              <select id="admin-adj-user-id" required style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-adj-user-id" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="">-- Choose User Account --</option>
               </select>
             </div>
 
             <div class="form-group" style="margin: 0;">
               <label for="admin-adj-wallet">Target Wallet</label>
-              <select id="admin-adj-wallet" required style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-adj-wallet" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="deposit">Deposit Wallet</option>
                 <option value="interest">Interest Wallet</option>
               </select>
@@ -278,7 +345,7 @@
 
             <div class="form-group" style="margin: 0;">
               <label for="admin-adj-type">Action Type</label>
-              <select id="admin-adj-type" required style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+              <select id="admin-adj-type" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
                 <option value="credit">Credit (+ Add Funds)</option>
                 <option value="debit">Debit (- Deduct Funds)</option>
               </select>
@@ -286,7 +353,7 @@
 
             <div class="form-group" style="margin: 0;">
               <label for="admin-adj-amount">Amount ($)</label>
-              <input type="number" id="admin-adj-amount" min="1" step="0.01" required placeholder="500.00" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              <input type="number" id="admin-adj-amount" min="1" step="0.01" required placeholder="500.00" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
             </div>
 
             <button class="btn btn-primary" type="submit" style="height: 44px; justify-content: center;">
@@ -296,7 +363,7 @@
         </div>
 
         <!-- Admin Crypto Gateway Integration Panel -->
-        <div class="panel" style="border: 1px solid rgba(168, 85, 247, 0.35); background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);">
+        <div class="panel admin-ui-box box-purple">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
             <div>
               <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-weight: 700;">COMPANY CRYPTO GATEWAYS</span>
@@ -318,68 +385,77 @@
           </div>
         </div>
 
-        <!-- Pending Deposits Approval Table -->
-        <div class="panel">
-          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-            <div>
-              <h3 style="margin: 0;">Deposit Approval Queue</h3>
+        <!-- Section Anchor for Pending Queues -->
+        <div id="admin-queues-section" style="scroll-margin-top: 90px; display: grid; gap: 1.5rem;">
+          <!-- Pending Deposits Approval Table -->
+          <div class="panel admin-ui-box">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <div>
+                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15; font-weight: 700;">DEPOSIT QUEUE</span>
+                <h3 style="margin: 0.2rem 0 0;">Deposit Approval Queue</h3>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Pending Action</span>
+                <button class="btn btn-secondary btn-sm" id="export-deposits-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+              </div>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Pending Action</span>
-              <button class="btn btn-secondary btn-sm" id="export-deposits-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+            <div class="table-wrap">
+              <table class="table" id="admin-deposits-table">
+                <thead>
+                  <tr>
+                    <th>ID / User</th>
+                    <th>Method</th>
+                    <th>Reference / Tx</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center muted">Loading deposit requests...</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <table class="table" id="admin-deposits-table">
-            <thead>
-              <tr>
-                <th>ID / User</th>
-                <th>Method</th>
-                <th>Reference / Tx</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="6" class="text-center muted">Loading deposit requests...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <!-- Pending Withdrawals Approval Table -->
-        <div class="panel">
-          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-            <div>
-              <h3 style="margin: 0;">Withdrawal Review Queue</h3>
+          <!-- Pending Withdrawals Approval Table -->
+          <div class="panel admin-ui-box">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <div>
+                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 700;">WITHDRAWAL QUEUE</span>
+                <h3 style="margin: 0.2rem 0 0;">Withdrawal Review Queue</h3>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Pending Action</span>
+                <button class="btn btn-secondary btn-sm" id="export-withdrawals-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+              </div>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Pending Action</span>
-              <button class="btn btn-secondary btn-sm" id="export-withdrawals-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+            <div class="table-wrap">
+              <table class="table" id="admin-withdrawals-table">
+                <thead>
+                  <tr>
+                    <th>ID / User</th>
+                    <th>Source Wallet</th>
+                    <th>Method &amp; Details</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center muted">Loading withdrawal requests...</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <table class="table" id="admin-withdrawals-table">
-            <thead>
-              <tr>
-                <th>ID / User</th>
-                <th>Source Wallet</th>
-                <th>Method & Details</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="6" class="text-center muted">Loading withdrawal requests...</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <!-- Registered User Directory -->
-        <div class="panel" style="border: 1px solid rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(15, 23, 42, 0.95) 100%);">
+        <div class="panel admin-ui-box box-blue" id="admin-users-section" style="scroll-margin-top: 90px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
             <div>
               <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">USER DATABASE DIRECTORY</span>
@@ -437,29 +513,164 @@
           </div>
         </div>
 
-        <!-- Customer Care Inquiries Panel -->
-        <div class="panel" style="border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(13, 27, 42, 0.95) 100%);">
-          <div class="panel-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
+        <!-- REAL-TIME WEBSITE VISITORS ANALYTICS & RECORDING PANEL -->
+        <div class="panel admin-ui-box box-purple" id="admin-visitors-section" style="scroll-margin-top: 90px;">
+          <div class="panel-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
             <div>
-              <h3>🎧 Customer Care Support Messages</h3>
-              <p class="panel-subhead">Live customer inquiries submitted via 24/7 Customer Care floating widget &amp; contact page.</p>
+              <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-weight: 700;">🌐 LIVE VISITOR TRACKER</span>
+              <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Website Visitor Logs &amp; Real-Time Traffic Notice</h3>
+              <p class="panel-subhead" style="margin-top: 0.2rem;">Automated recording of website traffic, page requests, IP addresses, and visitor devices.</p>
             </div>
-            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;" id="admin-contacts-count">0 Messages</span>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-weight: 700;" id="admin-total-visitors-badge">0 Total Visits</span>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;" id="admin-today-visitors-badge">0 Today</span>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;" id="admin-unique-visitors-badge">0 Unique IPs</span>
+            </div>
           </div>
-          <div class="table-wrap">
-            <table class="table" id="admin-contacts-table">
+
+          <div class="table-wrap" style="margin-top: 1rem; max-height: 380px; overflow-y: auto;">
+            <table class="table" id="admin-visitor-logs-table">
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Sender Info</th>
-                  <th>Message Content</th>
-                  <th>Submitted At</th>
-                  <th>Action</th>
+                  <th>Visitor IP Address</th>
+                  <th>Page / Path Visited</th>
+                  <th>User Agent / Device</th>
+                  <th>Referrer Source</th>
+                  <th>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td colspan="5" class="text-center muted">No customer care messages received yet.</td>
+                  <td colspan="6" class="text-center muted">Loading recorded website visitor logs...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- INVESTOR MESSAGES & CUSTOMER CARE NOTICES PANEL -->
+        <div class="panel admin-ui-box box-blue" id="admin-contacts-section" style="scroll-margin-top: 90px; margin-top: 1.5rem;">
+          <div class="panel-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem;">
+            <div>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">📩 INVESTOR MESSAGES</span>
+              <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Investor Support Inquiries &amp; Notice Center</h3>
+              <p class="panel-subhead" style="margin-top: 0.2rem;">Live inquiries &amp; feedback submitted by investors. Reply directly via official system email (info@trustpay.tax).</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 700;" id="admin-unread-messages-badge">0 Unread Notices</span>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;" id="admin-contacts-count">0 Total Messages</span>
+            </div>
+          </div>
+
+          <div class="table-wrap" style="margin-top: 1rem;">
+            <table class="table" id="admin-contacts-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Investor Info</th>
+                  <th>Subject</th>
+                  <th>Message Content</th>
+                  <th>Status Notice</th>
+                  <th>Submitted At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="7" class="text-center muted">No investor messages received yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Reply Modal for Admin Reply to Investor Message -->
+        <div id="admin-reply-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 99999; align-items: center; justify-content: center; padding: 1rem;">
+          <div class="panel" style="max-width: 550px; width: 100%; border: 1px solid #38bdf8; background: #0b1528; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+              <h3 style="margin:0; color:#38bdf8; font-size: 1.15rem;">✉️ Send Official Reply to Investor</h3>
+              <button type="button" id="close-reply-modal-btn" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <form id="admin-reply-investor-form">
+              <input type="hidden" id="reply-contact-id" />
+              <div style="margin-bottom: 0.8rem;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 0.2rem;">Recipient Email</label>
+                <input type="email" id="reply-recipient-email" readonly class="input" style="width: 100%; background: rgba(255,255,255,0.05); color: #e2e8f0;" />
+              </div>
+              <div style="margin-bottom: 0.8rem;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 0.2rem;">Original Investor Inquiry</label>
+                <div id="reply-original-msg" style="padding: 0.6rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.85rem; color: #cbd5e1; max-height: 100px; overflow-y: auto;"></div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 0.2rem;">Official Response Message (sent from info@trustpay.tax)</label>
+                <textarea id="reply-text-content" rows="4" class="input" style="width: 100%; resize: vertical;" placeholder="Type official response here..." required></textarea>
+              </div>
+              <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary" id="cancel-reply-modal-btn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="submit-reply-modal-btn" style="background: #0284c7; border-color: #38bdf8;">
+                  <span>📨 Send Official Email Reply</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 24-HOUR AUTOMATED WEBSITE & INVESTOR OPERATIONS BACKUP CENTER -->
+        <div class="panel admin-ui-box box-green" id="admin-backups-section" style="scroll-margin-top: 90px; margin-top: 1.5rem;">
+          <div class="panel-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 1.2rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
+                <span class="badge" style="background: rgba(16, 185, 129, 0.25); color: #34d399; font-weight: 800;">🟢 AUTOMATED 24H CRON ACTIVE</span>
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">🔒 ENCRYPTED SNAPSHOTS</span>
+              </div>
+              <h2 style="margin: 0; color: #ffffff; font-size: 1.35rem;">🛡️ 24-Hour Automated Website &amp; Investor Operations Backup Center</h2>
+              <p class="muted" style="margin: 0.25rem 0 0; font-size: 0.88rem; line-height: 1.5;">
+                Internal website command center managing 24-hour routine operational backups, investor ledgers, deposit histories, and system configurations.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary" id="admin-trigger-backup-cmd-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; font-weight: 800; padding: 0.75rem 1.25rem; font-size: 0.92rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>⚡ Execute Immediate Website &amp; Investor Operations Backup Now</span>
+            </button>
+          </div>
+
+          <!-- Backup Status Dashboard Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; border-left: 3.5px solid #34d399;">
+              <div class="muted" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">Last Automated Backup</div>
+              <div id="admin-last-backup-time" style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-top: 0.3rem;">Loading...</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; border-left: 3.5px solid #38bdf8;">
+              <div class="muted" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">Next Scheduled 24h Backup</div>
+              <div id="admin-next-backup-countdown" style="font-size: 0.95rem; font-weight: 800; color: #38bdf8; margin-top: 0.3rem;">Calculating...</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; border-left: 3.5px solid #c084fc;">
+              <div class="muted" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">Backup Archives Secured</div>
+              <div id="admin-total-archives-count" style="font-size: 1.1rem; font-weight: 800; color: #c084fc; margin-top: 0.3rem;">0 Archives</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; border-left: 3.5px solid #facc15;">
+              <div class="muted" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">Automated Dispatch Mail</div>
+              <div style="font-size: 0.9rem; font-weight: 800; color: #facc15; margin-top: 0.3rem;">info@trustpay.tax</div>
+            </div>
+          </div>
+
+          <!-- Backup Archives Table -->
+          <div class="table-wrap">
+            <table class="table" id="admin-backups-table">
+              <thead>
+                <tr>
+                  <th>Archive ID &amp; Filename</th>
+                  <th>Trigger Source</th>
+                  <th>Created At</th>
+                  <th>File Size</th>
+                  <th>Snapshot Scope (Investors / Ledgers)</th>
+                  <th>Internal Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="6" class="text-center muted">Loading website operations backup archives...</td>
                 </tr>
               </tbody>
             </table>

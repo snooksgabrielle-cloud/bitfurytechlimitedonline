@@ -35,10 +35,46 @@
         <form id="register-form">
           <label for="fullName">Full name</label>
           <input id="fullName" type="text" placeholder="John Doe" required />
+          
+          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="e.g. johndoe123" required autocomplete="username" />
+
           <label for="email">Email address</label>
           <input id="email" type="email" placeholder="you@example.com" required />
           <label for="password">Password (min. 6 characters)</label>
           <input id="password" type="password" placeholder="••••••••" required minlength="6" />
+          
+          <label for="phone">Mobile Phone Number</label>
+          <div class="phone-input-group" style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+            <select id="countryCode" name="countryCode" style="width: 135px; min-width: 125px; padding: 0.75rem 0.5rem; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-weight: 600; font-size: 0.88rem; cursor: pointer; outline: none;">
+              <option value="+1">🇺🇸 +1 (US)</option>
+              <option value="+44">🇬🇧 +44 (UK)</option>
+              <option value="+1">🇨🇦 +1 (CA)</option>
+              <option value="+61">🇦🇺 +61 (AU)</option>
+              <option value="+49">🇩🇪 +49 (DE)</option>
+              <option value="+33">🇫🇷 +33 (FR)</option>
+              <option value="+234">🇳🇬 +234 (NG)</option>
+              <option value="+91">🇮🇳 +91 (IN)</option>
+              <option value="+971">🇦🇪 +971 (AE)</option>
+              <option value="+65">🇸🇬 +65 (SG)</option>
+              <option value="+81">🇯🇵 +81 (JP)</option>
+              <option value="+55">🇧🇷 +55 (BR)</option>
+              <option value="+52">🇲🇽 +52 (MX)</option>
+              <option value="+27">🇿🇦 +27 (ZA)</option>
+              <option value="+34">🇪🇸 +34 (ES)</option>
+              <option value="+39">🇮🇹 +39 (IT)</option>
+              <option value="+31">🇳🇱 +31 (NL)</option>
+              <option value="+41">🇨🇭 +41 (CH)</option>
+              <option value="+46">🇸🇪 +46 (SE)</option>
+              <option value="+82">🇰🇷 +82 (KR)</option>
+              <option value="+92">🇵🇰 +92 (PK)</option>
+              <option value="+63">🇵🇭 +63 (PH)</option>
+              <option value="+254">🇰🇪 +254 (KE)</option>
+              <option value="+233">🇬🇭 +233 (GH)</option>
+            </select>
+            <input id="phone" type="tel" placeholder="(555) 000-1234" required style="flex: 1; margin-bottom: 0;" />
+          </div>
+
           <label for="account">Account type</label>
           <select id="account">
             <option value="standard">Standard Account</option>
