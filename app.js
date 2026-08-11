@@ -3278,6 +3278,97 @@ async function handleAdminWithdrawalAction(id, action) {
 // ==========================================
 // CRYPTOCURRENCY INTEGRATION PORTALS
 // ==========================================
+window.getCryptoIconSVG = function(coinCode, size = 24) {
+  const code = (coinCode || '').toUpperCase().trim();
+  
+  if (code.includes('BNB') || code === 'BSC') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <rect width="32" height="32" rx="16" fill="#F0B90B"/>
+      <path d="M12.116 14.404L16 10.52L19.884 14.404L22.148 12.14L16 5.992L9.852 12.14L12.116 14.404ZM5.992 16L8.256 13.736L10.52 16L8.256 18.264L5.992 16ZM12.116 17.596L16 21.48L19.884 17.596L22.148 19.86L16 26.008L9.852 19.86L12.116 17.596ZM26.008 16L23.744 18.264L21.48 16L23.744 13.736L26.008 16ZM16 13.592L18.408 16L16 18.408L13.592 16L16 13.592Z" fill="#181A20"/>
+    </svg>`;
+  }
+  if (code.includes('BTC') || code === 'BITCOIN') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+      <path d="M22.28 12.72c.32-2.14-1.31-3.29-3.54-4.06l.72-2.9-1.77-.44-.7 2.82c-.47-.12-.95-.23-1.42-.34l.71-2.84-1.77-.44-.72 2.9c-.38-.09-.77-.18-1.14-.27l-2.44-.61-.47 1.89s1.31.3 1.28.32c.72.18.85.65.83 1.03l-.83 3.33c.05.01.11.03.18.06l-.18-.04-1.16 4.67c-.09.22-.31.55-.82.42.02.03-1.28-.32-1.28-.32l-.88 2.03 2.3.57c.43.11.85.22 1.27.32l-.73 2.94 1.77.44.72-2.9c.48.13.95.25 1.41.36l-.72 2.89 1.77.44.73-2.92c3.02.57 5.29.34 6.25-2.39.77-2.2-.04-3.47-1.63-4.29 1.16-.27 2.03-1.03 2.27-2.61zm-4.06 5.7c-.55 2.21-4.25 1.02-5.45.72l.97-3.9c1.2.3 5.04.89 4.48 3.18zm.55-5.74c-.5 2.01-3.59.99-4.59.74l.88-3.54c1 .25 4.22.72 3.71 2.80z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('ETH') || code === 'ETHEREUM') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#627EEA"/>
+      <path d="M16 4v8.87l7.49 3.35L16 4z" fill="#FFF" fill-opacity=".6"/>
+      <path d="M16 4L8.51 16.22 16 12.87V4z" fill="#FFF"/>
+      <path d="M16 21.96v6.03l7.5-10.42L16 21.96z" fill="#FFF" fill-opacity=".6"/>
+      <path d="M16 27.99v-6.03l-7.49-4.39L16 27.99z" fill="#FFF"/>
+      <path d="M16 20.57l7.49-4.35L16 12.88v7.69z" fill="#FFF" fill-opacity=".2"/>
+      <path d="M8.51 16.22L16 20.57v-7.69l-7.49 3.34z" fill="#FFF" fill-opacity=".6"/>
+    </svg>`;
+  }
+  if (code.includes('USDT') || code === 'TETHER') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+      <path d="M17.922 17.383c-.115.008-.657.04-1.922.04-1.07 0-1.754-.03-1.935-.04-3.56-.16-6.222-.822-6.222-1.63 0-.923 3.486-1.67 7.842-1.67 4.356 0 7.842.747 7.842 1.67 0 .808-2.662 1.47-6.222 1.631zm0-3.664V11.21h5.36V7.472H8.718v3.738h5.36v2.509c-4.834.212-8.47 1.34-8.47 2.72 0 1.38 3.636 2.508 8.47 2.72v6.234h3.844V20.15c4.83-.212 8.463-1.34 8.463-2.72 0-1.38-3.633-2.508-8.463-2.72z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('USDC')) {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#2775CA"/>
+      <path d="M16 6a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1.5-12.5h3a2.5 2.5 0 010 5h-3v-5zm0 6.5h3.5a2.5 2.5 0 010 5H14.5v-5z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('SOL') || code === 'SOLANA') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#111827"/>
+      <path d="M9.13 20.35a.57.57 0 01.4-.17h12.82c.48 0 .73.57.4.9l-2.28 2.29a.57.57 0 01-.4.17H7.25c-.48 0-.73-.58-.4-.91l2.28-2.28zm0-8.7a.57.57 0 01.4-.17h12.82c.48 0 .73.58.4.9l-2.28 2.29a.57.57 0 01-.4.17H7.25c-.48 0-.73-.57-.4-.9l2.28-2.29zm13.62 4.35a.57.57 0 01-.4.17H9.53c-.48 0-.73-.58-.4-.91l2.28-2.28a.57.57 0 01.4-.17h12.82c.48 0 .73.57.4.9l-2.28 2.29z" fill="url(#sol_grad_${size})"/>
+      <defs>
+        <linearGradient id="sol_grad_${size}" x1="6.8" y1="23.5" x2="25.2" y2="11.5" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#00FFA3"/>
+          <stop offset="1" stop-color="#DC1FFF"/>
+        </linearGradient>
+      </defs>
+    </svg>`;
+  }
+  if (code.includes('TRX') || code === 'TRON') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#FF0013"/>
+      <path d="M22.8 10.2L8.5 7l6.8 17.8L22.8 10.2zm-12.1-.8l10.2 2.3-5.2 6.5-5-8.8zm1.2 11.2l3.4-11.8 3.8 6.7-7.2 5.1z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('LTC') || code === 'LITECOIN') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#345D9D"/>
+      <path d="M15.3 18.2l1.1-4.2-2.1.8.5-1.8 2.1-.8 1.5-5.8h3l-1.5 5.8 2.6-1-.5 1.8-2.6 1-1.1 4.2h5.5l-.8 2.8H12.5l2.8-10.8-3 1.1.5-1.8 3-1.1z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('DOGE') || code === 'DOGECOIN') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#C2A633"/>
+      <path d="M12 9h4.8c3.5 0 6.2 2.5 6.2 7s-2.7 7-6.2 7H12V9zm3.5 3v8h1.2c1.9 0 3.3-1.6 3.3-4s-1.4-4-3.3-4h-1.2zm-4.5 3h8v2h-8v-2z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('XRP') || code === 'RIPPLE') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#23292F"/>
+      <path d="M22.7 8h2.3l-5.6 5.6c-1.8 1.8-4.8 1.8-6.7 0L7.1 8h2.3l4.5 4.5c.9.9 2.4.9 3.3 0L22.7 8zm-13.4 16H7l5.6-5.6c1.8-1.8 4.8-1.8 6.7 0l5.6 5.6h-2.3l-4.5-4.5c-.9-.9-2.4-.9-3.3 0L9.3 24z" fill="#FFF"/>
+    </svg>`;
+  }
+  if (code.includes('ADA') || code === 'CARDANO') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+      <circle cx="16" cy="16" r="16" fill="#0033AD"/>
+      <circle cx="16" cy="16" r="4" fill="#FFF"/>
+      <circle cx="16" cy="8" r="1.5" fill="#FFF"/>
+      <circle cx="16" cy="24" r="1.5" fill="#FFF"/>
+      <circle cx="8" cy="16" r="1.5" fill="#FFF"/>
+      <circle cx="24" cy="16" r="1.5" fill="#FFF"/>
+    </svg>`;
+  }
+  
+  return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; flex-shrink: 0; display: inline-block;">
+    <circle cx="16" cy="16" r="16" fill="#7C3AED"/>
+    <text x="16" y="21" font-size="13" font-weight="bold" fill="#FFF" text-anchor="middle">${code.substring(0, 3)}</text>
+  </svg>`;
+};
+
 let activeAdminWallets = [];
 
 async function initCryptoDepositPortal() {
@@ -3297,23 +3388,25 @@ async function initCryptoDepositPortal() {
   if (!activeAdminWallets.length) {
     activeAdminWallets = [
       { coin_code: 'BTC', coin_name: 'Bitcoin', coin_symbol: '₿', network: 'Bitcoin Network', address: 'bc1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0001', memo: '' },
+      { coin_code: 'BNB', coin_name: 'Binance Coin', coin_symbol: '🪙', network: 'BEP20 (BSC)', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', memo: '' },
       { coin_code: 'USDT_TRC20', coin_name: 'Tether USDT', coin_symbol: '₮', network: 'TRC20 (Tron)', address: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', memo: '' },
       { coin_code: 'USDT_ERC20', coin_name: 'Tether USDT', coin_symbol: '₮', network: 'ERC20 (Ethereum)', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', memo: '' },
       { coin_code: 'ETH', coin_name: 'Ethereum', coin_symbol: 'Ξ', network: 'ERC20 (Ethereum)', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', memo: '' },
       { coin_code: 'LTC', coin_name: 'Litecoin', coin_symbol: 'Ł', network: 'Litecoin Network', address: 'LTC1q8xxf9z4a9pvl32wzq9unm7m6y0r5q3kz9u0002', memo: '' },
       { coin_code: 'SOL', coin_name: 'Solana', coin_symbol: '☀️', network: 'Solana Network', address: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU', memo: '' },
       { coin_code: 'TRX', coin_name: 'Tron', coin_symbol: '🗲', network: 'TRC20 Network', address: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', memo: '' },
-      { coin_code: 'BNB', coin_name: 'Binance Coin', coin_symbol: '🪙', network: 'BEP20 (BSC)', address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', memo: '' },
       { coin_code: 'XRP', coin_name: 'Ripple', coin_symbol: '✕', network: 'RippleNet', address: 'rEb8TK3gGKwBJJ98A9T1o2v9vF7f3x2mP1', memo: '1089241' },
       { coin_code: 'DOGE', coin_name: 'Dogecoin', coin_symbol: 'Ɖ', network: 'Dogecoin Network', address: 'D6k3y7z2W9P4n2x1v5b3N7m8x9Z1q', memo: '' }
     ];
   }
 
-  // Render Coin Buttons Grid
+  // Render Coin Buttons Grid with Official Vector Token Logos
   container.innerHTML = activeAdminWallets.map((w, idx) => `
-    <button type="button" class="crypto-coin-btn ${idx === 0 ? 'active-coin-selected' : ''}" data-coin-code="${w.coin_code}" style="padding: 0.55rem 0.4rem; text-align: center; border: 1px solid ${idx === 0 ? '#c084fc' : 'rgba(255,255,255,0.1)'}; background: ${idx === 0 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.03)'}; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; width: 100%; box-sizing: border-box; min-width: 0;">
-      <div style="font-size: 1.2rem; font-weight: 800; color: #c084fc; line-height: 1;">${w.coin_symbol || '₮'}</div>
-      <div style="font-size: 0.76rem; font-weight: 700; color: #ffffff; margin-top: 0.2rem; word-break: break-word; line-height: 1.2;">${w.coin_code.replace('_', ' ')}</div>
+    <button type="button" class="crypto-coin-btn ${idx === 0 ? 'active-coin-selected' : ''}" data-coin-code="${w.coin_code}" style="padding: 0.65rem 0.4rem; text-align: center; border: 1px solid ${idx === 0 ? '#c084fc' : 'rgba(255,255,255,0.1)'}; background: ${idx === 0 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.03)'}; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; width: 100%; box-sizing: border-box; min-width: 0;">
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 0.35rem;">
+        ${window.getCryptoIconSVG(w.coin_code, 28)}
+      </div>
+      <div style="font-size: 0.8rem; font-weight: 800; color: #ffffff; word-break: break-word; line-height: 1.2;">${w.coin_code.replace('_', ' ')}</div>
       <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 0.1rem; word-break: break-word;">${w.network ? w.network.split(' ')[0] : 'Crypto'}</div>
     </button>
   `).join('');
@@ -3342,7 +3435,9 @@ async function initCryptoDepositPortal() {
     const codeInput = document.getElementById('deposit-selected-coin-code');
     const symbolInput = document.getElementById('deposit-selected-coin-symbol');
 
-    if (symEl) symEl.textContent = wallet.coin_symbol || '₮';
+    if (symEl) {
+      symEl.innerHTML = window.getCryptoIconSVG(wallet.coin_code, 32);
+    }
     if (titleEl) titleEl.textContent = `${wallet.coin_name} (${wallet.coin_code.replace('_', ' ')})`;
     if (netEl) netEl.textContent = wallet.network || 'Blockchain Network';
     if (addrEl) addrEl.textContent = wallet.address || 'Address pending configuration';
@@ -3361,7 +3456,7 @@ async function initCryptoDepositPortal() {
       }
     }
 
-    if (methodInput) methodInput.value = `${wallet.coin_name} (${wallet.coin_code.replace('_', ' ')} ${wallet.coin_symbol || '₮'})`;
+    if (methodInput) methodInput.value = `${wallet.coin_name} (${wallet.coin_code.replace('_', ' ')})`;
     if (codeInput) codeInput.value = wallet.coin_code;
     if (symbolInput) symbolInput.value = wallet.coin_symbol || '₮';
 
@@ -3633,7 +3728,7 @@ function appendAdminWalletCard(w) {
   cardDiv.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
       <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; margin-right: 0.5rem;">
-        <span style="font-size: 1.3rem; font-weight: 800; color: #c084fc;">${w.coin_symbol || '₮'}</span>
+        <span>${window.getCryptoIconSVG(w.coin_code, 26)}</span>
         <input type="text" class="wallet-input-code" value="${w.coin_code}" placeholder="COIN_CODE" style="width: 130px; padding: 0.25rem 0.4rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #38bdf8; font-weight: 700; font-size: 0.85rem;" />
       </div>
       <div style="display: flex; align-items: center; gap: 0.6rem;">
