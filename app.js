@@ -58,7 +58,7 @@ const translations = {
     secure_access: 'Secure access',
     create_account_heading: 'Create account',
     login_heading: 'Login to your account',
-    login_subtitle: 'Use your email and password to continue into your dashboard or admin workspace.',
+    login_subtitle: 'Use your email and password to continue into your dashboard.',
     register_heading: 'Register for your investor workspace',
     register_subtitle: 'Create your profile to access the client dashboard, live market view, and premium support.',
     dashboard_heading: 'Investor portal',
@@ -103,7 +103,7 @@ const translations = {
     secure_access: 'Acceso seguro',
     create_account_heading: 'Crear cuenta',
     login_heading: 'Inicie sesión en su cuenta',
-    login_subtitle: 'Use su correo electrónico y contraseña para entrar a su panel o espacio de administración.',
+    login_subtitle: 'Use su correo electrónico y contraseña para entrar a su panel.',
     register_heading: 'Regístrese para su espacio de inversionista',
     register_subtitle: 'Cree su perfil para acceder al panel del cliente, la vista de mercado en vivo y el soporte premium.',
     dashboard_heading: 'Portal de inversionistas',
@@ -151,7 +151,7 @@ const translations = {
     secure_access: 'Accès sécurisé',
     create_account_heading: 'Créer un compte',
     login_heading: 'Connectez-vous à votre compte',
-    login_subtitle: 'Utilisez votre e-mail et votre mot de passe pour accéder à votre tableau de bord ou à votre espace d’administration.',
+    login_subtitle: 'Utilisez votre e-mail et votre mot de passe pour accéder à votre tableau de bord.',
     register_heading: 'Inscrivez-vous à votre espace investisseur',
     register_subtitle: 'Créez votre profil pour accéder au tableau de bord client, à la vue du marché en direct et au support premium.',
     dashboard_heading: 'Portail investisseur',
@@ -4003,7 +4003,7 @@ async function initCryptoDepositPortal() {
       const addressToCopy = (addrInputEl && addrInputEl.value) || (addrEl && addrEl.textContent) || '';
       if (addressToCopy) {
         navigator.clipboard.writeText(addressToCopy).then(() => {
-          showToast('📋 Admin cryptocurrency wallet address copied to clipboard!', true);
+          showToast('📋 Official cryptocurrency wallet address copied to clipboard!', true);
         }).catch(() => {
           showToast('📋 Address copied to clipboard!', true);
         });
