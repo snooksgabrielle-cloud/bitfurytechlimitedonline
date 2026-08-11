@@ -259,6 +259,27 @@ const translations = {
   }
 };
 
+const fxRates = {
+  USD: 1.0,
+  EUR: 0.92,
+  GBP: 0.79,
+  CAD: 1.36,
+  AUD: 1.52,
+  JPY: 155.20,
+  NGN: 1580.0,
+  INR: 83.90,
+  ZAR: 18.50,
+  AED: 3.67,
+  BTC: 0.0000146,
+  ETH: 0.000385,
+  USDT: 1.0,
+  SOL: 0.00685
+};
+
+const currSymbols = {
+  USD: '$', EUR: '€', GBP: '£', CAD: '$', AUD: '$', JPY: '¥', NGN: '₦', INR: '₹', ZAR: 'R', AED: 'د.إ', BTC: '₿', ETH: 'Ξ', USDT: '₮', SOL: '◎'
+};
+
 window.googleTranslateElementInit = function() {
   if (window.google && window.google.translate) {
     new window.google.translate.TranslateElement({
@@ -2303,26 +2324,6 @@ function initDashboardControls() {
 
   // --- Real Currency Converter Logic ---
   let currentDashboardBalanceUsd = 10.0;
-  const fxRates = {
-    USD: 1.0,
-    EUR: 0.92,
-    GBP: 0.79,
-    CAD: 1.36,
-    AUD: 1.52,
-    JPY: 155.20,
-    NGN: 1580.0,
-    INR: 83.90,
-    ZAR: 18.50,
-    AED: 3.67,
-    BTC: 0.0000146,
-    ETH: 0.000385,
-    USDT: 1.0,
-    SOL: 0.00685
-  };
-
-  const currSymbols = {
-    USD: '$', EUR: '€', GBP: '£', CAD: '$', AUD: '$', JPY: '¥', NGN: '₦', INR: '₹', ZAR: 'R', AED: 'د.إ', BTC: '₿', ETH: 'Ξ', USDT: '₮', SOL: '◎'
-  };
 
   async function fetchLiveRates() {
     const statusBadge = document.getElementById('fx-status-badge');
