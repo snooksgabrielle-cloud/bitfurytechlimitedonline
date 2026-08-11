@@ -75,6 +75,7 @@ export async function initDb() {
         status TEXT DEFAULT 'active',
         avatar TEXT DEFAULT '',
         username TEXT UNIQUE DEFAULT '',
+        account_type TEXT DEFAULT 'Crypto Account',
         reset_token TEXT DEFAULT '',
         reset_expires INTEGER DEFAULT 0,
         created_at TEXT NOT NULL
@@ -264,6 +265,7 @@ export async function initDb() {
       'ALTER TABLE users ADD COLUMN status TEXT DEFAULT "active"',
       'ALTER TABLE users ADD COLUMN avatar TEXT DEFAULT ""',
       'ALTER TABLE users ADD COLUMN username TEXT DEFAULT ""',
+      'ALTER TABLE users ADD COLUMN account_type TEXT DEFAULT "Crypto Account"',
       'ALTER TABLE users ADD COLUMN reset_token TEXT DEFAULT ""',
       'ALTER TABLE users ADD COLUMN reset_expires INTEGER DEFAULT 0',
       'ALTER TABLE transactions ADD COLUMN status TEXT DEFAULT "completed"',

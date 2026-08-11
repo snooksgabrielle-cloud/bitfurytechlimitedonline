@@ -897,6 +897,7 @@ function handleAuthFormSubmit(event) {
   const countryCodeVal = isRegister ? form.querySelector('#countryCode')?.value || '+1' : '';
   const phoneVal = isRegister ? form.querySelector('#phone')?.value?.trim() || '' : '';
   const fullPhone = phoneVal ? `${countryCodeVal} ${phoneVal}`.trim() : '';
+  const accountTypeVal = isRegister ? form.querySelector('#account')?.value || 'Crypto Account' : '';
 
   if (!emailVal || !passwordVal || (isRegister && !fullNameVal)) {
     createMessage(form, isRegister ? 'Please provide your full name, email address, and password.' : 'Please enter your username or email address and password.');
@@ -915,6 +916,7 @@ function handleAuthFormSubmit(event) {
         username: usernameVal,
         password: passwordVal,
         phone: fullPhone,
+        accountType: accountTypeVal,
       }
     : {
         usernameOrEmail: emailVal,

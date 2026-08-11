@@ -1027,11 +1027,12 @@ app.get('/api/admin', async (req, res) => {
 
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { fullName = '', email = '', username = '', password = '', phone = '', country = '' } = req.body;
+    const { fullName = '', email = '', username = '', password = '', phone = '', country = '', accountType = 'Crypto Account' } = req.body;
     const normalizedEmail = String(email).trim().toLowerCase();
     let cleanUsername = String(username || '').trim().toLowerCase();
     const cleanPhone = String(phone).trim();
     const cleanCountry = String(country).trim();
+    const cleanAccountType = String(accountType).trim() || 'Crypto Account';
 
     if (!fullName || !normalizedEmail || !password) {
       return res.status(400).json({ ok: false, error: 'Full name, email address, and password are required.' });
@@ -1056,8 +1057,8 @@ app.post('/api/auth/register', async (req, res) => {
     const now = new Date().toISOString();
 
     const result = await db.run(
-      'INSERT INTO users (full_name, email, username, password_hash, role, auth_token, deposit_balance, interest_balance, phone, country, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [String(fullName).trim(), normalizedEmail, cleanUsername, hashPassword(String(password)), 'client', token, 10.0, 0.0, cleanPhone, cleanCountry, now]
+      'INSERT INTO users (full_name, email, username, password_hash, role, auth_token, deposit_balance, interest_balance, phone, country, account_type, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [String(fullName).trim(), normalizedEmail, cleanUsername, hashPassword(String(password)), 'client', token, 10.0, 0.0, cleanPhone, cleanCountry, cleanAccountType, now]
     );
 
     const userId = result.lastID;
