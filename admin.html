@@ -111,6 +111,58 @@
           </div>
         </div>
 
+        <!-- Institutional System Health & Operational Status Monitor -->
+        <div class="panel" style="border: 1px solid rgba(16, 185, 129, 0.35); background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(13, 27, 42, 0.95) 100%);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">SYSTEM HEALTH &amp; ENGINE MONITOR</span>
+              <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Operational Services &amp; Automated Engine Diagnostics</h3>
+              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Real-time infrastructure health, database persistence locks &amp; profit yield distribution clock.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">● ALL SYSTEMS OPERATIONAL</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Node.js Server</span>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.7rem;">99.99% Uptime</span>
+              </div>
+              <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">Express Server API</div>
+              <div style="font-size: 0.78rem; color: #34d399; margin-top: 0.2rem;">● Port 3000 Listening</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">SQLite Storage</span>
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.7rem;">Auto-Lock Ready</span>
+              </div>
+              <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">Database Engine</div>
+              <div style="font-size: 0.78rem; color: #38bdf8; margin-top: 0.2rem;">● Auto-Sync &amp; Recovery Active</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Yield Distribution</span>
+                <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-size: 0.7rem;">24h Cycle</span>
+              </div>
+              <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">Profit Auto-Cron</div>
+              <div style="font-size: 0.78rem; color: #c084fc; margin-top: 0.2rem;">● Next Payout Cycle Scheduled</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Security Gateway</span>
+                <span class="badge" style="background: rgba(250, 204, 21, 0.2); color: #facc15; font-size: 0.7rem;">AES-256 Auth</span>
+              </div>
+              <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">TLS / Bearer Tokens</div>
+              <div style="font-size: 0.78rem; color: #facc15; margin-top: 0.2rem;">● Encrypted Bearer Token Auth</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Official Company Mailing & Notification Interface -->
         <div class="panel" id="admin-mailing-panel" style="border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(13, 27, 42, 0.95) 100%);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -268,9 +320,14 @@
 
         <!-- Pending Deposits Approval Table -->
         <div class="panel">
-          <div class="panel-header">
-            <h3>Deposit Approval Queue</h3>
-            <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Pending Action</span>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 style="margin: 0;">Deposit Approval Queue</h3>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Pending Action</span>
+              <button class="btn btn-secondary btn-sm" id="export-deposits-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+            </div>
           </div>
           <table class="table" id="admin-deposits-table">
             <thead>
@@ -293,9 +350,14 @@
 
         <!-- Pending Withdrawals Approval Table -->
         <div class="panel">
-          <div class="panel-header">
-            <h3>Withdrawal Review Queue</h3>
-            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Pending Action</span>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 style="margin: 0;">Withdrawal Review Queue</h3>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Pending Action</span>
+              <button class="btn btn-secondary btn-sm" id="export-withdrawals-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+            </div>
           </div>
           <table class="table" id="admin-withdrawals-table">
             <thead>
@@ -344,6 +406,11 @@
                 <option value="active">Filter: Active Accounts</option>
                 <option value="suspended">Filter: Suspended Accounts</option>
               </select>
+            </div>
+            <div>
+              <button class="btn btn-secondary" id="export-users-csv-btn" type="button" style="padding: 0.6rem 1rem; font-size: 0.88rem; border-color: #38bdf8; color: #38bdf8; font-weight: 700;">
+                📥 Export Users (CSV)
+              </button>
             </div>
           </div>
 

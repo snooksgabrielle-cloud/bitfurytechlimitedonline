@@ -2628,19 +2628,19 @@ body:has([data-dashboard]), body.dashboard-page {
 .dashboard-shell .stat-card-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: 1.15rem;
+  margin-bottom: 1.5rem;
 }
 
 .dashboard-shell .stat-box.green-stat {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(13, 27, 42, 0.94) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.32);
-  border-radius: 18px;
-  padding: 1.15rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(13, 27, 42, 0.96) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 22px;
+  padding: 1.35rem 1.45rem;
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
+  gap: 1.1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   transition: all 0.25s ease;
   width: 100%;
   box-sizing: border-box;
@@ -2649,16 +2649,16 @@ body:has([data-dashboard]), body.dashboard-page {
 
 .dashboard-shell .stat-box.green-stat:hover {
   border-color: var(--dash-mint);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.22);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 38px rgba(16, 185, 129, 0.3);
 }
 
 .dashboard-shell .stat-box .stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(16, 185, 129, 0.22);
-  border: 1px solid rgba(52, 211, 153, 0.4);
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(52, 211, 153, 0.5);
   color: var(--dash-mint);
   display: flex;
   align-items: center;
@@ -2672,22 +2672,22 @@ body:has([data-dashboard]), body.dashboard-page {
 }
 
 .dashboard-shell .stat-box .stat-title {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  font-size: 0.85rem;
+  color: #cbd5e1;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   white-space: normal;
   word-break: normal;
   overflow-wrap: normal;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .dashboard-shell .stat-box h3 {
-  font-size: 1.45rem;
-  font-weight: 800;
+  font-size: 1.75rem;
+  font-weight: 900;
   color: #ffffff;
-  margin: 0.2rem 0 0;
+  margin: 0.25rem 0 0;
   font-family: var(--font-mono, monospace);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -2698,9 +2698,9 @@ body:has([data-dashboard]), body.dashboard-page {
 .dashboard-shell .panel {
   background: var(--dash-card-bg);
   border: 1px solid var(--dash-border);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+  border-radius: 22px;
+  padding: 1.75rem;
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
 }
 
 .dashboard-shell .panel h3 {
@@ -2735,42 +2735,42 @@ body:has([data-dashboard]), body.dashboard-page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
-  padding: 0.25rem 0.2rem;
+  margin-bottom: 1.5rem;
+  padding: 0.35rem 0.2rem;
 }
 
 .user-info-cluster {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .user-avatar-circle {
-  width: 50px;
-  height: 50px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.45);
   flex-shrink: 0;
 }
 
 .header-action-cluster {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .header-icon-btn {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #e2e8f0;
   display: flex;
   align-items: center;
@@ -2780,49 +2780,49 @@ body:has([data-dashboard]), body.dashboard-page {
 }
 
 .header-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .notification-badge-pill {
   position: absolute;
-  top: -3px;
-  right: -5px;
+  top: -4px;
+  right: -6px;
   background: #ef4444;
   color: #ffffff;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  padding: 0.15rem 0.4rem;
-  border-radius: 10px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
   border: 2px solid #0f172a;
   line-height: 1;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.5);
 }
 
-/* Available Balance Main Container Card (Matching screenshot) */
+/* Available Balance Main Container Card (Expanded High-Impact Sizing) */
 .available-balance-card {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.16) 0%, rgba(15, 23, 42, 0.95) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.32);
-  border-radius: 22px;
-  padding: 1.4rem 1.5rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 26px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .balance-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.9rem;
+  margin-bottom: 1.1rem;
 }
 
 .balance-label-group {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .verified-shield-icon {
@@ -2832,67 +2832,69 @@ body:has([data-dashboard]), body.dashboard-page {
 }
 
 .balance-title {
-  font-size: 0.9rem;
-  color: #cbd5e1;
-  font-weight: 600;
+  font-size: 1.05rem;
+  color: #e2e8f0;
+  font-weight: 700;
 }
 
 .eye-toggle-btn {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #a855f7;
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 0.2rem;
-  border-radius: 6px;
-  transition: color 0.2s ease;
+  padding: 0.25rem;
+  border-radius: 8px;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .eye-toggle-btn:hover {
   color: #ffffff;
+  transform: scale(1.1);
 }
 
 .trans-history-link {
   background: none;
   border: none;
   color: #c084fc;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.98rem;
+  font-weight: 700;
   cursor: pointer;
   padding: 0;
   transition: color 0.2s ease;
 }
 
 .trans-history-link:hover {
-  color: #e9d5ff;
+  color: #f3e8ff;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
 }
 
 .balance-card-main-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.35rem;
   flex-wrap: wrap;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .balance-amount-display {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.65rem;
   cursor: pointer;
 }
 
 .balance-amount {
-  font-size: 2.3rem;
-  font-weight: 800;
+  font-size: 3.2rem;
+  font-weight: 900;
   color: #ffffff;
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   font-family: var(--font-mono, monospace);
+  line-height: 1.1;
 }
 
 /* Count-Up Animation Styling for Dashboard Balances and Profit Values */
@@ -2950,58 +2952,58 @@ body:has([data-dashboard]), body.dashboard-page {
 }
 
 .balance-arrow {
-  font-size: 1.6rem;
+  font-size: 2rem;
   color: #c084fc;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   margin-top: -2px;
 }
 
 .btn-add-money-purple {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
   color: #ffffff;
   border: none;
-  padding: 0.65rem 1.45rem;
-  border-radius: 24px;
-  font-weight: 700;
-  font-size: 0.92rem;
+  padding: 0.85rem 1.85rem;
+  border-radius: 28px;
+  font-weight: 800;
+  font-size: 1.05rem;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 6px 22px rgba(168, 85, 247, 0.5);
   transition: all 0.22s ease;
 }
 
 .btn-add-money-purple:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.65);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 28px rgba(168, 85, 247, 0.7);
 }
 
 .balance-card-sub-row {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 0.95rem 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.88rem;
-  color: #e2e8f0;
+  font-size: 1rem;
+  color: #f1f5f9;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .balance-card-sub-row:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(168, 85, 247, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(168, 85, 247, 0.45);
 }
 
 .sub-row-left {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
 }
 
 .coins-icon {
-  color: #a855f7;
+  color: #c084fc;
   display: flex;
   align-items: center;
 }
@@ -3013,11 +3015,12 @@ body:has([data-dashboard]), body.dashboard-page {
 .earnings-amount {
   color: #34d399;
   font-weight: 800;
+  font-size: 1.05rem;
 }
 
 .sub-row-arrow {
-  font-size: 1.3rem;
-  color: #a855f7;
+  font-size: 1.4rem;
+  color: #c084fc;
   font-weight: 700;
 }
 
@@ -3025,66 +3028,70 @@ body:has([data-dashboard]), body.dashboard-page {
 .fintech-action-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.85rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
 }
 
 @media (max-width: 768px) {
   .dashboard-shell .stat-card-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 }
 
 @media (max-width: 640px) {
   .fintech-action-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
   .dashboard-shell .stat-card-row {
     grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .user-greeting-header-bar {
-    gap: 0.5rem;
+    gap: 0.65rem;
   }
   .user-avatar-circle {
+    width: 48px;
+    height: 48px;
+  }
+  .user-greeting-text h2 {
+    font-size: 1.3rem !important;
+  }
+  .header-icon-btn {
     width: 42px;
     height: 42px;
   }
-  .user-greeting-text h2 {
-    font-size: 1.15rem !important;
-  }
-  .header-icon-btn {
-    width: 38px;
-    height: 38px;
-  }
   .available-balance-card {
-    padding: 1rem 1.1rem;
-    border-radius: 18px;
+    padding: 1.35rem 1.35rem;
+    border-radius: 22px;
   }
   .balance-amount {
-    font-size: 1.85rem;
+    font-size: 2.5rem;
+  }
+  .btn-add-money-purple {
+    padding: 0.75rem 1.45rem;
+    font-size: 0.98rem;
   }
   .fintech-action-card {
-    padding: 0.95rem 0.5rem;
-    gap: 0.45rem;
-    border-radius: 14px;
+    padding: 1.1rem 0.65rem;
+    gap: 0.55rem;
+    border-radius: 16px;
   }
   .action-card-icon-box {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
   }
   .action-card-icon-box svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
   }
   .action-card-title {
-    font-size: 0.84rem;
+    font-size: 0.9rem;
   }
 }
 

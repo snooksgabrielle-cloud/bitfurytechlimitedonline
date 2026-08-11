@@ -2283,6 +2283,37 @@ function initDashboardControls() {
     });
   }
 
+  // CSV Exporter Helper
+  window.downloadCSVFile = function(filename, csvContent) {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  if (document.getElementById('export-statement-csv-btn')) {
+    document.getElementById('export-statement-csv-btn').addEventListener('click', () => {
+      const trxList = window.currentDashboardTransactions || [];
+      let csv = 'Date,Reference ID,Details,Wallet,Amount,Status,Post Balance\n';
+      trxList.forEach(t => {
+        const date = new Date(t.createdAt || t.created_at || Date.now()).toLocaleDateString();
+        const ref = t.trxId || t.id || '';
+        const details = (t.details || '').replace(/,/g, ' ');
+        const wallet = t.wallet || t.walletType || '';
+        const amt = t.amount || 0;
+        const status = t.status || '';
+        const post = t.postBalance || t.post_balance || 0;
+        csv += `"${date}","${ref}","${details}","${wallet}","${amt}","${status}","${post}"\n`;
+      });
+      window.downloadCSVFile(`Account_Statement_${Date.now()}.csv`, csv);
+    });
+  }
+
   // Profit Calculator Logic
   const calcPlanSelect = document.getElementById('calc-plan-select');
   const calcAmountInput = document.getElementById('calc-amount-input');
@@ -2615,6 +2646,7 @@ async function loadAdminData() {
       headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {},
     });
     const data = await response.json();
+    window.currentAdminData = data;
 
     if (!response.ok || data.authRequired) {
       if (response.status === 401 || data.authRequired) {
@@ -2813,6 +2845,46 @@ async function loadAdminData() {
           });
         });
       }
+    }
+
+    // Attach Admin CSV Export Listeners
+    const exportUsersBtn = document.getElementById('export-users-csv-btn');
+    if (exportUsersBtn && !exportUsersBtn.dataset.bound) {
+      exportUsersBtn.dataset.bound = 'true';
+      exportUsersBtn.addEventListener('click', () => {
+        const users = allAdminUsersList || [];
+        let csv = 'ID,Full Name,Email,Phone,Country,Role,Status,Deposit Balance,Interest Balance,BTC Wallet,USDT Wallet,Created At\n';
+        users.forEach(u => {
+          csv += `"${u.id}","${(u.fullName || '').replace(/"/g, '""')}","${u.email}","${u.phone || ''}","${u.country || ''}","${u.role || 'client'}","${u.status || 'active'}","${u.depositBalance || u.deposit_balance || 0}","${u.interestBalance || u.interest_balance || 0}","${u.btcWallet || ''}","${u.usdtWallet || ''}","${u.createdAt || ''}"\n`;
+        });
+        if (window.downloadCSVFile) window.downloadCSVFile(`Investor_Directory_${Date.now()}.csv`, csv);
+      });
+    }
+
+    const exportDepBtn = document.getElementById('export-deposits-csv-btn');
+    if (exportDepBtn && !exportDepBtn.dataset.bound) {
+      exportDepBtn.dataset.bound = 'true';
+      exportDepBtn.addEventListener('click', () => {
+        const deposits = window.currentAdminData?.requests || [];
+        let csv = 'Deposit ID,User ID,Method,Reference,Amount,Status,Created At\n';
+        deposits.forEach(d => {
+          csv += `"${d.id}","${d.userId || ''}","${d.method || ''}","${d.reference || ''}","${d.amount || 0}","${d.status || ''}","${d.createdAt || ''}"\n`;
+        });
+        if (window.downloadCSVFile) window.downloadCSVFile(`Deposits_Ledger_${Date.now()}.csv`, csv);
+      });
+    }
+
+    const exportWdBtn = document.getElementById('export-withdrawals-csv-btn');
+    if (exportWdBtn && !exportWdBtn.dataset.bound) {
+      exportWdBtn.dataset.bound = 'true';
+      exportWdBtn.addEventListener('click', () => {
+        const withdrawals = window.currentAdminData?.withdrawals || [];
+        let csv = 'Withdrawal ID,User ID,Wallet Type,Method,Details,Amount,Status,Created At\n';
+        withdrawals.forEach(w => {
+          csv += `"${w.id}","${w.userId || ''}","${w.walletType || ''}","${w.method || ''}","${(w.details || '').replace(/"/g, '""')}","${w.amount || 0}","${w.status || ''}","${w.createdAt || ''}"\n`;
+        });
+        if (window.downloadCSVFile) window.downloadCSVFile(`Withdrawals_Ledger_${Date.now()}.csv`, csv);
+      });
     }
   } catch (error) {
     console.error('Admin data load error:', error);
