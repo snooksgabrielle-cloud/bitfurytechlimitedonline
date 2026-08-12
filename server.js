@@ -122,6 +122,18 @@ const INVESTMENT_PLANS = [
     referralBonus: 6,
     durationDays: 30,
     description: 'Direct equity stakes in commercial & residential real estate with inflation-protected dividends.'
+  },
+  {
+    id: 'agriculture',
+    name: 'AGRICULTURE Plan',
+    category: 'Sustainable Agriculture',
+    dailyProfit: 1.45, // 1.45% daily
+    monthlyProfit: 43.5, // 43.5% monthly
+    minDeposit: 2500,
+    maxDeposit: 100000,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Investing in Sustainable Agriculture, Precision Farming Technology & Agri-Assets.'
   }
 ];
 

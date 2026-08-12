@@ -548,7 +548,8 @@ function setupCustomerCareFloatingWidget() {
         const data = await res.json();
         if (res.ok && data.ok) {
           showToast('✅ Message sent to Customer Care! A representative will get back to you shortly.', true);
-          document.getElementById('care-message').value = '';
+          const careMsg = document.getElementById('care-message');
+          if (careMsg) careMsg.value = '';
           closeModal();
           if (typeof loadAdminData === 'function') {
             loadAdminData();
@@ -2303,25 +2304,36 @@ function initDashboardControls() {
       const min = parseFloat(btn.getAttribute('data-plan-min') || '1000');
       const max = parseFloat(btn.getAttribute('data-plan-max') || '19999');
 
-      document.getElementById('modal-plan-id').value = planId;
-      document.getElementById('modal-plan-title').textContent = planName;
-      document.getElementById('modal-plan-rate').textContent = `${rate}% / Daily`;
-      document.getElementById('invest-amount-input').value = min;
-      document.getElementById('invest-amount-input').min = min;
-      document.getElementById('invest-amount-input').max = max;
-      document.getElementById('modal-limit-text').textContent = `Limits: $${min.toLocaleString()} - $${max.toLocaleString()}`;
+      const planIdEl = document.getElementById('modal-plan-id');
+      const planTitleEl = document.getElementById('modal-plan-title');
+      const planRateEl = document.getElementById('modal-plan-rate');
+      const investAmtInput = document.getElementById('invest-amount-input');
+      const modalLimitTxt = document.getElementById('modal-limit-text');
+
+      if (planIdEl) planIdEl.value = planId;
+      if (planTitleEl) planTitleEl.textContent = planName;
+      if (planRateEl) planRateEl.textContent = `${rate}% / Daily`;
+      if (investAmtInput) {
+        investAmtInput.value = min;
+        investAmtInput.min = min;
+        investAmtInput.max = max;
+      }
+      if (modalLimitTxt) modalLimitTxt.textContent = `Limits: $${min.toLocaleString()} - $${max.toLocaleString()}`;
 
       // Update calculations
       const updateModalCalc = () => {
-        const amt = parseFloat(document.getElementById('invest-amount-input').value) || 0;
+        const amtInput = document.getElementById('invest-amount-input');
+        const amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
         const dailyProfit = amt * (rate / 100);
         const monthlyProfit = dailyProfit * 30;
-        document.getElementById('modal-daily-return-calc').textContent = `$${dailyProfit.toFixed(2)}`;
-        document.getElementById('modal-monthly-return-calc').textContent = `$${monthlyProfit.toFixed(2)}`;
+        const dailyCalcEl = document.getElementById('modal-daily-return-calc');
+        const monthlyCalcEl = document.getElementById('modal-monthly-return-calc');
+        if (dailyCalcEl) dailyCalcEl.textContent = `$${dailyProfit.toFixed(2)}`;
+        if (monthlyCalcEl) monthlyCalcEl.textContent = `$${monthlyProfit.toFixed(2)}`;
       };
 
       updateModalCalc();
-      document.getElementById('invest-amount-input').oninput = updateModalCalc;
+      if (investAmtInput) investAmtInput.oninput = updateModalCalc;
 
       if (investModal) investModal.classList.add('active');
     });
@@ -3269,15 +3281,16 @@ function initAdminDepositsControls() {
   const approveBtn = document.getElementById('modal-approve-dep-btn');
   const rejectBtn = document.getElementById('modal-reject-dep-btn');
 
-  if (closeBtn) closeBtn.onclick = () => document.getElementById('admin-view-deposit-modal').style.display = 'none';
-  if (cancelBtn) cancelBtn.onclick = () => document.getElementById('admin-view-deposit-modal').style.display = 'none';
+  const depModal = document.getElementById('admin-view-deposit-modal');
+  if (closeBtn) closeBtn.onclick = () => { if (depModal) depModal.style.display = 'none'; };
+  if (cancelBtn) cancelBtn.onclick = () => { if (depModal) depModal.style.display = 'none'; };
 
   if (approveBtn && !approveBtn.dataset.bound) {
     approveBtn.dataset.bound = 'true';
     approveBtn.onclick = async () => {
       const depId = approveBtn.getAttribute('data-dep-id');
       if (depId) {
-        document.getElementById('admin-view-deposit-modal').style.display = 'none';
+        if (depModal) depModal.style.display = 'none';
         await handleAdminDepositAction(depId, 'approve');
       }
     };
@@ -3288,7 +3301,7 @@ function initAdminDepositsControls() {
     rejectBtn.onclick = async () => {
       const depId = rejectBtn.getAttribute('data-dep-id');
       if (depId) {
-        document.getElementById('admin-view-deposit-modal').style.display = 'none';
+        if (depModal) depModal.style.display = 'none';
         await handleAdminDepositAction(depId, 'reject');
       }
     };
@@ -3464,15 +3477,16 @@ function initAdminWithdrawalsControls() {
   const approveBtn = document.getElementById('modal-approve-wd-btn');
   const rejectBtn = document.getElementById('modal-reject-wd-btn');
 
-  if (closeBtn) closeBtn.onclick = () => document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
-  if (cancelBtn) cancelBtn.onclick = () => document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+  const wdModal = document.getElementById('admin-view-withdrawal-modal');
+  if (closeBtn) closeBtn.onclick = () => { if (wdModal) wdModal.style.display = 'none'; };
+  if (cancelBtn) cancelBtn.onclick = () => { if (wdModal) wdModal.style.display = 'none'; };
 
   if (approveBtn && !approveBtn.dataset.bound) {
     approveBtn.dataset.bound = 'true';
     approveBtn.onclick = async () => {
       const wdId = approveBtn.getAttribute('data-wd-id');
       if (wdId) {
-        document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+        if (wdModal) wdModal.style.display = 'none';
         await handleAdminWithdrawalAction(wdId, 'approve');
       }
     };
@@ -3483,7 +3497,7 @@ function initAdminWithdrawalsControls() {
     rejectBtn.onclick = async () => {
       const wdId = rejectBtn.getAttribute('data-wd-id');
       if (wdId) {
-        document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+        if (wdModal) wdModal.style.display = 'none';
         await handleAdminWithdrawalAction(wdId, 'reject');
       }
     };
@@ -4125,19 +4139,22 @@ function openEditUserModal(user) {
   const modal = document.getElementById('admin-edit-user-modal');
   if (!modal) return;
 
-  document.getElementById('edit-user-id').value = user.id;
-  document.getElementById('edit-user-header-name').textContent = `#${user.id} — ${user.fullName || user.email}`;
-  document.getElementById('edit-user-fullname').value = user.fullName || '';
-  document.getElementById('edit-user-email').value = user.email || '';
-  document.getElementById('edit-user-phone').value = user.phone || '';
-  document.getElementById('edit-user-country').value = user.country || '';
-  document.getElementById('edit-user-deposit').value = user.depositBalanceRaw !== undefined ? user.depositBalanceRaw : 0;
-  document.getElementById('edit-user-interest').value = user.interestBalanceRaw !== undefined ? user.interestBalanceRaw : 0;
-  document.getElementById('edit-user-btc').value = user.btcWallet || '';
-  document.getElementById('edit-user-usdt').value = user.usdtWallet || '';
-  document.getElementById('edit-user-role').value = user.role || 'client';
-  document.getElementById('edit-user-status').value = user.status || 'active';
-  document.getElementById('edit-user-newpwd').value = '';
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+
+  setVal('edit-user-id', user.id);
+  setTxt('edit-user-header-name', `#${user.id} — ${user.fullName || user.email}`);
+  setVal('edit-user-fullname', user.fullName || '');
+  setVal('edit-user-email', user.email || '');
+  setVal('edit-user-phone', user.phone || '');
+  setVal('edit-user-country', user.country || '');
+  setVal('edit-user-deposit', user.depositBalanceRaw !== undefined ? user.depositBalanceRaw : 0);
+  setVal('edit-user-interest', user.interestBalanceRaw !== undefined ? user.interestBalanceRaw : 0);
+  setVal('edit-user-btc', user.btcWallet || '');
+  setVal('edit-user-usdt', user.usdtWallet || '');
+  setVal('edit-user-role', user.role || 'client');
+  setVal('edit-user-status', user.status || 'active');
+  setVal('edit-user-newpwd', '');
 
   modal.style.display = 'flex';
 }
@@ -5530,6 +5547,42 @@ const CORPORATE_INCOME_DATA = {
         desc: "Portfolio-level commercial land acquisitions, sovereign infrastructure development contracts, and custom real estate refinancing liquidity desks."
       }
     ]
+  },
+  agriculture: {
+    id: "agriculture",
+    title: "Agriculture Strategy",
+    segment: "Sustainable Agriculture & Agri-Tech Assets",
+    range: "$2,500.00 – $100,000.00",
+    minDeposit: "$2,500.00",
+    maxDeposit: "$100,000.00",
+    payoutSchedule: "Credited Every 24 Hours",
+    capitalProtection: "100% Guaranteed",
+    referralBonus: "6.0% Bonus",
+    howCompanyMakesMoney: "Capital deployment into sustainable agribusiness, smart irrigation infrastructure, precision farming technology, and high-yielding agricultural commodity export syndicates with insured crop yields.",
+    workInsight: "Resilient real-asset returns driven by global food supply demand and sustainable farming automation.",
+    riskManagement: "Comprehensive multi-peril crop insurance, physical land asset backing, and off-take supply contracts.",
+    tierBreakdown: [
+      {
+        tier: "Beginners Plan Tier ($100.00 – $4,999.00)",
+        desc: "Fractional allocation in regional greenhouse vertical farming operations and automated crop yield monitoring."
+      },
+      {
+        tier: "Prime Plan Tier ($5,000.00 – $19,999.00)",
+        desc: "Direct funding of smart irrigation automation, soil regeneration tech, and organic crop export supply chains."
+      },
+      {
+        tier: "Executive Plan Tier ($20,000.00 – $49,999.00)",
+        desc: "Co-ownership in commercial grain storage silos, solar-powered agricultural facilities, and tractor fleet leasing."
+      },
+      {
+        tier: "Master Plan Tier ($50,000.00 – $99,999.00)",
+        desc: "Large-scale farmland acquisition syndicates, sustainable aquaculture facilities, and international commodity arbitrage."
+      },
+      {
+        tier: "Prime Executive Tier ($100,000.00 – $1,000,000.00)",
+        desc: "Sovereign-backed agricultural development funds, global port grain terminal leasing, and dedicated asset managers."
+      }
+    ]
   }
 };
 
@@ -6104,10 +6157,10 @@ function updateThemeToggleUI(theme) {
     
     if (labelEl) {
       const text = labelEl.textContent.trim();
-      if (text === 'Navy' || text === 'Light') {
-        labelEl.textContent = isLight ? 'Light' : 'Navy';
+      if (text === 'Navy' || text === 'Light' || text === 'Dark') {
+        labelEl.textContent = isLight ? 'Light' : 'Dark';
       } else {
-        labelEl.textContent = isLight ? 'Light Theme' : 'Navy Theme';
+        labelEl.textContent = isLight ? 'Light Theme' : 'Dark Theme';
       }
     }
     
@@ -6116,8 +6169,8 @@ function updateThemeToggleUI(theme) {
         ? `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
         : `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
     }
-    btn.setAttribute('title', isLight ? 'Switch to Deep Navy Theme' : 'Switch to High-Contrast Light Theme');
-    btn.setAttribute('aria-label', isLight ? 'Switch to Deep Navy Theme' : 'Switch to High-Contrast Light Theme');
+    btn.setAttribute('title', isLight ? 'Switch to Dark Theme' : 'Switch to High-Contrast Light Theme');
+    btn.setAttribute('aria-label', isLight ? 'Switch to Dark Theme' : 'Switch to High-Contrast Light Theme');
   });
 }
 
