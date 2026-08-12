@@ -814,9 +814,12 @@ function handleDepositFormSubmit(event) {
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
   const token = getAuthToken();
+  const selectedMethodInput = form.querySelector('#deposit-selected-method') || form.querySelector('#deposit-method') || form.querySelector('[name="method"]');
+  const methodVal = selectedMethodInput?.value || 'Bitcoin (BTC ₿)';
+
   const payload = {
     amount: form.querySelector('#deposit-amount')?.value || '',
-    method: form.querySelector('#deposit-method')?.value || '',
+    method: methodVal,
     reference: form.querySelector('#deposit-reference')?.value?.trim() || '',
   };
 
@@ -837,10 +840,16 @@ function handleDepositFormSubmit(event) {
   }
 
   postJson('/api/deposits', payload, { authToken: token })
-    .then(() => {
+    .then((res) => {
       createMessage(form, t('deposit_success'));
+      if (typeof showToast === 'function') {
+        showToast('✅ Deposit request submitted successfully and pending approval!', true);
+      }
+      const savedMethod = methodVal;
       form.reset();
+      if (selectedMethodInput) selectedMethodInput.value = savedMethod;
       if (button) {
+        button.disabled = false;
         button.textContent = t('request_submitted');
       }
       loadDashboardData();
@@ -1755,7 +1764,8 @@ function initDashboardControls() {
 
   const switchTab = (tabId) => {
     if (!tabId) return;
-    allTabBtns.forEach((btn) => {
+    const btns = document.querySelectorAll('.dash-nav-btn, .acc-menu-btn, .investor-nav-item, [data-tab]');
+    btns.forEach((btn) => {
       const isMatch = btn.getAttribute('data-tab') === tabId;
       btn.classList.toggle('active', isMatch);
       btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
@@ -1766,6 +1776,8 @@ function initDashboardControls() {
       tab.classList.toggle('active', isMatch);
       tab.setAttribute('aria-hidden', isMatch ? 'false' : 'true');
     });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Dashboard Mobile Sidebar Toggle Logic
@@ -1805,23 +1817,29 @@ function initDashboardControls() {
     dashOverlay.addEventListener('click', closeDashMenu);
   }
 
-  allTabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.getAttribute('data-tab');
+  document.addEventListener('click', (e) => {
+    const switchTarget = e.target.closest('[data-switch-tab]');
+    if (switchTarget) {
+      const tabId = switchTarget.getAttribute('data-switch-tab');
       if (tabId) {
         switchTab(tabId);
         if (window.innerWidth <= 940) {
           closeDashMenu();
         }
       }
-    });
-  });
+      return;
+    }
 
-  document.querySelectorAll('[data-switch-tab]').forEach((trigger) => {
-    trigger.addEventListener('click', () => {
-      const targetTab = trigger.getAttribute('data-switch-tab');
-      switchTab(targetTab);
-    });
+    const tabTarget = e.target.closest('[data-tab]');
+    if (tabTarget && (tabTarget.classList.contains('dash-nav-btn') || tabTarget.classList.contains('acc-menu-btn') || tabTarget.classList.contains('investor-nav-item') || tabTarget.classList.contains('mobile-bottom-nav-btn'))) {
+      const tabId = tabTarget.getAttribute('data-tab');
+      if (tabId) {
+        switchTab(tabId);
+        if (window.innerWidth <= 940) {
+          closeDashMenu();
+        }
+      }
+    }
   });
 
   // Account Accordion Toggle Handler
