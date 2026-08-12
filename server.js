@@ -874,162 +874,219 @@ adminRouter.use(async (req, res, next) => {
   next();
 });
 
+// ==========================================
+// LIVE FINANCIAL TOTALS SERVICE & MIDDLEWARE
+// ==========================================
+
+/**
+ * Service function to query and calculate real-time live financial metrics directly from SQLite database.
+ */
+async function getLiveFinancialTotals(database) {
+  const activeDb = database || db;
+  const deposits = await activeDb.all('SELECT * FROM deposits ORDER BY id DESC');
+  const withdrawals = await activeDb.all('SELECT * FROM withdrawals ORDER BY id DESC');
+  const users = await activeDb.all('SELECT * FROM users ORDER BY id DESC');
+  const investments = await activeDb.all('SELECT * FROM investments ORDER BY id DESC');
+  const contacts = await activeDb.all('SELECT * FROM contacts ORDER BY id DESC LIMIT 100');
+  const visitorLogs = await activeDb.all('SELECT * FROM visitor_logs ORDER BY id DESC LIMIT 200');
+
+  // Visitor Statistics Computations
+  const totalVisitorsCount = (await activeDb.get('SELECT COUNT(*) as count FROM visitor_logs'))?.count || 0;
+  const todayDateStr = new Date().toISOString().split('T')[0];
+  const todayVisitorsCount = (await activeDb.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at LIKE ?', [todayDateStr + '%']))?.count || 0;
+  const uniqueVisitorsCount = (await activeDb.get('SELECT COUNT(DISTINCT ip_address) as count FROM visitor_logs'))?.count || 0;
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const weeklyVisitorsCount = (await activeDb.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [sevenDaysAgo]))?.count || Math.max(todayVisitorsCount, Math.floor(totalVisitorsCount * 0.4));
+  const monthlyVisitorsCount = (await activeDb.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [thirtyDaysAgo]))?.count || totalVisitorsCount;
+
+  // Top Visited Pages
+  const pageCountsMap = {};
+  visitorLogs.forEach(v => {
+    const p = v.path || '/';
+    pageCountsMap[p] = (pageCountsMap[p] || 0) + 1;
+  });
+  const mostVisitedPages = Object.entries(pageCountsMap)
+    .map(([path, hits]) => ({ path, hits, count: hits, percentage: Math.round((hits / Math.max(visitorLogs.length, 1)) * 100) }))
+    .sort((a, b) => b.hits - a.hits)
+    .slice(0, 5);
+
+  // Device & Browser Stats
+  let desktopCount = 0, mobileCount = 0, tabletCount = 0;
+  let chromeCount = 0, safariCount = 0, firefoxCount = 0, edgeCount = 0, otherBrowserCount = 0;
+  visitorLogs.forEach(v => {
+    const ua = (v.user_agent || '').toLowerCase();
+    if (/ipad|tablet/i.test(ua)) tabletCount++;
+    else if (/mobile|iphone|android/i.test(ua)) mobileCount++;
+    else desktopCount++;
+
+    if (ua.includes('edg/')) edgeCount++;
+    else if (ua.includes('chrome')) chromeCount++;
+    else if (ua.includes('safari')) safariCount++;
+    else if (ua.includes('firefox')) firefoxCount++;
+    else otherBrowserCount++;
+  });
+
+  const deviceStats = { Desktop: desktopCount || 1, Mobile: mobileCount, Tablet: tabletCount };
+  const browserStats = { Chrome: chromeCount || 1, Safari: safariCount, Edge: edgeCount, Firefox: firefoxCount, Other: otherBrowserCount };
+
+  const pendingDeposits = deposits.filter((item) => item.status === 'pending');
+  const pendingWithdrawals = withdrawals.filter((item) => item.status === 'pending');
+  const approvedWithdrawalsSum = withdrawals
+    .filter((item) => item.status === 'approved')
+    .reduce((sum, w) => sum + (w.amount || 0), 0);
+
+  const unreadMessagesCount = contacts.filter((c) => (c.status || 'unread') === 'unread').length;
+
+  const totalUserDepositBalances = users.reduce((sum, u) => sum + (u.deposit_balance || 0), 0);
+  const totalUserInterestBalances = users.reduce((sum, u) => sum + (u.interest_balance || 0), 0);
+  const activeInvestmentsList = investments.filter((inv) => inv.status === 'active');
+  const totalInvestedRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+  const totalAccruedProfitRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.accrued_profit || 0), 0);
+
+  const totalManagedCapitalRaw = totalUserDepositBalances + totalUserInterestBalances + totalInvestedRaw;
+  const totalProfitYieldRaw = totalUserInterestBalances + totalAccruedProfitRaw;
+
+  // Portfolio Sector Categorization
+  let realEstateCap = 0, agriCap = 0, cryptoCap = 0, stocksCap = 0;
+  activeInvestmentsList.forEach(inv => {
+    const pName = (inv.plan_name || '').toLowerCase();
+    if (pName.includes('real estate') || pName.includes('property')) realEstateCap += inv.amount;
+    else if (pName.includes('agri') || pName.includes('farm')) agriCap += inv.amount;
+    else if (pName.includes('stock') || pName.includes('equity') || pName.includes('index')) stocksCap += inv.amount;
+    else cryptoCap += inv.amount;
+  });
+
+  if (totalInvestedRaw > 0 && (realEstateCap + agriCap + cryptoCap + stocksCap === 0)) {
+    realEstateCap = Math.round(totalInvestedRaw * 0.35);
+    agriCap = Math.round(totalInvestedRaw * 0.20);
+    cryptoCap = Math.round(totalInvestedRaw * 0.30);
+    stocksCap = totalInvestedRaw - (realEstateCap + agriCap + cryptoCap);
+  }
+
+  const uptimeSeconds = Math.floor(process.uptime());
+  const uptimeHours = (uptimeSeconds / 3600).toFixed(1);
+
+  const stats = {
+    managedCapital: formatCurrency(totalManagedCapitalRaw),
+    managedCapitalRaw: totalManagedCapitalRaw,
+    investedCapital: formatCurrency(totalInvestedRaw),
+    investedCapitalRaw: totalInvestedRaw,
+    profitYield: formatCurrency(totalProfitYieldRaw),
+    profitYieldRaw: totalProfitYieldRaw,
+    totalWithdrawals: formatCurrency(approvedWithdrawalsSum),
+    totalWithdrawalsRaw: approvedWithdrawalsSum,
+    activeUsers: String(users.length),
+    activeInvestmentsCount: String(activeInvestmentsList.length),
+    pendingAlerts: String(pendingDeposits.length + pendingWithdrawals.length),
+    pendingDepositsCount: String(pendingDeposits.length),
+    pendingWithdrawalsCount: String(pendingWithdrawals.length),
+    totalDeposits: formatCurrency(deposits.reduce((sum, d) => sum + d.amount, 0)),
+    totalVisitorsCount: String(totalVisitorsCount),
+    todayVisitorsCount: String(todayVisitorsCount),
+    weeklyVisitorsCount: String(weeklyVisitorsCount),
+    monthlyVisitorsCount: String(monthlyVisitorsCount),
+    uniqueVisitorsCount: String(uniqueVisitorsCount),
+    unreadMessagesCount: String(unreadMessagesCount),
+    uptime: `${uptimeHours} hours`,
+    categories: {
+      realEstate: formatCurrency(realEstateCap),
+      realEstateRaw: realEstateCap,
+      agriculture: formatCurrency(agriCap),
+      agricultureRaw: agriCap,
+      crypto: formatCurrency(cryptoCap),
+      cryptoRaw: cryptoCap,
+      stocks: formatCurrency(stocksCap),
+      stocksRaw: stocksCap
+    },
+    deviceStats,
+    browserStats,
+    mostVisitedPages
+  };
+
+  const capitalCenter = {
+    totalManagedCapital: totalManagedCapitalRaw,
+    totalInvestedCapital: totalInvestedRaw,
+    totalProfitYield: totalProfitYieldRaw,
+    totalWithdrawals: approvedWithdrawalsSum,
+    categories: {
+      realEstate: realEstateCap,
+      agriculture: agriCap,
+      crypto: cryptoCap,
+      stocks: stocksCap
+    },
+    investmentLedger: activeInvestmentsList.map((inv) => {
+      const u = users.find(usr => usr.id === inv.user_id) || {};
+      return {
+        id: inv.id,
+        userId: inv.user_id,
+        userName: u.full_name || u.username || `Investor #${inv.user_id}`,
+        userEmail: u.email || '',
+        planName: inv.plan_name,
+        amount: formatCurrency(inv.amount),
+        amountRaw: inv.amount,
+        dailyRate: inv.daily_rate,
+        profitYield: formatCurrency(inv.accrued_profit || 0),
+        status: inv.status,
+        createdAt: inv.created_at
+      };
+    })
+  };
+
+  return {
+    stats,
+    capitalCenter,
+    topPages: mostVisitedPages,
+    deviceStats,
+    browserStats,
+    deposits,
+    withdrawals,
+    users,
+    investments,
+    contacts,
+    visitorLogs
+  };
+}
+
+/**
+ * Express middleware to attach live financial totals to request object
+ */
+async function liveTotalsMiddleware(req, res, next) {
+  try {
+    req.liveTotals = await getLiveFinancialTotals(db);
+  } catch (err) {
+    console.error('Error in liveTotalsMiddleware:', err);
+  }
+  next();
+}
+
+// GET /api/live-financial-totals - Dedicated API endpoint for real-time financial metrics
+app.get('/api/live-financial-totals', async (req, res) => {
+  try {
+    const data = await getLiveFinancialTotals(db);
+    res.json({ ok: true, stats: data.stats, capitalCenter: data.capitalCenter });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Failed to fetch live financial totals.' });
+  }
+});
+
 // GET / or /stats - Main Admin Telemetry & Statistics
 adminRouter.get(['/', '/stats'], async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
 
-    const deposits = await db.all('SELECT * FROM deposits ORDER BY id DESC');
-    const withdrawals = await db.all('SELECT * FROM withdrawals ORDER BY id DESC');
-    const users = await db.all('SELECT * FROM users ORDER BY id DESC');
-    const investments = await db.all('SELECT * FROM investments ORDER BY id DESC');
-    const contacts = await db.all('SELECT * FROM contacts ORDER BY id DESC LIMIT 100');
-    const visitorLogs = await db.all('SELECT * FROM visitor_logs ORDER BY id DESC LIMIT 200');
-
-    // Visitor Statistics Computations
-    const totalVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs'))?.count || 0;
-    const todayDateStr = new Date().toISOString().split('T')[0];
-    const todayVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at LIKE ?', [todayDateStr + '%']))?.count || 0;
-    const uniqueVisitorsCount = (await db.get('SELECT COUNT(DISTINCT ip_address) as count FROM visitor_logs'))?.count || 0;
-
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const weeklyVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [sevenDaysAgo]))?.count || Math.max(todayVisitorsCount, Math.floor(totalVisitorsCount * 0.4));
-    const monthlyVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [thirtyDaysAgo]))?.count || totalVisitorsCount;
-
-    // Top Visited Pages
-    const pageCountsMap = {};
-    visitorLogs.forEach(v => {
-      const p = v.path || '/';
-      pageCountsMap[p] = (pageCountsMap[p] || 0) + 1;
-    });
-    const mostVisitedPages = Object.entries(pageCountsMap)
-      .map(([path, count]) => ({ path, count, percentage: Math.round((count / Math.max(visitorLogs.length, 1)) * 100) }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-
-    // Device & Browser Stats
-    let desktopCount = 0, mobileCount = 0, tabletCount = 0;
-    let chromeCount = 0, safariCount = 0, firefoxCount = 0, edgeCount = 0, otherBrowserCount = 0;
-    visitorLogs.forEach(v => {
-      const ua = (v.user_agent || '').toLowerCase();
-      if (/ipad|tablet/i.test(ua)) tabletCount++;
-      else if (/mobile|iphone|android/i.test(ua)) mobileCount++;
-      else desktopCount++;
-
-      if (ua.includes('edg/')) edgeCount++;
-      else if (ua.includes('chrome')) chromeCount++;
-      else if (ua.includes('safari')) safariCount++;
-      else if (ua.includes('firefox')) firefoxCount++;
-      else otherBrowserCount++;
-    });
-    const logTotal = Math.max(visitorLogs.length, 1);
-    const deviceStats = {
-      desktop: Math.round((desktopCount / logTotal) * 100) || 72,
-      mobile: Math.round((mobileCount / logTotal) * 100) || 23,
-      tablet: Math.round((tabletCount / logTotal) * 100) || 5
-    };
-    const browserStats = {
-      chrome: Math.round((chromeCount / logTotal) * 100) || 58,
-      safari: Math.round((safariCount / logTotal) * 100) || 24,
-      edge: Math.round((edgeCount / logTotal) * 100) || 10,
-      firefox: Math.round((firefoxCount / logTotal) * 100) || 6,
-      other: Math.round((otherBrowserCount / logTotal) * 100) || 2
-    };
-
-    const pendingDeposits = deposits.filter((item) => item.status === 'pending');
-    const pendingWithdrawals = withdrawals.filter((item) => item.status === 'pending');
-    const approvedWithdrawalsSum = withdrawals
-      .filter((item) => item.status === 'approved')
-      .reduce((sum, w) => sum + (w.amount || 0), 0);
-
-    const unreadMessagesCount = contacts.filter((c) => (c.status || 'unread') === 'unread').length;
-
-    const totalUserDepositBalances = users.reduce((sum, u) => sum + (u.deposit_balance || 0), 0);
-    const totalUserInterestBalances = users.reduce((sum, u) => sum + (u.interest_balance || 0), 0);
-    const activeInvestmentsList = investments.filter((inv) => inv.status === 'active');
-    const totalInvestedRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.amount || 0), 0);
-    const totalAccruedProfitRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.accrued_profit || 0), 0);
-
-    const totalManagedCapitalRaw = totalUserDepositBalances + totalUserInterestBalances + totalInvestedRaw;
-    const totalProfitYieldRaw = totalUserInterestBalances + totalAccruedProfitRaw;
-
-    // Investment Portfolio Category Allocations
-    let realEstateCap = 0, agriCap = 0, cryptoCap = 0, stocksCap = 0;
-    activeInvestmentsList.forEach(inv => {
-      const pName = (inv.plan_name || '').toLowerCase();
-      if (pName.includes('real estate') || pName.includes('property')) realEstateCap += inv.amount;
-      else if (pName.includes('agri') || pName.includes('farm')) agriCap += inv.amount;
-      else if (pName.includes('stock') || pName.includes('equity') || pName.includes('index')) stocksCap += inv.amount;
-      else cryptoCap += inv.amount; // default/crypto mining
-    });
-
-    // If portfolio allocations are empty because users have custom names, provide default weighted breakdown
-    if (totalInvestedRaw > 0 && (realEstateCap + agriCap + cryptoCap + stocksCap === 0)) {
-      realEstateCap = Math.round(totalInvestedRaw * 0.35);
-      agriCap = Math.round(totalInvestedRaw * 0.20);
-      cryptoCap = Math.round(totalInvestedRaw * 0.30);
-      stocksCap = totalInvestedRaw - (realEstateCap + agriCap + cryptoCap);
-    }
-
-    const uptimeSeconds = Math.floor(process.uptime());
-    const uptimeHours = (uptimeSeconds / 3600).toFixed(1);
+    const liveData = await getLiveFinancialTotals(db);
 
     res.json({
-      stats: {
-        managedCapital: formatCurrency(totalManagedCapitalRaw),
-        managedCapitalRaw: totalManagedCapitalRaw,
-        investedCapital: formatCurrency(totalInvestedRaw),
-        investedCapitalRaw: totalInvestedRaw,
-        profitYield: formatCurrency(totalProfitYieldRaw),
-        profitYieldRaw: totalProfitYieldRaw,
-        totalWithdrawals: formatCurrency(approvedWithdrawalsSum),
-        totalWithdrawalsRaw: approvedWithdrawalsSum,
-        activeUsers: String(users.length),
-        activeInvestmentsCount: String(activeInvestmentsList.length),
-        pendingAlerts: String(pendingDeposits.length + pendingWithdrawals.length),
-        pendingDepositsCount: String(pendingDeposits.length),
-        pendingWithdrawalsCount: String(pendingWithdrawals.length),
-        totalDeposits: formatCurrency(deposits.reduce((sum, d) => sum + d.amount, 0)),
-        totalVisitorsCount: String(totalVisitorsCount),
-        todayVisitorsCount: String(todayVisitorsCount),
-        weeklyVisitorsCount: String(weeklyVisitorsCount),
-        monthlyVisitorsCount: String(monthlyVisitorsCount),
-        uniqueVisitorsCount: String(uniqueVisitorsCount),
-        unreadMessagesCount: String(unreadMessagesCount),
-        uptime: `${uptimeHours} hours`,
-        categories: {
-          realEstate: formatCurrency(realEstateCap),
-          realEstateRaw: realEstateCap,
-          agriculture: formatCurrency(agriCap),
-          agricultureRaw: agriCap,
-          crypto: formatCurrency(cryptoCap),
-          cryptoRaw: cryptoCap,
-          stocks: formatCurrency(stocksCap),
-          stocksRaw: stocksCap
-        },
-        deviceStats,
-        browserStats,
-        mostVisitedPages
-      },
-      investmentsLedger: activeInvestmentsList.map((inv) => {
-        const u = users.find(usr => usr.id === inv.user_id) || {};
-        return {
-          id: inv.id,
-          userId: inv.user_id,
-          userName: u.full_name || u.username || `Investor #${inv.user_id}`,
-          userEmail: u.email || '',
-          planName: inv.plan_name,
-          amount: formatCurrency(inv.amount),
-          amountRaw: inv.amount,
-          dailyRate: inv.daily_rate,
-          accruedProfit: formatCurrency(inv.accrued_profit || 0),
-          status: inv.status,
-          createdAt: inv.created_at
-        };
-      }),
-      requests: deposits.map((item) => ({
+      stats: liveData.stats,
+      capitalCenter: liveData.capitalCenter,
+      topPages: liveData.topPages,
+      deviceStats: liveData.deviceStats,
+      browserStats: liveData.browserStats,
+      investmentsLedger: liveData.capitalCenter.investmentLedger,
+      requests: liveData.deposits.map((item) => ({
         id: item.id,
         userId: item.user_id,
         amount: formatCurrency(item.amount),
@@ -1038,7 +1095,7 @@ adminRouter.get(['/', '/stats'], async (req, res) => {
         status: item.status,
         createdAt: item.created_at
       })),
-      withdrawals: withdrawals.map((w) => ({
+      withdrawals: liveData.withdrawals.map((w) => ({
         id: w.id,
         userId: w.user_id,
         amount: formatCurrency(w.amount),
@@ -1048,8 +1105,8 @@ adminRouter.get(['/', '/stats'], async (req, res) => {
         status: w.status,
         createdAt: w.created_at
       })),
-      users: users.map((u) => {
-        const userInvestments = investments.filter((inv) => inv.user_id === u.id);
+      users: liveData.users.map((u) => {
+        const userInvestments = liveData.investments.filter((inv) => inv.user_id === u.id);
         const activeInvestments = userInvestments.filter((inv) => inv.status === 'active');
         return {
           id: u.id,
@@ -1082,7 +1139,7 @@ adminRouter.get(['/', '/stats'], async (req, res) => {
           totalInvested: formatCurrency(activeInvestments.reduce((sum, inv) => sum + inv.amount, 0))
         };
       }),
-      contacts: (contacts || []).map((c) => ({
+      contacts: (liveData.contacts || []).map((c) => ({
         id: c.id,
         name: c.name,
         email: c.email,
@@ -1093,7 +1150,7 @@ adminRouter.get(['/', '/stats'], async (req, res) => {
         repliedAt: c.replied_at || '',
         createdAt: c.created_at
       })),
-      visitorLogs: (visitorLogs || []).map((v) => ({
+      visitorLogs: (liveData.visitorLogs || []).map((v) => ({
         id: v.id,
         ipAddress: v.ip_address || '127.0.0.1',
         userAgent: v.user_agent || 'Browser',
