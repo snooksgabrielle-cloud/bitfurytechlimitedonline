@@ -344,9 +344,56 @@
               <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Institutional Email Notification Dispatcher</h3>
               <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Official Sender &amp; Support Mailbox: <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong></p>
             </div>
-            <div style="text-align: right;">
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" id="toggle-smtp-config-btn" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700;">
+                ⚙️ SMTP Mailer Settings
+              </button>
               <span class="badge badge-accent" id="mail-status-badge">info@trustpay.tax Ready</span>
             </div>
+          </div>
+
+          <!-- SMTP Mailer Server Credentials Configuration Form -->
+          <div id="smtp-config-box" style="display: none; background: rgba(0,0,0,0.4); border: 1px solid rgba(56, 189, 248, 0.3); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.6rem;">
+              <h4 style="margin: 0; color: #38bdf8; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+                ⚙️ SMTP Credentials &amp; Email Delivery Server Setup
+              </h4>
+              <span class="badge" id="smtp-configured-status" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Not Configured</span>
+            </div>
+            <form id="admin-smtp-config-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-host" style="font-size: 0.8rem; color: #94a3b8;">SMTP Host Server</label>
+                <input type="text" id="smtp-host" placeholder="e.g. smtp.gmail.com or mail.privateemail.com" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-port" style="font-size: 0.8rem; color: #94a3b8;">Port (587 TLS or 465 SSL)</label>
+                <input type="number" id="smtp-port" placeholder="587" value="587" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-user" style="font-size: 0.8rem; color: #94a3b8;">SMTP Username / Email</label>
+                <input type="text" id="smtp-user" placeholder="e.g. info@trustpay.tax or mailer@domain.com" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-pass" style="font-size: 0.8rem; color: #94a3b8;">SMTP Password / App Secret</label>
+                <input type="password" id="smtp-pass" placeholder="••••••••••••" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-from" style="font-size: 0.8rem; color: #94a3b8;">Official From Address</label>
+                <input type="email" id="smtp-from" placeholder="info@trustpay.tax" value="info@trustpay.tax" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="smtp-secure" style="font-size: 0.8rem; color: #94a3b8;">Security Mode</label>
+                <select id="smtp-secure" style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+                  <option value="false">STARTTLS (Port 587)</option>
+                  <option value="true">SSL / TLS (Port 465)</option>
+                </select>
+              </div>
+              <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 0.4rem;">
+                <button class="btn btn-primary" type="submit" id="save-smtp-btn" style="background: #0284c7; border-color: #38bdf8;">
+                  💾 Save SMTP Server Credentials
+                </button>
+              </div>
+            </form>
           </div>
 
           <form id="admin-mail-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; align-items: start; margin-top: 1rem;">

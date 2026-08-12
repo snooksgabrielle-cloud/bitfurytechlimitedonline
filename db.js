@@ -203,6 +203,11 @@ export async function initDb() {
         is_active INTEGER DEFAULT 1,
         updated_at TEXT NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS app_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
     `;
 
     try {

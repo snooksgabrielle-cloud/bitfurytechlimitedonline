@@ -2313,48 +2313,57 @@ function initDashboardControls() {
     document.getElementById('cancel-invest-modal').addEventListener('click', closeInvestModal);
   }
 
-  // Open Invest Modal handler
-  document.querySelectorAll('.open-invest-modal').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const planId = btn.getAttribute('data-plan-id');
-      const planName = btn.getAttribute('data-plan-name');
-      const rate = parseFloat(btn.getAttribute('data-plan-rate') || '1.08');
-      const min = parseFloat(btn.getAttribute('data-plan-min') || '1000');
-      const max = parseFloat(btn.getAttribute('data-plan-max') || '19999');
+  // Helper to open invest modal for a plan
+  window.openInvestModalForPlan = function(planId, planName, rate, min, max, initialAmount) {
+    const investModal = document.getElementById('invest-modal');
+    if (!investModal) return;
 
-      const planIdEl = document.getElementById('modal-plan-id');
-      const planTitleEl = document.getElementById('modal-plan-title');
-      const planRateEl = document.getElementById('modal-plan-rate');
-      const investAmtInput = document.getElementById('invest-amount-input');
-      const modalLimitTxt = document.getElementById('modal-limit-text');
+    const planIdEl = document.getElementById('modal-plan-id');
+    const planTitleEl = document.getElementById('modal-plan-title');
+    const planRateEl = document.getElementById('modal-plan-rate');
+    const investAmtInput = document.getElementById('invest-amount-input');
+    const modalLimitTxt = document.getElementById('modal-limit-text');
 
-      if (planIdEl) planIdEl.value = planId;
-      if (planTitleEl) planTitleEl.textContent = planName;
-      if (planRateEl) planRateEl.textContent = `${rate}% / Daily`;
-      if (investAmtInput) {
-        investAmtInput.value = min;
-        investAmtInput.min = min;
-        investAmtInput.max = max;
-      }
-      if (modalLimitTxt) modalLimitTxt.textContent = `Limits: $${min.toLocaleString()} - $${max.toLocaleString()}`;
+    if (planIdEl) planIdEl.value = planId || 'beginners';
+    if (planTitleEl) planTitleEl.textContent = planName || 'Investment Plan';
+    if (planRateEl) planRateEl.textContent = `${rate || 1.00}% / Daily`;
+    if (investAmtInput) {
+      const defaultVal = initialAmount || min || 100;
+      investAmtInput.value = defaultVal;
+      investAmtInput.min = min || 100;
+      investAmtInput.max = max || 1000000;
+    }
+    if (modalLimitTxt) modalLimitTxt.textContent = `Limits: $${(min || 100).toLocaleString()} - $${(max || 1000000).toLocaleString()}`;
 
-      // Update calculations
-      const updateModalCalc = () => {
-        const amtInput = document.getElementById('invest-amount-input');
-        const amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
-        const dailyProfit = amt * (rate / 100);
-        const monthlyProfit = dailyProfit * 30;
-        const dailyCalcEl = document.getElementById('modal-daily-return-calc');
-        const monthlyCalcEl = document.getElementById('modal-monthly-return-calc');
-        if (dailyCalcEl) dailyCalcEl.textContent = `$${dailyProfit.toFixed(2)}`;
-        if (monthlyCalcEl) monthlyCalcEl.textContent = `$${monthlyProfit.toFixed(2)}`;
-      };
+    const updateModalCalc = () => {
+      const amtInput = document.getElementById('invest-amount-input');
+      const amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
+      const dailyProfit = amt * ((rate || 1.00) / 100);
+      const monthlyProfit = dailyProfit * 30;
+      const dailyCalcEl = document.getElementById('modal-daily-return-calc');
+      const monthlyCalcEl = document.getElementById('modal-monthly-return-calc');
+      if (dailyCalcEl) dailyCalcEl.textContent = `$${dailyProfit.toFixed(2)}`;
+      if (monthlyCalcEl) monthlyCalcEl.textContent = `$${monthlyProfit.toFixed(2)}`;
+    };
 
-      updateModalCalc();
-      if (investAmtInput) investAmtInput.oninput = updateModalCalc;
+    updateModalCalc();
+    if (investAmtInput) investAmtInput.oninput = updateModalCalc;
 
-      if (investModal) investModal.classList.add('active');
-    });
+    investModal.classList.add('active');
+  };
+
+  // Delegated click handler for Open Invest Modal buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.open-invest-modal');
+    if (btn) {
+      e.preventDefault();
+      const planId = btn.getAttribute('data-plan-id') || 'beginners';
+      const planName = btn.getAttribute('data-plan-name') || 'Investment Plan';
+      const rate = parseFloat(btn.getAttribute('data-plan-rate') || '1.00');
+      const min = parseFloat(btn.getAttribute('data-plan-min') || '100');
+      const max = parseFloat(btn.getAttribute('data-plan-max') || '1000000');
+      window.openInvestModalForPlan(planId, planName, rate, min, max);
+    }
   });
 
   // Confirm Investment Submission
@@ -2630,7 +2639,26 @@ function initDashboardControls() {
 
   if (document.getElementById('calc-invest-now-btn')) {
     document.getElementById('calc-invest-now-btn').addEventListener('click', () => {
+      let planId = 'beginners';
+      let planName = 'Beginners Plan';
+      let rate = 1.00;
+      let min = 100;
+      let max = 4999;
+      let amt = parseFloat(calcAmountInput?.value || '1000') || 1000;
+
+      if (calcPlanSelect && calcPlanSelect.selectedIndex >= 0) {
+        const opt = calcPlanSelect.options[calcPlanSelect.selectedIndex];
+        planId = opt.value || 'beginners';
+        planName = opt.getAttribute('data-plan-name') || opt.text || 'Investment Plan';
+        rate = parseFloat(opt.getAttribute('data-rate') || '1.00');
+        min = parseFloat(opt.getAttribute('data-min') || '100');
+        max = parseFloat(opt.getAttribute('data-max') || '4999');
+      }
+
       switchTab('plans');
+      if (window.openInvestModalForPlan) {
+        window.openInvestModalForPlan(planId, planName, rate, min, max, amt);
+      }
     });
   }
 
@@ -4987,6 +5015,94 @@ function initAdminMailingForm() {
   const userSelect = document.getElementById('admin-mail-user-id');
   const refreshLogsBtn = document.getElementById('refresh-mail-logs-btn');
 
+  // SMTP Settings Controls
+  const toggleSmtpBtn = document.getElementById('toggle-smtp-config-btn');
+  const smtpBox = document.getElementById('smtp-config-box');
+  const smtpForm = document.getElementById('admin-smtp-config-form');
+
+  if (toggleSmtpBtn && !toggleSmtpBtn.dataset.bound) {
+    toggleSmtpBtn.dataset.bound = 'true';
+    toggleSmtpBtn.addEventListener('click', () => {
+      if (smtpBox) {
+        const isHidden = smtpBox.style.display === 'none';
+        smtpBox.style.display = isHidden ? 'block' : 'none';
+      }
+    });
+  }
+
+  const loadSmtpSettings = async () => {
+    try {
+      const res = await fetch('/api/admin/smtp', {
+        headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {}
+      });
+      const data = await res.json();
+      if (res.ok && data.ok && data.smtp) {
+        const s = data.smtp;
+        const hostEl = document.getElementById('smtp-host');
+        const portEl = document.getElementById('smtp-port');
+        const userEl = document.getElementById('smtp-user');
+        const fromEl = document.getElementById('smtp-from');
+        const secureEl = document.getElementById('smtp-secure');
+        const statusBadge = document.getElementById('smtp-configured-status');
+
+        if (hostEl) hostEl.value = s.host || '';
+        if (portEl) portEl.value = s.port || '587';
+        if (userEl) userEl.value = s.user || '';
+        if (fromEl) fromEl.value = s.from || 'info@trustpay.tax';
+        if (secureEl) secureEl.value = s.secure || 'false';
+
+        if (statusBadge) {
+          if (s.isConfigured) {
+            statusBadge.textContent = '🟢 SMTP Configured';
+            statusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+            statusBadge.style.color = '#34d399';
+          } else {
+            statusBadge.textContent = '🟡 Not Configured (In-App Only)';
+            statusBadge.style.background = 'rgba(234, 179, 8, 0.2)';
+            statusBadge.style.color = '#facc15';
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not load SMTP settings:', e);
+    }
+  };
+
+  loadSmtpSettings();
+
+  if (smtpForm && !smtpForm.dataset.bound) {
+    smtpForm.dataset.bound = 'true';
+    smtpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const host = document.getElementById('smtp-host')?.value?.trim() || '';
+      const port = document.getElementById('smtp-port')?.value?.trim() || '587';
+      const user = document.getElementById('smtp-user')?.value?.trim() || '';
+      const pass = document.getElementById('smtp-pass')?.value || '';
+      const from = document.getElementById('smtp-from')?.value?.trim() || 'info@trustpay.tax';
+      const secure = document.getElementById('smtp-secure')?.value || 'false';
+
+      try {
+        const res = await fetch('/api/admin/smtp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
+          },
+          body: JSON.stringify({ host, port, user, pass, from, secure })
+        });
+        const resData = await res.json();
+        if (res.ok && resData.ok) {
+          showToast('✅ SMTP Mailer credentials saved successfully!', true);
+          await loadSmtpSettings();
+        } else {
+          showToast(`❌ ${resData.error || 'Failed to save SMTP settings.'}`, false);
+        }
+      } catch (err) {
+        showToast('❌ Error saving SMTP settings.', false);
+      }
+    });
+  }
+
   if (targetSelect && !targetSelect.dataset.bound) {
     targetSelect.dataset.bound = 'true';
     targetSelect.addEventListener('change', () => {
@@ -5822,20 +5938,32 @@ function initInvestmentPlanModals() {
     const label = (target.textContent || '').trim();
 
     // Open Standalone Plan Details Page
-    if (
-      target.classList.contains('open-income-modal') ||
-      target.getAttribute('data-open-modal') === 'income'
-    ) {
-      const card = target.closest('.plan-card, .dash-plan-card, .surface-card');
+    const incomeBtn = target.closest('.open-income-modal, [data-open-modal="income"]');
+    if (incomeBtn) {
+      const card = incomeBtn.closest('.plan-card, .dash-plan-card, .surface-card');
       const planKey =
-        target.getAttribute('data-plan') ||
-        target.getAttribute('data-plan-id') ||
+        incomeBtn.getAttribute('data-plan') ||
+        incomeBtn.getAttribute('data-plan-id') ||
         card?.querySelector('[data-plan]')?.getAttribute('data-plan') ||
         card?.querySelector('[data-plan-id]')?.getAttribute('data-plan-id') ||
         'crypto';
 
       e.preventDefault();
       window.location.href = `plan-details.html?plan=${encodeURIComponent(planKey)}`;
+      return;
+    }
+
+    // Copy Promo Banner Handler
+    const copyPromoBtn = target.closest('#copy-promo-banner-btn');
+    if (copyPromoBtn) {
+      e.preventDefault();
+      const codeInput = document.getElementById('promo-embed-code');
+      const bannerCode = (codeInput && codeInput.value) || `<a href="${window.location.origin}/register.html" target="_blank"><img src="${window.location.origin}/logo.svg" alt="Bitfurytech" /></a>`;
+      navigator.clipboard.writeText(bannerCode).then(() => {
+        showToast('📋 Promotional banner embed code copied to clipboard!', true);
+      }).catch(() => {
+        showToast('📋 Banner code copied!', true);
+      });
       return;
     }
 

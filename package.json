@@ -15,6 +15,7 @@
   "dependencies": {
     "cors": "^2.8.0",
     "express": "^4.19.0",
+    "nodemailer": "^9.0.5",
     "sql.js": "^1.14.1"
   }
 }

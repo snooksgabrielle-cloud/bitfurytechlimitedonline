@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 import { createHash, randomBytes } from 'crypto';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { db, initDb } from './db.js';
@@ -142,8 +143,45 @@ const OFFICIAL_COMPANY_EMAIL = 'info@trustpay.tax';
 const hashPassword = (password) => createHash('sha256').update(password).digest('hex');
 const createToken = () => randomBytes(24).toString('hex');
 
+async function getSmtpTransporter() {
+  let host = process.env.SMTP_HOST || process.env.MAIL_HOST;
+  let port = parseInt(process.env.SMTP_PORT || process.env.MAIL_PORT || '587');
+  let user = process.env.SMTP_USER || process.env.MAIL_USER;
+  let pass = process.env.SMTP_PASS || process.env.MAIL_PASS;
+  let secure = process.env.SMTP_SECURE === 'true' || port === 465;
+
+  if (!host && db) {
+    try {
+      const rows = await db.all('SELECT key, value FROM app_settings WHERE key LIKE "smtp_%"');
+      const settings = {};
+      (rows || []).forEach((r) => { settings[r.key] = r.value; });
+      if (settings.smtp_host) {
+        host = settings.smtp_host;
+        port = parseInt(settings.smtp_port || '587');
+        user = settings.smtp_user || '';
+        pass = settings.smtp_pass || '';
+        secure = settings.smtp_secure === 'true' || port === 465;
+      }
+    } catch (e) {
+      // Table check fallback
+    }
+  }
+
+  if (host && user && pass) {
+    return nodemailer.createTransport({
+      host,
+      port,
+      secure,
+      auth: { user, pass },
+      tls: { rejectUnauthorized: false }
+    });
+  }
+
+  return null;
+}
+
 async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, subject, message, category = 'Official Notice', notificationType = 'info' }) {
-  const sender = OFFICIAL_COMPANY_EMAIL;
+  const sender = process.env.SMTP_FROM || OFFICIAL_COMPANY_EMAIL;
   let targetUserId = userId || (toUser ? toUser.id : null);
   let recipient = recipientEmail || (toUser ? toUser.email : null);
 
@@ -156,10 +194,51 @@ async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, s
 
   const now = new Date().toISOString();
 
-  // Record outgoing dispatch log
+  let emailStatus = 'delivered_in_app';
+  let smtpError = null;
+
+  try {
+    const transporter = await getSmtpTransporter();
+    if (transporter) {
+      const htmlBody = `
+        <div style="font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; background-color: #0b0f19; color: #f8fafc; padding: 28px; border-radius: 12px; max-width: 620px; margin: 0 auto; border: 1px solid #1e293b;">
+          <div style="text-align: center; border-bottom: 1px solid #334155; padding-bottom: 18px; margin-bottom: 22px;">
+            <h2 style="color: #38bdf8; margin: 0; font-size: 22px; font-weight: 800;">Bitfurytech Limited</h2>
+            <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Quantitative Finance & Asset Management</p>
+          </div>
+          <div style="background: #1e293b; padding: 22px; border-radius: 8px; border-left: 4px solid #38bdf8; margin-bottom: 22px;">
+            <h3 style="color: #f1f5f9; margin-top: 0; font-size: 16px;">${subject}</h3>
+            <div style="color: #cbd5e1; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+          </div>
+          <div style="text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #334155; padding-top: 16px;">
+            <p style="margin: 4px 0;">Official Sender: <a href="mailto:${sender}" style="color: #38bdf8; text-decoration: none;">${sender}</a></p>
+            <p style="margin: 4px 0;">&copy; ${new Date().getFullYear()} Bitfurytech Limited. All rights reserved.</p>
+          </div>
+        </div>
+      `;
+
+      await transporter.sendMail({
+        from: `"Bitfurytech Support" <${sender}>`,
+        to: recipient,
+        subject: subject,
+        text: message,
+        html: htmlBody
+      });
+      emailStatus = 'sent_smtp';
+      console.log(`✅ [SMTP Mailer] Real email dispatched to ${recipient}: ${subject}`);
+    } else {
+      console.log(`ℹ️ [Mailer] No active SMTP configuration found in environment. Saved in-app notification for ${recipient}: ${subject}`);
+    }
+  } catch (err) {
+    smtpError = err.message;
+    console.error(`⚠️ [SMTP Dispatch Failure] ${recipient}:`, err.message);
+    emailStatus = 'smtp_failed';
+  }
+
+  // Record outgoing dispatch log in SQLite
   const mailResult = await db.run(
     'INSERT INTO mail_logs (sender, recipient, subject, message, category, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [sender, recipient, subject, message, category, 'delivered', now]
+    [sender, recipient, subject, message, category, emailStatus, now]
   );
 
   if (!targetUserId) {
@@ -174,8 +253,7 @@ async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, s
     );
   }
 
-  console.log(`Email dispatched from ${sender} to ${recipient}: ${subject}`);
-  return { mailId: mailResult.lastID, sender, recipient, subject };
+  return { mailId: mailResult.lastID, sender, recipient, subject, status: emailStatus, smtpError };
 }
 
 const createNotificationEmail = sendOfficialNotificationEmail;
@@ -1974,6 +2052,138 @@ adminRouter.get('/mail/logs', async (req, res) => {
   } catch (err) {
     console.error('Error fetching mail logs:', err);
     res.status(500).json({ ok: false, error: 'Failed to load mail logs.' });
+  }
+});
+
+adminRouter.get('/smtp', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    let host = process.env.SMTP_HOST || '';
+    let port = process.env.SMTP_PORT || '587';
+    let user = process.env.SMTP_USER || '';
+    let passSet = !!process.env.SMTP_PASS;
+    let secure = process.env.SMTP_SECURE || 'false';
+    let from = process.env.SMTP_FROM || 'info@trustpay.tax';
+
+    const rows = await db.all('SELECT key, value FROM app_settings WHERE key LIKE "smtp_%"');
+    const settings = {};
+    (rows || []).forEach((r) => { settings[r.key] = r.value; });
+
+    if (settings.smtp_host) {
+      host = settings.smtp_host;
+      port = settings.smtp_port || '587';
+      user = settings.smtp_user || '';
+      passSet = passSet || !!settings.smtp_pass;
+      secure = settings.smtp_secure || 'false';
+      from = settings.smtp_from || 'info@trustpay.tax';
+    }
+
+    res.json({
+      ok: true,
+      smtp: {
+        host,
+        port,
+        user,
+        passSet,
+        secure,
+        from,
+        isConfigured: !!(host && user && passSet)
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Failed to fetch SMTP configuration.' });
+  }
+});
+
+adminRouter.post('/smtp', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    const { host = '', port = '587', user = '', pass = '', secure = 'false', from = 'info@trustpay.tax' } = req.body;
+
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_host', String(host).trim()]);
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_port', String(port).trim()]);
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_user', String(user).trim()]);
+    if (pass) {
+      await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_pass', String(pass).trim()]);
+    }
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_secure', String(secure).trim()]);
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_from', String(from).trim()]);
+
+    res.json({ ok: true, message: 'SMTP mailer configuration saved successfully.' });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Failed to save SMTP configuration.' });
+  }
+});
+
+// ADMIN COMPANY CRYPTO GATEWAY WALLETS MANAGEMENT ENDPOINTS
+adminRouter.get('/wallets', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    const wallets = await db.all('SELECT * FROM admin_wallets ORDER BY id ASC');
+    res.json({ ok: true, wallets });
+  } catch (err) {
+    console.error('Error fetching company wallets:', err);
+    res.status(500).json({ ok: false, error: 'Failed to load company wallet configurations.' });
+  }
+});
+
+adminRouter.post('/wallets', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    const { wallets } = req.body;
+    if (!Array.isArray(wallets)) {
+      return res.status(400).json({ ok: false, error: 'Invalid wallets payload. Array expected.' });
+    }
+
+    const nowStr = new Date().toISOString();
+    const activeCodes = [];
+
+    for (const w of wallets) {
+      const code = String(w.coin_code || 'COIN').trim().toUpperCase();
+      if (!code) continue;
+
+      const name = String(w.coin_name || code).trim();
+      const symbol = String(w.coin_symbol || '₮').trim();
+      const network = String(w.network || 'Mainnet').trim();
+      const address = String(w.address || '').trim();
+      const memo = String(w.memo || '').trim();
+      const isActive = w.is_active ? 1 : 0;
+      const qr = address ? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(address)}&size=200x200` : '';
+
+      activeCodes.push(code);
+
+      const existing = await db.get('SELECT id FROM admin_wallets WHERE coin_code = ?', [code]);
+      if (existing) {
+        await db.run(
+          'UPDATE admin_wallets SET coin_name = ?, coin_symbol = ?, network = ?, address = ?, memo = ?, qr_code_url = ?, is_active = ?, updated_at = ? WHERE id = ?',
+          [name, symbol, network, address, memo, qr, isActive, nowStr, existing.id]
+        );
+      } else {
+        await db.run(
+          'INSERT INTO admin_wallets (coin_code, coin_name, coin_symbol, network, address, memo, qr_code_url, is_active, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [code, name, symbol, network, address, memo, qr, isActive, nowStr]
+        );
+      }
+    }
+
+    // Remove deleted gateway wallets
+    if (activeCodes.length > 0) {
+      const placeholders = activeCodes.map(() => '?').join(',');
+      await db.run(`DELETE FROM admin_wallets WHERE coin_code NOT IN (${placeholders})`, activeCodes);
+    }
+
+    res.json({ ok: true, message: 'Company gateway wallet addresses updated successfully!' });
+  } catch (err) {
+    console.error('Error updating company wallets:', err);
+    res.status(500).json({ ok: false, error: 'Failed to update company wallet configurations.' });
   }
 });
 
