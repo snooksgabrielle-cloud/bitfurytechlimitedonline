@@ -944,7 +944,7 @@ function handleAuthFormSubmit(event) {
       createMessage(form, isRegister ? 'Account created successfully! Redirecting to dashboard...' : 'Login successful! Redirecting to dashboard...');
       setTimeout(() => {
         if (data && data.user && data.user.role === 'admin') {
-          window.location.href = 'admin.html';
+          window.location.href = '/admin';
         } else {
           window.location.href = 'dashboard.html';
         }
@@ -2827,9 +2827,9 @@ function initDashboardControls() {
   }
 
   // Admin Controls Event Bindings
-  const adminProfitBtn = document.getElementById('admin-trigger-profit-btn');
-  if (adminProfitBtn) {
-    adminProfitBtn.addEventListener('click', async () => {
+  const adminProfitBtns = document.querySelectorAll('#admin-trigger-profit-btn, #admin-trigger-profit-btn-cap');
+  adminProfitBtns.forEach((btn) => {
+    btn.addEventListener('click', async () => {
       try {
         const res = await fetch('/api/admin/trigger-profit', {
           method: 'POST',
@@ -2839,7 +2839,9 @@ function initDashboardControls() {
         if (res.ok && data.ok) {
           showToast(`⚡ ${data.message}`, true);
           await loadAdminData();
-          await loadDashboardData();
+          if (window.location.pathname.includes('dashboard.html')) {
+            await loadDashboardData();
+          }
         } else {
           showToast(`❌ ${data.error || 'Failed to trigger profit yields.'}`, false);
         }
@@ -2847,7 +2849,7 @@ function initDashboardControls() {
         showToast('❌ Error triggering profit yields.', false);
       }
     });
-  }
+  });
 
   const adminAdjForm = document.getElementById('admin-balance-adj-form');
   if (adminAdjForm) {
@@ -2877,7 +2879,9 @@ function initDashboardControls() {
           showToast(`💰 ${data.message}`, true);
           adminAdjForm.reset();
           await loadAdminData();
-          await loadDashboardData();
+          if (window.location.pathname.includes('dashboard.html')) {
+            await loadDashboardData();
+          }
         } else {
           showToast(`❌ ${data.error || 'Adjustment failed.'}`, false);
         }
@@ -2886,6 +2890,28 @@ function initDashboardControls() {
       }
     });
   }
+
+  // Bind Clickable Overview Cards Smooth Jump Navigation
+  initAdminOverviewJumpCards();
+}
+
+function initAdminOverviewJumpCards() {
+  document.querySelectorAll('.clickable-overview-card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      // Don't trigger if clicked on an action button inside the card
+      if (e.target.closest('button, a')) return;
+
+      const jumpTarget = card.getAttribute('data-jump');
+      if (jumpTarget) {
+        const targetEl = document.querySelector(jumpTarget);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          targetEl.classList.add('highlight-section');
+          setTimeout(() => targetEl.classList.remove('highlight-section'), 2000);
+        }
+      }
+    });
+  });
 }
 
 async function loadAdminData() {
@@ -2921,6 +2947,8 @@ async function loadAdminData() {
 
     if (document.getElementById('admin-pending-deposits-count')) document.getElementById('admin-pending-deposits-count').textContent = String(pendingDeposits.length);
     if (document.getElementById('admin-pending-withdrawals-count')) document.getElementById('admin-pending-withdrawals-count').textContent = String(pendingWithdrawals.length);
+    if (document.getElementById('admin-pending-dep-badge')) document.getElementById('admin-pending-dep-badge').textContent = `${pendingDeposits.length} Pending Action`;
+    if (document.getElementById('admin-pending-wd-badge')) document.getElementById('admin-pending-wd-badge').textContent = `${pendingWithdrawals.length} Pending Action`;
 
     // Update Visitors & Investor Messages Stat Elements
     if (document.getElementById('admin-visitors-stat')) document.getElementById('admin-visitors-stat').textContent = `${stats.totalVisitorsCount || '0'} Hits`;
@@ -2933,7 +2961,13 @@ async function loadAdminData() {
     if (document.getElementById('admin-unread-messages-badge')) document.getElementById('admin-unread-messages-badge').textContent = `${stats.unreadMessagesCount || '0'} Unread Notices`;
     if (document.getElementById('admin-contacts-count')) document.getElementById('admin-contacts-count').textContent = `${(data.contacts || []).length} Total Messages`;
 
-    // User select options
+    // Render Managed Capital Center
+    renderAdminCapitalCenter(data.capitalCenter);
+
+    // Render Analytics Overview Metrics & Visual Progress Bars
+    renderAdminAnalyticsCenter(data);
+
+    // User select options for balance adjustment and mailing
     const userSelect = document.getElementById('admin-adj-user-id');
     const mailUserSelect = document.getElementById('admin-mail-user-id');
     if (data.users) {
@@ -2961,94 +2995,14 @@ async function loadAdminData() {
     await initAdminCryptoWalletsPortal();
 
     // Deposits Table
-    const depositsTable = document.querySelector('#admin-deposits-table tbody, #admin-requests tbody');
-    if (depositsTable) {
-      const reqList = data.requests || [];
-      if (!reqList.length) {
-        depositsTable.innerHTML = `<tr><td colspan="6" class="text-center muted">No deposit requests logged.</td></tr>`;
-      } else {
-        depositsTable.innerHTML = reqList.map((item) => `
-          <tr>
-            <td><strong>#${item.id}</strong> (User #${item.userId || '1'})</td>
-            <td>${item.method}</td>
-            <td><code>${item.reference}</code></td>
-            <td><strong class="green-text">${item.amount}</strong></td>
-            <td>
-              <span class="badge" style="${item.status === 'approved' ? 'background: rgba(16,185,129,0.2); color:#34d399;' : item.status === 'rejected' ? 'background: rgba(239,68,68,0.2); color:#f87171;' : 'background: rgba(234,179,8,0.2); color:#facc15;'}">
-                ${(item.status || 'pending').toUpperCase()}
-              </span>
-            </td>
-            <td>
-              ${item.status === 'pending' ? `
-                <div class="table-actions" style="display: flex; gap: 0.4rem;">
-                  <button class="btn btn-secondary btn-sm" type="button" data-approve-dep="${item.id}" style="border-color: #22c55e; color: #4ade80;">Approve</button>
-                  <button class="btn btn-secondary btn-sm" type="button" data-reject-dep="${item.id}" style="border-color: #f87171; color: #f87171;">Reject</button>
-                </div>
-              ` : '<span class="muted" style="font-size: 0.8rem;">Processed</span>'}
-            </td>
-          </tr>
-        `).join('');
-
-        depositsTable.querySelectorAll('[data-approve-dep]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-approve-dep');
-            await handleAdminDepositAction(id, 'approve');
-          });
-        });
-        depositsTable.querySelectorAll('[data-reject-dep]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-reject-dep');
-            await handleAdminDepositAction(id, 'reject');
-          });
-        });
-      }
-    }
+    renderAdminDepositsTable(data.requests || []);
+    initAdminDepositsControls();
 
     // Withdrawals Table
-    const withdrawalsTable = document.querySelector('#admin-withdrawals-table tbody');
-    if (withdrawalsTable) {
-      const wList = data.withdrawals || [];
-      if (!wList.length) {
-        withdrawalsTable.innerHTML = `<tr><td colspan="6" class="text-center muted">No withdrawal requests logged.</td></tr>`;
-      } else {
-        withdrawalsTable.innerHTML = wList.map((item) => `
-          <tr>
-            <td><strong>#${item.id}</strong> (User #${item.userId || '1'})</td>
-            <td><span class="badge">${item.walletType || 'Wallet'}</span></td>
-            <td>${item.method} — <code>${item.details}</code></td>
-            <td><strong class="green-text">${item.amount}</strong></td>
-            <td>
-              <span class="badge" style="${item.status === 'approved' ? 'background: rgba(16,185,129,0.2); color:#34d399;' : item.status === 'rejected' ? 'background: rgba(239,68,68,0.2); color:#f87171;' : 'background: rgba(234,179,8,0.2); color:#facc15;'}">
-                ${(item.status || 'pending').toUpperCase()}
-              </span>
-            </td>
-            <td>
-              ${item.status === 'pending' ? `
-                <div class="table-actions" style="display: flex; gap: 0.4rem;">
-                  <button class="btn btn-secondary btn-sm" type="button" data-approve-wd="${item.id}" style="border-color: #22c55e; color: #4ade80;">Approve</button>
-                  <button class="btn btn-secondary btn-sm" type="button" data-reject-wd="${item.id}" style="border-color: #f87171; color: #f87171;">Reject</button>
-                </div>
-              ` : '<span class="muted" style="font-size: 0.8rem;">Processed</span>'}
-            </td>
-          </tr>
-        `).join('');
+    renderAdminWithdrawalsTable(data.withdrawals || []);
+    initAdminWithdrawalsControls();
 
-        withdrawalsTable.querySelectorAll('[data-approve-wd]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-approve-wd');
-            await handleAdminWithdrawalAction(id, 'approve');
-          });
-        });
-        withdrawalsTable.querySelectorAll('[data-reject-wd]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-reject-wd');
-            await handleAdminWithdrawalAction(id, 'reject');
-          });
-        });
-      }
-    }
-
-    // Users Table
+    // Registered Users Table
     if (data.users) {
       allAdminUsersList = data.users || [];
       renderAdminUsersTable();
@@ -3056,173 +3010,698 @@ async function loadAdminData() {
     }
 
     // Render Website Visitors Recording Table
-    const visitorsTable = document.querySelector('#admin-visitor-logs-table tbody');
-    if (visitorsTable) {
-      const vLogs = data.visitorLogs || [];
-      if (!vLogs.length) {
-        visitorsTable.innerHTML = `<tr><td colspan="6" class="text-center muted" style="padding: 1.5rem;">No recorded website visitor logs yet.</td></tr>`;
-      } else {
-        visitorsTable.innerHTML = vLogs.map((v) => {
-          const dateStr = v.createdAt ? new Date(v.createdAt).toLocaleString() : 'N/A';
-          return `
-            <tr>
-              <td><strong style="color: #c084fc;">#${v.id}</strong></td>
-              <td>
-                <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #e9d5ff; font-family: monospace;">${v.ipAddress}</span>
-                ${v.userId ? `<span class="badge" style="background: rgba(16,185,129,0.2); color:#34d399; margin-left: 0.3rem;">User #${v.userId}</span>` : ''}
-              </td>
-              <td><code style="color: #38bdf8; font-size: 0.82rem;">${v.path}</code></td>
-              <td><span style="font-size: 0.8rem; color: #cbd5e1; max-width: 250px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${v.userAgent}">${v.userAgent}</span></td>
-              <td><span style="font-size: 0.8rem; color: #94a3b8;">${v.referrer}</span></td>
-              <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
-            </tr>
-          `;
-        }).join('');
-      }
-    }
+    renderAdminVisitorLogsTable(data.visitorLogs || []);
 
     // Investor Support Messages Notice Center Table
-    const contactsTable = document.querySelector('#admin-contacts-table tbody');
-    if (contactsTable && data.contacts) {
-      const cList = data.contacts || [];
-      if (!cList.length) {
-        contactsTable.innerHTML = `<tr><td colspan="7" class="text-center muted" style="padding: 1.5rem;">No investor messages received yet.</td></tr>`;
-      } else {
-        contactsTable.innerHTML = cList.map((c) => {
-          const dateStr = c.createdAt ? new Date(c.createdAt).toLocaleString() : 'N/A';
-          const statusBg = c.status === 'replied'
-            ? 'background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);'
-            : c.status === 'read'
-            ? 'background: rgba(148,163,184,0.2); color: #cbd5e1; border: 1px solid rgba(148,163,184,0.4);'
-            : 'background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4);';
-
-          return `
-            <tr>
-              <td><strong style="color: #38bdf8;">#${c.id}</strong></td>
-              <td>
-                <div style="font-weight: 700; color: #fff;">${c.name}</div>
-                <div style="font-size: 0.82rem; color: #38bdf8;">${c.email}</div>
-              </td>
-              <td>
-                <span class="badge" style="background: rgba(56,189,248,0.15); color: #7dd3fc; font-weight: 600;">${c.subject || 'General Inquiry'}</span>
-              </td>
-              <td>
-                <div style="font-size: 0.88rem; color: #cbd5e1; max-width: 320px; white-space: pre-wrap;">${c.message}</div>
-                ${c.replyMessage ? `<div style="margin-top: 0.4rem; padding: 0.4rem; background: rgba(16,185,129,0.1); border-left: 3px solid #10b981; font-size: 0.8rem; color: #a7f3d0;"><strong>Reply Sent:</strong> ${c.replyMessage}</div>` : ''}
-              </td>
-              <td>
-                <span class="badge" style="${statusBg}">
-                  ${(c.status || 'unread').toUpperCase()}
-                </span>
-              </td>
-              <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
-              <td>
-                <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-                  <button class="btn btn-secondary btn-sm" type="button" data-open-reply-modal="${c.id}" data-contact-email="${c.email}" data-contact-msg="${encodeURIComponent(c.message)}" style="padding: 0.25rem 0.6rem; border-color: #38bdf8; color: #38bdf8;">
-                    ✉️ Reply
-                  </button>
-                  ${c.status === 'unread' ? `
-                    <button class="btn btn-secondary btn-sm" type="button" data-mark-read-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #94a3b8; color: #cbd5e1;">
-                      ✓ Read
-                    </button>
-                  ` : ''}
-                  <button class="btn btn-secondary btn-sm" type="button" data-delete-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-        // Event listeners for reply modal
-        contactsTable.querySelectorAll('[data-open-reply-modal]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-open-reply-modal');
-            const email = btn.getAttribute('data-contact-email');
-            const msg = decodeURIComponent(btn.getAttribute('data-contact-msg'));
-
-            const replyContactId = document.getElementById('reply-contact-id');
-            const replyRecipientEmail = document.getElementById('reply-recipient-email');
-            const replyOriginalMsg = document.getElementById('reply-original-msg');
-            const replyTextContent = document.getElementById('reply-text-content');
-            const replyModal = document.getElementById('admin-reply-modal');
-
-            if (replyContactId) replyContactId.value = id;
-            if (replyRecipientEmail) replyRecipientEmail.value = email;
-            if (replyOriginalMsg) replyOriginalMsg.textContent = msg;
-            if (replyTextContent) replyTextContent.value = '';
-            if (replyModal) replyModal.style.display = 'flex';
-          });
-        });
-
-        // Event listeners for mark as read
-        contactsTable.querySelectorAll('[data-mark-read-contact]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-mark-read-contact');
-            await handleAdminContactStatus(id, 'read');
-          });
-        });
-
-        // Event listeners for delete
-        contactsTable.querySelectorAll('[data-delete-contact]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-delete-contact');
-            if (confirm('Are you sure you want to delete this investor message notice?')) {
-              await handleAdminContactDelete(id);
-            }
-          });
-        });
-      }
-    }
-
-    initAdminReplyModalControls();
+    renderAdminContactsTable(data.contacts || []);
 
     // Attach Admin CSV Export Listeners
-    const exportUsersBtn = document.getElementById('export-users-csv-btn');
-    if (exportUsersBtn && !exportUsersBtn.dataset.bound) {
-      exportUsersBtn.dataset.bound = 'true';
-      exportUsersBtn.addEventListener('click', () => {
-        const users = allAdminUsersList || [];
-        let csv = 'ID,Full Name,Email,Phone,Country,Role,Status,Deposit Balance,Interest Balance,BTC Wallet,USDT Wallet,Created At\n';
-        users.forEach(u => {
-          csv += `"${u.id}","${(u.fullName || '').replace(/"/g, '""')}","${u.email}","${u.phone || ''}","${u.country || ''}","${u.role || 'client'}","${u.status || 'active'}","${u.depositBalance || u.deposit_balance || 0}","${u.interestBalance || u.interest_balance || 0}","${u.btcWallet || ''}","${u.usdtWallet || ''}","${u.createdAt || ''}"\n`;
-        });
-        if (window.downloadCSVFile) window.downloadCSVFile(`Investor_Directory_${Date.now()}.csv`, csv);
-      });
-    }
-
-    const exportDepBtn = document.getElementById('export-deposits-csv-btn');
-    if (exportDepBtn && !exportDepBtn.dataset.bound) {
-      exportDepBtn.dataset.bound = 'true';
-      exportDepBtn.addEventListener('click', () => {
-        const deposits = window.currentAdminData?.requests || [];
-        let csv = 'Deposit ID,User ID,Method,Reference,Amount,Status,Created At\n';
-        deposits.forEach(d => {
-          csv += `"${d.id}","${d.userId || ''}","${d.method || ''}","${d.reference || ''}","${d.amount || 0}","${d.status || ''}","${d.createdAt || ''}"\n`;
-        });
-        if (window.downloadCSVFile) window.downloadCSVFile(`Deposits_Ledger_${Date.now()}.csv`, csv);
-      });
-    }
-
-    const exportWdBtn = document.getElementById('export-withdrawals-csv-btn');
-    if (exportWdBtn && !exportWdBtn.dataset.bound) {
-      exportWdBtn.dataset.bound = 'true';
-      exportWdBtn.addEventListener('click', () => {
-        const withdrawals = window.currentAdminData?.withdrawals || [];
-        let csv = 'Withdrawal ID,User ID,Wallet Type,Method,Details,Amount,Status,Created At\n';
-        withdrawals.forEach(w => {
-          csv += `"${w.id}","${w.userId || ''}","${w.walletType || ''}","${w.method || ''}","${(w.details || '').replace(/"/g, '""')}","${w.amount || 0}","${w.status || ''}","${w.createdAt || ''}"\n`;
-        });
-        if (window.downloadCSVFile) window.downloadCSVFile(`Withdrawals_Ledger_${Date.now()}.csv`, csv);
-      });
-    }
+    initAdminCSVExports();
 
     // Load 24-Hour Automated Website Operations Backup Archives & Controls
     await loadAdminBackups();
     initAdminBackupControls();
   } catch (error) {
     console.error('Admin data load error:', error);
+  }
+}
+// ----------------------------------------------------
+// MANAGED CAPITAL CENTER & ANALYTICS RENDERERS
+// ----------------------------------------------------
+function renderAdminCapitalCenter(capital) {
+  if (!capital) return;
+
+  const fmtCurrency = (val) => '$' + Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  if (document.getElementById('cap-center-total')) document.getElementById('cap-center-total').textContent = fmtCurrency(capital.totalManagedCapital);
+  if (document.getElementById('cap-center-invested')) document.getElementById('cap-center-invested').textContent = fmtCurrency(capital.totalInvestedCapital);
+  if (document.getElementById('cap-center-profit')) document.getElementById('cap-center-profit').textContent = fmtCurrency(capital.totalProfitYield);
+  if (document.getElementById('cap-center-withdrawals')) document.getElementById('cap-center-withdrawals').textContent = fmtCurrency(capital.totalWithdrawals);
+
+  const categories = capital.categories || {};
+  if (document.getElementById('cap-sector-realestate')) document.getElementById('cap-sector-realestate').textContent = fmtCurrency(categories.realEstate);
+  if (document.getElementById('cap-sector-agri')) document.getElementById('cap-sector-agri').textContent = fmtCurrency(categories.agriculture);
+  if (document.getElementById('cap-sector-crypto')) document.getElementById('cap-sector-crypto').textContent = fmtCurrency(categories.crypto);
+  if (document.getElementById('cap-sector-stocks')) document.getElementById('cap-sector-stocks').textContent = fmtCurrency(categories.stocks);
+
+  // Active Ledger Table
+  const ledgerTable = document.querySelector('#admin-investment-ledger-table tbody');
+  const countBadge = document.getElementById('cap-ledger-count');
+  const ledgerList = capital.investmentLedger || [];
+
+  if (countBadge) countBadge.textContent = `${ledgerList.length} Active Contracts`;
+
+  if (ledgerTable) {
+    if (!ledgerList.length) {
+      ledgerTable.innerHTML = `<tr><td colspan="8" class="text-center muted" style="padding: 1.5rem;">No active investor subscriptions logged in capital ledger.</td></tr>`;
+    } else {
+      ledgerTable.innerHTML = ledgerList.map((inv) => {
+        const dateStr = inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : 'N/A';
+        return `
+          <tr>
+            <td><strong style="color: #38bdf8;">#${inv.id}</strong></td>
+            <td>
+              <div style="font-weight: 700; color: #ffffff;">${inv.userName || 'Investor'}</div>
+              <div style="font-size: 0.8rem; color: #38bdf8;">${inv.userEmail || ''}</div>
+            </td>
+            <td><span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-weight: 700;">${inv.planName || 'Plan'}</span></td>
+            <td><strong class="green-text" style="font-size: 0.95rem;">${inv.amount}</strong></td>
+            <td><span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${inv.dailyRate}% / day</span></td>
+            <td><strong style="color: #c084fc; font-size: 0.95rem;">${inv.profitYield || '$0.00'}</strong></td>
+            <td><span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">${(inv.status || 'active').toUpperCase()}</span></td>
+            <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+}
+
+function renderAdminAnalyticsCenter(data) {
+  if (!data) return;
+  const stats = data.stats || {};
+
+  if (document.getElementById('analytics-weekly-visits')) document.getElementById('analytics-weekly-visits').textContent = `${stats.weeklyVisitsCount || 0} Visits`;
+  if (document.getElementById('analytics-monthly-visits')) document.getElementById('analytics-monthly-visits').textContent = `${stats.monthlyVisitsCount || 0} Visits`;
+  if (document.getElementById('analytics-top-pages-count')) document.getElementById('analytics-top-pages-count').textContent = `${(data.topPages || []).length} Active Pages`;
+  if (document.getElementById('analytics-visitor-countries-count')) document.getElementById('analytics-visitor-countries-count').textContent = `${stats.uniqueVisitorsCount || 0} IPs`;
+
+  // Render Top Pages List
+  const topPagesEl = document.getElementById('admin-analytics-top-pages-list');
+  if (topPagesEl) {
+    const topPages = data.topPages || [];
+    if (!topPages.length) {
+      topPagesEl.innerHTML = `<div class="muted text-center" style="padding: 1rem;">No page visit analytics recorded yet.</div>`;
+    } else {
+      topPagesEl.innerHTML = topPages.map((p) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+          <div style="font-family: monospace; font-size: 0.88rem; color: #38bdf8;">${p.path}</div>
+          <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; font-weight: 800;">${p.hits} Views</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Render Device Stats Bars
+  const deviceEl = document.getElementById('admin-analytics-device-bars');
+  if (deviceEl) {
+    const devices = data.deviceStats || {};
+    const total = Object.values(devices).reduce((a, b) => a + b, 0) || 1;
+    const deviceColors = { Desktop: '#34d399', Mobile: '#38bdf8', Tablet: '#c084fc', Other: '#94a3b8' };
+
+    deviceEl.innerHTML = Object.entries(devices).map(([dev, count]) => {
+      const pct = Math.round((count / total) * 100);
+      const color = deviceColors[dev] || '#94a3b8';
+      return `
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #cbd5e1; font-weight: 700;">${dev}</span>
+            <span style="color: ${color}; font-weight: 800;">${count} (${pct}%)</span>
+          </div>
+          <div style="height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+            <div style="width: ${pct}%; height: 100%; background: ${color}; border-radius: 4px;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Browser Stats Bars
+  const browserEl = document.getElementById('admin-analytics-browser-bars');
+  if (browserEl) {
+    const browsers = data.browserStats || {};
+    const total = Object.values(browsers).reduce((a, b) => a + b, 0) || 1;
+    const browserColors = { Chrome: '#38bdf8', Safari: '#c084fc', Firefox: '#f97316', Edge: '#34d399', Other: '#94a3b8' };
+
+    browserEl.innerHTML = Object.entries(browsers).map(([br, count]) => {
+      const pct = Math.round((count / total) * 100);
+      const color = browserColors[br] || '#94a3b8';
+      return `
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #cbd5e1; font-weight: 700;">${br}</span>
+            <span style="color: ${color}; font-weight: 800;">${count} (${pct}%)</span>
+          </div>
+          <div style="height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+            <div style="width: ${pct}%; height: 100%; background: ${color}; border-radius: 4px;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// ----------------------------------------------------
+// DEPOSIT QUEUE & DETAILS MODAL
+// ----------------------------------------------------
+function renderAdminDepositsTable(requests) {
+  const table = document.querySelector('#admin-deposits-table tbody');
+  if (!table) return;
+
+  const searchQuery = (document.getElementById('admin-dep-search')?.value || '').toLowerCase().trim();
+  const statusFilter = document.getElementById('admin-dep-filter')?.value || 'pending';
+
+  let filtered = requests.filter((r) => {
+    if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+    if (searchQuery) {
+      const matchId = String(r.id).includes(searchQuery);
+      const matchUser = String(r.userId || '').includes(searchQuery) || (r.userName || '').toLowerCase().includes(searchQuery) || (r.userEmail || '').toLowerCase().includes(searchQuery);
+      const matchRef = (r.reference || '').toLowerCase().includes(searchQuery);
+      const matchMethod = (r.method || '').toLowerCase().includes(searchQuery);
+      return matchId || matchUser || matchRef || matchMethod;
+    }
+    return true;
+  });
+
+  if (!filtered.length) {
+    table.innerHTML = `<tr><td colspan="7" class="text-center muted" style="padding: 1.5rem;">No deposit requests found matching criteria.</td></tr>`;
+    return;
+  }
+
+  table.innerHTML = filtered.map((item) => {
+    const isPending = item.status === 'pending';
+    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A';
+    return `
+      <tr>
+        <td>
+          <strong style="color: #facc15;">#${item.id}</strong>
+          <div style="font-size: 0.82rem; color: #ffffff; font-weight: 700;">${item.userName || `User #${item.userId || '1'}`}</div>
+          <div style="font-size: 0.75rem; color: #38bdf8;">${item.userEmail || ''}</div>
+        </td>
+        <td><span class="badge" style="background: rgba(250, 204, 21, 0.15); color: #facc15; font-weight: 700;">${item.method}</span></td>
+        <td><code style="font-size: 0.82rem; color: #cbd5e1; word-break: break-all;">${item.reference}</code></td>
+        <td><strong class="green-text" style="font-size: 1.05rem;">${item.amount}</strong></td>
+        <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+        <td>
+          <span class="badge" style="${item.status === 'approved' ? 'background: rgba(16,185,129,0.2); color:#34d399;' : item.status === 'rejected' ? 'background: rgba(239,68,68,0.2); color:#f87171;' : 'background: rgba(234,179,8,0.2); color:#facc15;'}">
+            ${(item.status || 'pending').toUpperCase()}
+          </span>
+        </td>
+        <td>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" type="button" data-view-dep="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #facc15; color: #facc15;">
+              👁️ Details
+            </button>
+            ${isPending ? `
+              <button class="btn btn-secondary btn-sm" type="button" data-approve-dep="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #22c55e; color: #4ade80; font-weight: 700;">Approve</button>
+              <button class="btn btn-secondary btn-sm" type="button" data-reject-dep="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">Reject</button>
+            ` : '<span class="muted" style="font-size: 0.78rem;">Processed</span>'}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Attach button event listeners
+  table.querySelectorAll('[data-view-dep]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-view-dep');
+      const item = requests.find(r => String(r.id) === String(id));
+      if (item) openDepositModal(item);
+    });
+  });
+
+  table.querySelectorAll('[data-approve-dep]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-approve-dep');
+      await handleAdminDepositAction(id, 'approve');
+    });
+  });
+
+  table.querySelectorAll('[data-reject-dep]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-reject-dep');
+      await handleAdminDepositAction(id, 'reject');
+    });
+  });
+}
+
+function initAdminDepositsControls() {
+  const searchInput = document.getElementById('admin-dep-search');
+  const filterSelect = document.getElementById('admin-dep-filter');
+  const refreshBtn = document.getElementById('admin-dep-refresh-btn');
+
+  if (searchInput && !searchInput.dataset.bound) {
+    searchInput.dataset.bound = 'true';
+    searchInput.addEventListener('input', () => {
+      if (window.currentAdminData) renderAdminDepositsTable(window.currentAdminData.requests || []);
+    });
+  }
+
+  if (filterSelect && !filterSelect.dataset.bound) {
+    filterSelect.dataset.bound = 'true';
+    filterSelect.addEventListener('change', () => {
+      if (window.currentAdminData) renderAdminDepositsTable(window.currentAdminData.requests || []);
+    });
+  }
+
+  if (refreshBtn && !refreshBtn.dataset.bound) {
+    refreshBtn.dataset.bound = 'true';
+    refreshBtn.addEventListener('click', async () => {
+      await loadAdminData();
+      showToast('🔄 Deposit Queue Refreshed!', true);
+    });
+  }
+
+  // Modal Buttons
+  const closeBtn = document.getElementById('close-view-dep-modal');
+  const cancelBtn = document.getElementById('cancel-view-dep-btn');
+  const approveBtn = document.getElementById('modal-approve-dep-btn');
+  const rejectBtn = document.getElementById('modal-reject-dep-btn');
+
+  if (closeBtn) closeBtn.onclick = () => document.getElementById('admin-view-deposit-modal').style.display = 'none';
+  if (cancelBtn) cancelBtn.onclick = () => document.getElementById('admin-view-deposit-modal').style.display = 'none';
+
+  if (approveBtn && !approveBtn.dataset.bound) {
+    approveBtn.dataset.bound = 'true';
+    approveBtn.onclick = async () => {
+      const depId = approveBtn.getAttribute('data-dep-id');
+      if (depId) {
+        document.getElementById('admin-view-deposit-modal').style.display = 'none';
+        await handleAdminDepositAction(depId, 'approve');
+      }
+    };
+  }
+
+  if (rejectBtn && !rejectBtn.dataset.bound) {
+    rejectBtn.dataset.bound = 'true';
+    rejectBtn.onclick = async () => {
+      const depId = rejectBtn.getAttribute('data-dep-id');
+      if (depId) {
+        document.getElementById('admin-view-deposit-modal').style.display = 'none';
+        await handleAdminDepositAction(depId, 'reject');
+      }
+    };
+  }
+}
+
+function openDepositModal(item) {
+  const modal = document.getElementById('admin-view-deposit-modal');
+  const content = document.getElementById('view-dep-content');
+  const approveBtn = document.getElementById('modal-approve-dep-btn');
+  const rejectBtn = document.getElementById('modal-reject-dep-btn');
+
+  if (!modal || !content) return;
+
+  if (approveBtn) approveBtn.setAttribute('data-dep-id', item.id);
+  if (rejectBtn) rejectBtn.setAttribute('data-dep-id', item.id);
+
+  if (item.status === 'pending') {
+    if (approveBtn) approveBtn.style.display = 'inline-block';
+    if (rejectBtn) rejectBtn.style.display = 'inline-block';
+  } else {
+    if (approveBtn) approveBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
+  }
+
+  content.innerHTML = `
+    <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+      <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Investor Profile</div>
+      <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">${item.userName || `User #${item.userId}`}</div>
+      <div style="font-size: 0.88rem; color: #38bdf8;">Email: ${item.userEmail || 'N/A'}</div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+      <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">DEPOSIT AMOUNT</span>
+        <div style="font-size: 1.3rem; font-weight: 800; color: #34d399;">${item.amount}</div>
+      </div>
+      <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">PAYMENT GATEWAY</span>
+        <div style="font-size: 1.1rem; font-weight: 800; color: #facc15;">${item.method}</div>
+      </div>
+    </div>
+    <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">TRANSACTION REFERENCE / BLOCKCHAIN HASH</span>
+      <div style="font-family: monospace; font-size: 0.88rem; color: #38bdf8; word-break: break-all; margin-top: 0.2rem;">${item.reference}</div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #94a3b8;">
+      <span>Status: <strong style="color: #fff;">${(item.status || 'pending').toUpperCase()}</strong></span>
+      <span>Date: ${item.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A'}</span>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+// ----------------------------------------------------
+// WITHDRAWAL QUEUE & DETAILS MODAL
+// ----------------------------------------------------
+function renderAdminWithdrawalsTable(withdrawals) {
+  const table = document.querySelector('#admin-withdrawals-table tbody');
+  if (!table) return;
+
+  const searchQuery = (document.getElementById('admin-wd-search')?.value || '').toLowerCase().trim();
+  const statusFilter = document.getElementById('admin-wd-filter')?.value || 'pending';
+
+  let filtered = withdrawals.filter((w) => {
+    if (statusFilter !== 'all' && w.status !== statusFilter) return false;
+    if (searchQuery) {
+      const matchId = String(w.id).includes(searchQuery);
+      const matchUser = String(w.userId || '').includes(searchQuery) || (w.userName || '').toLowerCase().includes(searchQuery) || (w.userEmail || '').toLowerCase().includes(searchQuery);
+      const matchDetails = (w.details || '').toLowerCase().includes(searchQuery);
+      const matchMethod = (w.method || '').toLowerCase().includes(searchQuery);
+      return matchId || matchUser || matchDetails || matchMethod;
+    }
+    return true;
+  });
+
+  if (!filtered.length) {
+    table.innerHTML = `<tr><td colspan="7" class="text-center muted" style="padding: 1.5rem;">No withdrawal requests found matching criteria.</td></tr>`;
+    return;
+  }
+
+  table.innerHTML = filtered.map((item) => {
+    const isPending = item.status === 'pending';
+    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A';
+    return `
+      <tr>
+        <td>
+          <strong style="color: #f87171;">#${item.id}</strong>
+          <div style="font-size: 0.82rem; color: #ffffff; font-weight: 700;">${item.userName || `User #${item.userId || '1'}`}</div>
+          <div style="font-size: 0.75rem; color: #38bdf8;">${item.userEmail || ''}</div>
+        </td>
+        <td><span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${item.walletType || 'Wallet'}</span></td>
+        <td>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #c084fc;">${item.method}</div>
+          <code style="font-size: 0.78rem; color: #cbd5e1; word-break: break-all;">${item.details}</code>
+        </td>
+        <td><strong class="green-text" style="font-size: 1.05rem;">${item.amount}</strong></td>
+        <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+        <td>
+          <span class="badge" style="${item.status === 'approved' ? 'background: rgba(16,185,129,0.2); color:#34d399;' : item.status === 'rejected' ? 'background: rgba(239,68,68,0.2); color:#f87171;' : 'background: rgba(234,179,8,0.2); color:#facc15;'}">
+            ${(item.status || 'pending').toUpperCase()}
+          </span>
+        </td>
+        <td>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" type="button" data-view-wd="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">
+              👁️ Details
+            </button>
+            ${isPending ? `
+              <button class="btn btn-secondary btn-sm" type="button" data-approve-wd="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #22c55e; color: #4ade80; font-weight: 700;">Approve</button>
+              <button class="btn btn-secondary btn-sm" type="button" data-reject-wd="${item.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">Reject</button>
+            ` : '<span class="muted" style="font-size: 0.78rem;">Processed</span>'}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Attach button event listeners
+  table.querySelectorAll('[data-view-wd]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-view-wd');
+      const item = withdrawals.find(w => String(w.id) === String(id));
+      if (item) openWithdrawalModal(item);
+    });
+  });
+
+  table.querySelectorAll('[data-approve-wd]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-approve-wd');
+      await handleAdminWithdrawalAction(id, 'approve');
+    });
+  });
+
+  table.querySelectorAll('[data-reject-wd]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-reject-wd');
+      await handleAdminWithdrawalAction(id, 'reject');
+    });
+  });
+}
+
+function initAdminWithdrawalsControls() {
+  const searchInput = document.getElementById('admin-wd-search');
+  const filterSelect = document.getElementById('admin-wd-filter');
+  const refreshBtn = document.getElementById('admin-wd-refresh-btn');
+
+  if (searchInput && !searchInput.dataset.bound) {
+    searchInput.dataset.bound = 'true';
+    searchInput.addEventListener('input', () => {
+      if (window.currentAdminData) renderAdminWithdrawalsTable(window.currentAdminData.withdrawals || []);
+    });
+  }
+
+  if (filterSelect && !filterSelect.dataset.bound) {
+    filterSelect.dataset.bound = 'true';
+    filterSelect.addEventListener('change', () => {
+      if (window.currentAdminData) renderAdminWithdrawalsTable(window.currentAdminData.withdrawals || []);
+    });
+  }
+
+  if (refreshBtn && !refreshBtn.dataset.bound) {
+    refreshBtn.dataset.bound = 'true';
+    refreshBtn.addEventListener('click', async () => {
+      await loadAdminData();
+      showToast('🔄 Withdrawal Queue Refreshed!', true);
+    });
+  }
+
+  // Modal Buttons
+  const closeBtn = document.getElementById('close-view-wd-modal');
+  const cancelBtn = document.getElementById('cancel-view-wd-btn');
+  const approveBtn = document.getElementById('modal-approve-wd-btn');
+  const rejectBtn = document.getElementById('modal-reject-wd-btn');
+
+  if (closeBtn) closeBtn.onclick = () => document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+  if (cancelBtn) cancelBtn.onclick = () => document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+
+  if (approveBtn && !approveBtn.dataset.bound) {
+    approveBtn.dataset.bound = 'true';
+    approveBtn.onclick = async () => {
+      const wdId = approveBtn.getAttribute('data-wd-id');
+      if (wdId) {
+        document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+        await handleAdminWithdrawalAction(wdId, 'approve');
+      }
+    };
+  }
+
+  if (rejectBtn && !rejectBtn.dataset.bound) {
+    rejectBtn.dataset.bound = 'true';
+    rejectBtn.onclick = async () => {
+      const wdId = rejectBtn.getAttribute('data-wd-id');
+      if (wdId) {
+        document.getElementById('admin-view-withdrawal-modal').style.display = 'none';
+        await handleAdminWithdrawalAction(wdId, 'reject');
+      }
+    };
+  }
+}
+
+function openWithdrawalModal(item) {
+  const modal = document.getElementById('admin-view-withdrawal-modal');
+  const content = document.getElementById('view-wd-content');
+  const approveBtn = document.getElementById('modal-approve-wd-btn');
+  const rejectBtn = document.getElementById('modal-reject-wd-btn');
+
+  if (!modal || !content) return;
+
+  if (approveBtn) approveBtn.setAttribute('data-wd-id', item.id);
+  if (rejectBtn) rejectBtn.setAttribute('data-wd-id', item.id);
+
+  if (item.status === 'pending') {
+    if (approveBtn) approveBtn.style.display = 'inline-block';
+    if (rejectBtn) rejectBtn.style.display = 'inline-block';
+  } else {
+    if (approveBtn) approveBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
+  }
+
+  content.innerHTML = `
+    <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+      <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Investor Profile</div>
+      <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">${item.userName || `User #${item.userId}`}</div>
+      <div style="font-size: 0.88rem; color: #38bdf8;">Email: ${item.userEmail || 'N/A'}</div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+      <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">WITHDRAWAL AMOUNT</span>
+        <div style="font-size: 1.3rem; font-weight: 800; color: #f87171;">${item.amount}</div>
+      </div>
+      <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">SOURCE WALLET</span>
+        <div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8;">${item.walletType || 'Deposit Wallet'}</div>
+      </div>
+    </div>
+    <div style="background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 8px;">
+      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">DESTINATION CRYPTO ADDRESS (${item.method})</span>
+      <div style="font-family: monospace; font-size: 0.88rem; color: #c084fc; word-break: break-all; margin-top: 0.2rem;">${item.details}</div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #94a3b8;">
+      <span>Status: <strong style="color: #fff;">${(item.status || 'pending').toUpperCase()}</strong></span>
+      <span>Date: ${item.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A'}</span>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+// ----------------------------------------------------
+// VISITOR LOGS & CONTACT MESSAGES RENDERERS
+// ----------------------------------------------------
+function renderAdminVisitorLogsTable(vLogs) {
+  const visitorsTable = document.querySelector('#admin-visitor-logs-table tbody');
+  if (!visitorsTable) return;
+
+  if (!vLogs.length) {
+    visitorsTable.innerHTML = `<tr><td colspan="6" class="text-center muted" style="padding: 1.5rem;">No recorded website visitor logs yet.</td></tr>`;
+  } else {
+    visitorsTable.innerHTML = vLogs.map((v) => {
+      const dateStr = v.createdAt ? new Date(v.createdAt).toLocaleString() : 'N/A';
+      return `
+        <tr>
+          <td><strong style="color: #c084fc;">#${v.id}</strong></td>
+          <td>
+            <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #e9d5ff; font-family: monospace;">${v.ipAddress}</span>
+            ${v.userId ? `<span class="badge" style="background: rgba(16,185,129,0.2); color:#34d399; margin-left: 0.3rem;">User #${v.userId}</span>` : ''}
+          </td>
+          <td><code style="color: #38bdf8; font-size: 0.82rem;">${v.path}</code></td>
+          <td><span style="font-size: 0.8rem; color: #cbd5e1; max-width: 250px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${v.userAgent}">${v.userAgent}</span></td>
+          <td><span style="font-size: 0.8rem; color: #94a3b8;">${v.referrer}</span></td>
+          <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+}
+
+function renderAdminContactsTable(cList) {
+  const contactsTable = document.querySelector('#admin-contacts-table tbody');
+  if (!contactsTable) return;
+
+  if (!cList.length) {
+    contactsTable.innerHTML = `<tr><td colspan="7" class="text-center muted" style="padding: 1.5rem;">No investor messages received yet.</td></tr>`;
+  } else {
+    contactsTable.innerHTML = cList.map((c) => {
+      const dateStr = c.createdAt ? new Date(c.createdAt).toLocaleString() : 'N/A';
+      const statusBg = c.status === 'replied'
+        ? 'background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);'
+        : c.status === 'read'
+        ? 'background: rgba(148,163,184,0.2); color: #cbd5e1; border: 1px solid rgba(148,163,184,0.4);'
+        : 'background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4);';
+
+      return `
+        <tr>
+          <td><strong style="color: #38bdf8;">#${c.id}</strong></td>
+          <td>
+            <div style="font-weight: 700; color: #fff;">${c.name}</div>
+            <div style="font-size: 0.82rem; color: #38bdf8;">${c.email}</div>
+          </td>
+          <td>
+            <span class="badge" style="background: rgba(56,189,248,0.15); color: #7dd3fc; font-weight: 600;">${c.subject || 'General Inquiry'}</span>
+          </td>
+          <td>
+            <div style="font-size: 0.88rem; color: #cbd5e1; max-width: 320px; white-space: pre-wrap;">${c.message}</div>
+            ${c.replyMessage ? `<div style="margin-top: 0.4rem; padding: 0.4rem; background: rgba(16,185,129,0.1); border-left: 3px solid #10b981; font-size: 0.8rem; color: #a7f3d0;"><strong>Reply Sent:</strong> ${c.replyMessage}</div>` : ''}
+          </td>
+          <td>
+            <span class="badge" style="${statusBg}">
+              ${(c.status || 'unread').toUpperCase()}
+            </span>
+          </td>
+          <td><span style="font-size: 0.78rem; color: #94a3b8;">${dateStr}</span></td>
+          <td>
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" type="button" data-open-reply-modal="${c.id}" data-contact-email="${c.email}" data-contact-msg="${encodeURIComponent(c.message)}" style="padding: 0.25rem 0.6rem; border-color: #38bdf8; color: #38bdf8;">
+                ✉️ Reply
+              </button>
+              ${c.status === 'unread' ? `
+                <button class="btn btn-secondary btn-sm" type="button" data-mark-read-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #94a3b8; color: #cbd5e1;">
+                  ✓ Read
+                </button>
+              ` : ''}
+              <button class="btn btn-secondary btn-sm" type="button" data-delete-contact="${c.id}" style="padding: 0.25rem 0.5rem; border-color: #f87171; color: #f87171;">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Event listeners for reply modal
+    contactsTable.querySelectorAll('[data-open-reply-modal]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-open-reply-modal');
+        const email = btn.getAttribute('data-contact-email');
+        const msg = decodeURIComponent(btn.getAttribute('data-contact-msg'));
+
+        const replyContactId = document.getElementById('reply-contact-id');
+        const replyRecipientEmail = document.getElementById('reply-recipient-email');
+        const replyOriginalMsg = document.getElementById('reply-original-msg');
+        const replyTextContent = document.getElementById('reply-text-content');
+        const replyModal = document.getElementById('admin-reply-modal');
+
+        if (replyContactId) replyContactId.value = id;
+        if (replyRecipientEmail) replyRecipientEmail.value = email;
+        if (replyOriginalMsg) replyOriginalMsg.textContent = msg;
+        if (replyTextContent) replyTextContent.value = '';
+        if (replyModal) replyModal.style.display = 'flex';
+      });
+    });
+
+    // Event listeners for mark as read
+    contactsTable.querySelectorAll('[data-mark-read-contact]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-mark-read-contact');
+        await handleAdminContactStatus(id, 'read');
+      });
+    });
+
+    // Event listeners for delete
+    contactsTable.querySelectorAll('[data-delete-contact]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-delete-contact');
+        if (confirm('Are you sure you want to delete this investor message notice?')) {
+          await handleAdminContactDelete(id);
+        }
+      });
+    });
+  }
+
+  initAdminReplyModalControls();
+}
+
+function initAdminCSVExports() {
+  const exportUsersBtn = document.getElementById('export-users-csv-btn');
+  if (exportUsersBtn && !exportUsersBtn.dataset.bound) {
+    exportUsersBtn.dataset.bound = 'true';
+    exportUsersBtn.addEventListener('click', () => {
+      const users = allAdminUsersList || [];
+      let csv = 'ID,Full Name,Email,Phone,Country,Role,Status,Deposit Balance,Interest Balance,BTC Wallet,USDT Wallet,Created At\n';
+      users.forEach(u => {
+        csv += `"${u.id}","${(u.fullName || '').replace(/"/g, '""')}","${u.email}","${u.phone || ''}","${u.country || ''}","${u.role || 'client'}","${u.status || 'active'}","${u.depositBalance || u.deposit_balance || 0}","${u.interestBalance || u.interest_balance || 0}","${u.btcWallet || ''}","${u.usdtWallet || ''}","${u.createdAt || ''}"\n`;
+      });
+      if (window.downloadCSVFile) window.downloadCSVFile(`Investor_Directory_${Date.now()}.csv`, csv);
+    });
+  }
+
+  const exportDepBtn = document.getElementById('export-deposits-csv-btn');
+  if (exportDepBtn && !exportDepBtn.dataset.bound) {
+    exportDepBtn.dataset.bound = 'true';
+    exportDepBtn.addEventListener('click', () => {
+      const deposits = window.currentAdminData?.requests || [];
+      let csv = 'Deposit ID,User ID,Method,Reference,Amount,Status,Created At\n';
+      deposits.forEach(d => {
+        csv += `"${d.id}","${d.userId || ''}","${d.method || ''}","${d.reference || ''}","${d.amount || 0}","${d.status || ''}","${d.createdAt || ''}"\n`;
+      });
+      if (window.downloadCSVFile) window.downloadCSVFile(`Deposits_Ledger_${Date.now()}.csv`, csv);
+    });
+  }
+
+  const exportWdBtn = document.getElementById('export-withdrawals-csv-btn');
+  if (exportWdBtn && !exportWdBtn.dataset.bound) {
+    exportWdBtn.dataset.bound = 'true';
+    exportWdBtn.addEventListener('click', () => {
+      const withdrawals = window.currentAdminData?.withdrawals || [];
+      let csv = 'Withdrawal ID,User ID,Wallet Type,Method,Details,Amount,Status,Created At\n';
+      withdrawals.forEach(w => {
+        csv += `"${w.id}","${w.userId || ''}","${w.walletType || ''}","${w.method || ''}","${(w.details || '').replace(/"/g, '""')}","${w.amount || 0}","${w.status || ''}","${w.createdAt || ''}"\n`;
+      });
+      if (window.downloadCSVFile) window.downloadCSVFile(`Withdrawals_Ledger_${Date.now()}.csv`, csv);
+    });
   }
 }
 
@@ -5385,7 +5864,7 @@ function initRealtimeDataPolling() {
         }
       }
 
-      if (window.location.pathname.includes('admin.html')) {
+      if (window.location.pathname.includes('admin') || window.location.pathname.includes('admin.html')) {
         loadAdminData();
       }
     } catch (err) {

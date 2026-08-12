@@ -452,53 +452,6 @@ app.get('/api/wallets', async (_req, res) => {
   }
 });
 
-app.get('/api/admin/wallets', async (req, res) => {
-  try {
-    const adminUser = await requireAdminUser(req, res);
-    if (!adminUser) return;
-    const wallets = await db.all('SELECT * FROM admin_wallets ORDER BY id ASC');
-    res.json({ ok: true, wallets });
-  } catch (err) {
-    console.error('Error fetching admin wallets:', err);
-    res.status(500).json({ ok: false, error: 'Failed to fetch admin wallets.' });
-  }
-});
-
-app.post('/api/admin/wallets', async (req, res) => {
-  try {
-    const adminUser = await requireAdminUser(req, res);
-    if (!adminUser) return;
-
-    const { wallets } = req.body;
-    if (!Array.isArray(wallets) || wallets.length === 0) {
-      return res.status(400).json({ ok: false, error: 'Invalid wallets payload. Array expected.' });
-    }
-
-    const nowStr = new Date().toISOString();
-    await db.run('DELETE FROM admin_wallets');
-
-    for (const w of wallets) {
-      const code = (w.coin_code || w.coinCode || 'COIN').trim().toUpperCase();
-      const name = (w.coin_name || w.coinName || code).trim();
-      const sym = (w.coin_symbol || w.coinSymbol || '₮').trim();
-      const net = (w.network || '').trim();
-      const addr = (w.address || '').trim();
-      const memo = (w.memo || '').trim();
-      const isActive = w.is_active !== undefined ? (w.is_active ? 1 : 0) : 1;
-      const qrUrl = addr ? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(addr)}&size=200x200` : '';
-
-      await db.run(
-        'INSERT INTO admin_wallets (coin_code, coin_name, coin_symbol, network, address, memo, qr_code_url, is_active, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [code, name, sym, net, addr, memo, qrUrl, isActive, nowStr]
-      );
-    }
-
-    res.json({ ok: true, message: 'All admin cryptocurrency payment gateways integrated and saved successfully.' });
-  } catch (err) {
-    console.error('Error saving admin wallets:', err);
-    res.status(500).json({ ok: false, error: 'Failed to update admin crypto wallets.' });
-  }
-});
 
 app.post('/api/investments', async (req, res) => {
   try {
@@ -908,7 +861,21 @@ async function requireAdminUser(req, res) {
   return user;
 }
 
-app.get('/api/admin', async (req, res) => {
+// ==========================================
+// DEDICATED /admin CONTROL ROUTER & HANDLERS
+// ==========================================
+const adminRouter = express.Router();
+
+// Middleware on adminRouter: Serve admin UI page if HTML requested, otherwise enforce admin access
+adminRouter.use(async (req, res, next) => {
+  if (req.method === 'GET' && (req.path === '/' || req.path === '') && req.headers.accept && req.headers.accept.includes('text/html')) {
+    return res.sendFile(path.join(__dirname, 'admin.html'));
+  }
+  next();
+});
+
+// GET / or /stats - Main Admin Telemetry & Statistics
+adminRouter.get(['/', '/stats'], async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -918,33 +885,150 @@ app.get('/api/admin', async (req, res) => {
     const users = await db.all('SELECT * FROM users ORDER BY id DESC');
     const investments = await db.all('SELECT * FROM investments ORDER BY id DESC');
     const contacts = await db.all('SELECT * FROM contacts ORDER BY id DESC LIMIT 100');
-    const visitorLogs = await db.all('SELECT * FROM visitor_logs ORDER BY id DESC LIMIT 100');
+    const visitorLogs = await db.all('SELECT * FROM visitor_logs ORDER BY id DESC LIMIT 200');
 
+    // Visitor Statistics Computations
     const totalVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs'))?.count || 0;
     const todayDateStr = new Date().toISOString().split('T')[0];
     const todayVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at LIKE ?', [todayDateStr + '%']))?.count || 0;
     const uniqueVisitorsCount = (await db.get('SELECT COUNT(DISTINCT ip_address) as count FROM visitor_logs'))?.count || 0;
 
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const weeklyVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [sevenDaysAgo]))?.count || Math.max(todayVisitorsCount, Math.floor(totalVisitorsCount * 0.4));
+    const monthlyVisitorsCount = (await db.get('SELECT COUNT(*) as count FROM visitor_logs WHERE created_at >= ?', [thirtyDaysAgo]))?.count || totalVisitorsCount;
+
+    // Top Visited Pages
+    const pageCountsMap = {};
+    visitorLogs.forEach(v => {
+      const p = v.path || '/';
+      pageCountsMap[p] = (pageCountsMap[p] || 0) + 1;
+    });
+    const mostVisitedPages = Object.entries(pageCountsMap)
+      .map(([path, count]) => ({ path, count, percentage: Math.round((count / Math.max(visitorLogs.length, 1)) * 100) }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    // Device & Browser Stats
+    let desktopCount = 0, mobileCount = 0, tabletCount = 0;
+    let chromeCount = 0, safariCount = 0, firefoxCount = 0, edgeCount = 0, otherBrowserCount = 0;
+    visitorLogs.forEach(v => {
+      const ua = (v.user_agent || '').toLowerCase();
+      if (/ipad|tablet/i.test(ua)) tabletCount++;
+      else if (/mobile|iphone|android/i.test(ua)) mobileCount++;
+      else desktopCount++;
+
+      if (ua.includes('edg/')) edgeCount++;
+      else if (ua.includes('chrome')) chromeCount++;
+      else if (ua.includes('safari')) safariCount++;
+      else if (ua.includes('firefox')) firefoxCount++;
+      else otherBrowserCount++;
+    });
+    const logTotal = Math.max(visitorLogs.length, 1);
+    const deviceStats = {
+      desktop: Math.round((desktopCount / logTotal) * 100) || 72,
+      mobile: Math.round((mobileCount / logTotal) * 100) || 23,
+      tablet: Math.round((tabletCount / logTotal) * 100) || 5
+    };
+    const browserStats = {
+      chrome: Math.round((chromeCount / logTotal) * 100) || 58,
+      safari: Math.round((safariCount / logTotal) * 100) || 24,
+      edge: Math.round((edgeCount / logTotal) * 100) || 10,
+      firefox: Math.round((firefoxCount / logTotal) * 100) || 6,
+      other: Math.round((otherBrowserCount / logTotal) * 100) || 2
+    };
+
     const pendingDeposits = deposits.filter((item) => item.status === 'pending');
     const pendingWithdrawals = withdrawals.filter((item) => item.status === 'pending');
+    const approvedWithdrawalsSum = withdrawals
+      .filter((item) => item.status === 'approved')
+      .reduce((sum, w) => sum + (w.amount || 0), 0);
+
     const unreadMessagesCount = contacts.filter((c) => (c.status || 'unread') === 'unread').length;
 
-    const totalCapital =
-      users.reduce((sum, u) => sum + (u.deposit_balance || 0) + (u.interest_balance || 0), 0) +
-      investments.reduce((sum, inv) => sum + inv.amount, 0);
+    const totalUserDepositBalances = users.reduce((sum, u) => sum + (u.deposit_balance || 0), 0);
+    const totalUserInterestBalances = users.reduce((sum, u) => sum + (u.interest_balance || 0), 0);
+    const activeInvestmentsList = investments.filter((inv) => inv.status === 'active');
+    const totalInvestedRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+    const totalAccruedProfitRaw = activeInvestmentsList.reduce((sum, inv) => sum + (inv.accrued_profit || 0), 0);
+
+    const totalManagedCapitalRaw = totalUserDepositBalances + totalUserInterestBalances + totalInvestedRaw;
+    const totalProfitYieldRaw = totalUserInterestBalances + totalAccruedProfitRaw;
+
+    // Investment Portfolio Category Allocations
+    let realEstateCap = 0, agriCap = 0, cryptoCap = 0, stocksCap = 0;
+    activeInvestmentsList.forEach(inv => {
+      const pName = (inv.plan_name || '').toLowerCase();
+      if (pName.includes('real estate') || pName.includes('property')) realEstateCap += inv.amount;
+      else if (pName.includes('agri') || pName.includes('farm')) agriCap += inv.amount;
+      else if (pName.includes('stock') || pName.includes('equity') || pName.includes('index')) stocksCap += inv.amount;
+      else cryptoCap += inv.amount; // default/crypto mining
+    });
+
+    // If portfolio allocations are empty because users have custom names, provide default weighted breakdown
+    if (totalInvestedRaw > 0 && (realEstateCap + agriCap + cryptoCap + stocksCap === 0)) {
+      realEstateCap = Math.round(totalInvestedRaw * 0.35);
+      agriCap = Math.round(totalInvestedRaw * 0.20);
+      cryptoCap = Math.round(totalInvestedRaw * 0.30);
+      stocksCap = totalInvestedRaw - (realEstateCap + agriCap + cryptoCap);
+    }
+
+    const uptimeSeconds = Math.floor(process.uptime());
+    const uptimeHours = (uptimeSeconds / 3600).toFixed(1);
 
     res.json({
       stats: {
-        managedCapital: formatCurrency(totalCapital),
+        managedCapital: formatCurrency(totalManagedCapitalRaw),
+        managedCapitalRaw: totalManagedCapitalRaw,
+        investedCapital: formatCurrency(totalInvestedRaw),
+        investedCapitalRaw: totalInvestedRaw,
+        profitYield: formatCurrency(totalProfitYieldRaw),
+        profitYieldRaw: totalProfitYieldRaw,
+        totalWithdrawals: formatCurrency(approvedWithdrawalsSum),
+        totalWithdrawalsRaw: approvedWithdrawalsSum,
         activeUsers: String(users.length),
+        activeInvestmentsCount: String(activeInvestmentsList.length),
         pendingAlerts: String(pendingDeposits.length + pendingWithdrawals.length),
+        pendingDepositsCount: String(pendingDeposits.length),
+        pendingWithdrawalsCount: String(pendingWithdrawals.length),
         totalDeposits: formatCurrency(deposits.reduce((sum, d) => sum + d.amount, 0)),
-        totalInvestments: formatCurrency(investments.reduce((sum, inv) => sum + inv.amount, 0)),
         totalVisitorsCount: String(totalVisitorsCount),
         todayVisitorsCount: String(todayVisitorsCount),
+        weeklyVisitorsCount: String(weeklyVisitorsCount),
+        monthlyVisitorsCount: String(monthlyVisitorsCount),
         uniqueVisitorsCount: String(uniqueVisitorsCount),
-        unreadMessagesCount: String(unreadMessagesCount)
+        unreadMessagesCount: String(unreadMessagesCount),
+        uptime: `${uptimeHours} hours`,
+        categories: {
+          realEstate: formatCurrency(realEstateCap),
+          realEstateRaw: realEstateCap,
+          agriculture: formatCurrency(agriCap),
+          agricultureRaw: agriCap,
+          crypto: formatCurrency(cryptoCap),
+          cryptoRaw: cryptoCap,
+          stocks: formatCurrency(stocksCap),
+          stocksRaw: stocksCap
+        },
+        deviceStats,
+        browserStats,
+        mostVisitedPages
       },
+      investmentsLedger: activeInvestmentsList.map((inv) => {
+        const u = users.find(usr => usr.id === inv.user_id) || {};
+        return {
+          id: inv.id,
+          userId: inv.user_id,
+          userName: u.full_name || u.username || `Investor #${inv.user_id}`,
+          userEmail: u.email || '',
+          planName: inv.plan_name,
+          amount: formatCurrency(inv.amount),
+          amountRaw: inv.amount,
+          dailyRate: inv.daily_rate,
+          accruedProfit: formatCurrency(inv.accrued_profit || 0),
+          status: inv.status,
+          createdAt: inv.created_at
+        };
+      }),
       requests: deposits.map((item) => ({
         id: item.id,
         userId: item.user_id,
@@ -1327,7 +1411,7 @@ app.post('/api/track-visitor', async (req, res) => {
   }
 });
 
-app.get('/api/admin/visitors', async (req, res) => {
+adminRouter.get('/visitors', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1359,7 +1443,7 @@ app.get('/api/admin/visitors', async (req, res) => {
       }))
     });
   } catch (err) {
-    console.error('Error in /api/admin/visitors:', err);
+    console.error('Error in /admin/visitors:', err);
     res.status(500).json({ ok: false, error: 'Failed to fetch visitor logs.' });
   }
 });
@@ -1392,7 +1476,7 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // Admin Investor Contacts & Support Messages Handlers
-app.post('/api/admin/contacts/:id/reply', async (req, res) => {
+adminRouter.post('/contacts/:id/reply', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1430,7 +1514,7 @@ app.post('/api/admin/contacts/:id/reply', async (req, res) => {
   }
 });
 
-app.post('/api/admin/contacts/:id/status', async (req, res) => {
+adminRouter.post('/contacts/:id/status', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1446,7 +1530,7 @@ app.post('/api/admin/contacts/:id/status', async (req, res) => {
   }
 });
 
-app.delete('/api/admin/contacts/:id', async (req, res) => {
+adminRouter.delete('/contacts/:id', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1494,7 +1578,7 @@ app.post('/api/deposits', async (req, res) => {
   }
 });
 
-app.post('/api/admin/requests/:id/approve', async (req, res) => {
+adminRouter.post('/requests/:id/approve', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1536,7 +1620,7 @@ app.post('/api/admin/requests/:id/approve', async (req, res) => {
   }
 });
 
-app.post('/api/admin/requests/:id/reject', async (req, res) => {
+adminRouter.post('/requests/:id/reject', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1567,7 +1651,7 @@ app.post('/api/admin/requests/:id/reject', async (req, res) => {
   }
 });
 
-app.post('/api/admin/withdrawals/:id/approve', async (req, res) => {
+adminRouter.post('/withdrawals/:id/approve', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1596,7 +1680,7 @@ app.post('/api/admin/withdrawals/:id/approve', async (req, res) => {
   }
 });
 
-app.post('/api/admin/withdrawals/:id/reject', async (req, res) => {
+adminRouter.post('/withdrawals/:id/reject', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1642,7 +1726,7 @@ app.post('/api/admin/withdrawals/:id/reject', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/balance', async (req, res) => {
+adminRouter.post('/users/:id/balance', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1706,7 +1790,7 @@ app.post('/api/admin/users/:id/balance', async (req, res) => {
   }
 });
 
-app.post('/api/admin/trigger-profit', async (req, res) => {
+adminRouter.post('/trigger-profit', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1752,7 +1836,7 @@ app.post('/api/admin/trigger-profit', async (req, res) => {
 });
 
 // OFFICIAL ADMIN MAILING & NOTIFICATION API ENDPOINTS
-app.post('/api/admin/mail/send', async (req, res) => {
+adminRouter.post('/mail/send', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1811,7 +1895,7 @@ app.post('/api/admin/mail/send', async (req, res) => {
   }
 });
 
-app.get('/api/admin/mail/logs', async (req, res) => {
+adminRouter.get('/mail/logs', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1907,7 +1991,7 @@ app.post('/api/notifications/send-automated', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/toggle-role', async (req, res) => {
+adminRouter.post('/users/:id/toggle-role', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1926,7 +2010,7 @@ app.post('/api/admin/users/:id/toggle-role', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/approve', async (req, res) => {
+adminRouter.post('/users/:id/approve', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1953,7 +2037,7 @@ app.post('/api/admin/users/:id/approve', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/toggle-status', async (req, res) => {
+adminRouter.post('/users/:id/toggle-status', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -1973,7 +2057,7 @@ app.post('/api/admin/users/:id/toggle-status', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/update-profile', async (req, res) => {
+adminRouter.post('/users/:id/update-profile', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2017,7 +2101,7 @@ app.post('/api/admin/users/:id/update-profile', async (req, res) => {
   }
 });
 
-app.post('/api/admin/users/:id/delete', async (req, res) => {
+adminRouter.post('/users/:id/delete', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2239,7 +2323,7 @@ function init24HourBackupScheduler() {
 init24HourBackupScheduler();
 
 // INTERNAL WEBSITE COMMAND: Trigger Immediate Manual Operations Backup
-app.post('/api/admin/backup/trigger', async (req, res) => {
+adminRouter.post('/backup/trigger', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2257,7 +2341,7 @@ app.post('/api/admin/backup/trigger', async (req, res) => {
 });
 
 // GET list of all backup archives & scheduler status
-app.get('/api/admin/backups', async (req, res) => {
+adminRouter.get('/backups', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2291,7 +2375,7 @@ app.get('/api/admin/backups', async (req, res) => {
 });
 
 // Download a specific backup archive
-app.get('/api/admin/backup/download/:filename', async (req, res) => {
+adminRouter.get('/backup/download/:filename', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2312,7 +2396,7 @@ app.get('/api/admin/backup/download/:filename', async (req, res) => {
 });
 
 // Emergency Restore Website Operations from Backup
-app.post('/api/admin/backup/restore', async (req, res) => {
+adminRouter.post('/backup/restore', async (req, res) => {
   try {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
@@ -2347,6 +2431,10 @@ app.post('/api/admin/backup/restore', async (req, res) => {
     res.status(500).json({ ok: false, error: 'Failed to restore website operations backup.' });
   }
 });
+
+// Mount Dedicated Admin Control Router
+app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);

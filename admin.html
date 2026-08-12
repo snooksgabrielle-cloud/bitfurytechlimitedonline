@@ -112,65 +112,174 @@
           </div>
         </div>
 
-        <!-- Metric Stat Cards Row -->
+        <!-- Metric Stat Cards Row (Every Card Clickable) -->
         <div class="stat-card-row">
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-capital-section" title="Click to open Managed Capital Center">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Managed Capital</span>
+              <span class="stat-title">💰 Managed Capital</span>
               <h3 id="admin-balance">$0.00</h3>
+              <span class="click-hint">Click → MANAGED CAPITAL CENTER</span>
             </div>
           </div>
 
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-users-section" title="Click to open User Database Directory">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Active Users</span>
+              <span class="stat-title">👥 Active Users</span>
               <h3 id="admin-users">0</h3>
+              <span class="click-hint">Click → USER DATABASE DIRECTORY</span>
             </div>
           </div>
 
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-queues-section" title="Click to open Deposit Approval Queue">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Pending Deposits</span>
+              <span class="stat-title">💵 Pending Deposits</span>
               <h3 id="admin-pending-deposits-count">0</h3>
+              <span class="click-hint">Click → DEPOSIT APPROVAL QUEUE</span>
             </div>
           </div>
 
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-queues-section" title="Click to open Withdrawal Review Queue">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Pending Withdrawals</span>
+              <span class="stat-title">💸 Pending Withdrawals</span>
               <h3 id="admin-pending-withdrawals-count">0</h3>
+              <span class="click-hint">Click → WITHDRAWAL REVIEW QUEUE</span>
             </div>
           </div>
 
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-visitors-section" title="Click to open Website Analytics Center">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Website Visitors</span>
+              <span class="stat-title">👁 Website Visitors</span>
               <h3 id="admin-visitors-stat">0 Hits</h3>
+              <span class="click-hint">Click → WEBSITE ANALYTICS CENTER</span>
             </div>
           </div>
 
-          <div class="stat-box green-stat">
+          <div class="stat-box green-stat clickable-overview-card" data-jump="#admin-contacts-section" title="Click to open Investor Communication Center">
             <div class="stat-icon-wrapper">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
             <div class="stat-details">
-              <span class="stat-title">Investor Messages</span>
+              <span class="stat-title">💬 Investor Messages</span>
               <h3 id="admin-unread-messages-stat">0 Notice</h3>
+              <span class="click-hint">Click → INVESTOR COMMUNICATION CENTER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANAGED CAPITAL CENTER SECTION -->
+        <div class="panel admin-ui-box box-green" id="admin-capital-section" style="scroll-margin-top: 90px; border-left: 4px solid #34d399; margin-top: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 1.2rem;">
+            <div>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.25); color: #34d399; font-weight: 800;">💰 MANAGED CAPITAL CENTER</span>
+              <h2 style="margin: 0.3rem 0 0; color: #ffffff;">Institutional Managed Capital &amp; Asset Portfolio Control</h2>
+              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Live financial ledger, portfolio sector allocations, yield distributions, and daily interest engine controls.</p>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <a href="#admin-overview" class="back-to-overview-btn">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>Back to Dashboard</span>
+              </a>
+              <button class="btn btn-primary" type="button" id="admin-trigger-profit-btn-cap" style="background: #16a34a; border-color: #22c55e; font-weight: 700;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Trigger Instant Profit Yields
+              </button>
+            </div>
+          </div>
+
+          <!-- Managed Capital 4 Macro Metrics -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(16, 185, 129, 0.3); padding: 1.2rem; border-radius: 12px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Total Managed Capital</span>
+              <h3 id="cap-center-total" style="font-size: 1.5rem; font-weight: 800; color: #34d399; margin: 0.2rem 0 0;">$0.00</h3>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(56, 189, 248, 0.3); padding: 1.2rem; border-radius: 12px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Total Invested Capital</span>
+              <h3 id="cap-center-invested" style="font-size: 1.5rem; font-weight: 800; color: #38bdf8; margin: 0.2rem 0 0;">$0.00</h3>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(192, 132, 252, 0.3); padding: 1.2rem; border-radius: 12px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Total Profit / Yield Distributed</span>
+              <h3 id="cap-center-profit" style="font-size: 1.5rem; font-weight: 800; color: #c084fc; margin: 0.2rem 0 0;">$0.00</h3>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(250, 204, 21, 0.3); padding: 1.2rem; border-radius: 12px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Total Approved Withdrawals</span>
+              <h3 id="cap-center-withdrawals" style="font-size: 1.5rem; font-weight: 800; color: #facc15; margin: 0.2rem 0 0;">$0.00</h3>
+            </div>
+          </div>
+
+          <!-- Active Asset Sector Allocations -->
+          <h4 style="margin: 0 0 0.8rem; color: #ffffff; font-size: 1.05rem;">📊 Active Investment Sector Allocations</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.8rem;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 0.8rem;">
+              <div style="font-size: 1.8rem;">🏢</div>
+              <div>
+                <span style="font-size: 0.78rem; color: #94a3b8; font-weight: 700;">Real Estate</span>
+                <div id="cap-sector-realestate" style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">$0.00</div>
+              </div>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 0.8rem;">
+              <div style="font-size: 1.8rem;">🌾</div>
+              <div>
+                <span style="font-size: 0.78rem; color: #94a3b8; font-weight: 700;">Agriculture</span>
+                <div id="cap-sector-agri" style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">$0.00</div>
+              </div>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 0.8rem;">
+              <div style="font-size: 1.8rem;">⚡</div>
+              <div>
+                <span style="font-size: 0.78rem; color: #94a3b8; font-weight: 700;">Crypto &amp; Mining</span>
+                <div id="cap-sector-crypto" style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">$0.00</div>
+              </div>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 10px; display: flex; align-items: center; gap: 0.8rem;">
+              <div style="font-size: 1.8rem;">📈</div>
+              <div>
+                <span style="font-size: 0.78rem; color: #94a3b8; font-weight: 700;">Stocks &amp; Equities</span>
+                <div id="cap-sector-stocks" style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">$0.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Investment Ledger Table -->
+          <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+              <h4 style="margin: 0; color: #ffffff; font-size: 1.05rem;">📋 Active Investor Ledger &amp; Portfolio Subscriptions</h4>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;" id="cap-ledger-count">0 Active Contracts</span>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="admin-investment-ledger-table">
+                <thead>
+                  <tr>
+                    <th>Inv ID</th>
+                    <th>Investor Name &amp; Email</th>
+                    <th>Plan / Portfolio</th>
+                    <th>Principal Amount</th>
+                    <th>Daily Rate</th>
+                    <th>Accrued Yield</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="8" class="text-center muted">Loading investment ledger entries...</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -385,35 +494,58 @@
           </div>
         </div>
 
-        <!-- Section Anchor for Pending Queues -->
+        <!-- Section Anchor for Pending Queues (Deposits & Withdrawals) -->
         <div id="admin-queues-section" style="scroll-margin-top: 90px; display: grid; gap: 1.5rem;">
           <!-- Pending Deposits Approval Table -->
-          <div class="panel admin-ui-box">
-            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+          <div class="panel admin-ui-box" id="admin-deposits-section">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
               <div>
-                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15; font-weight: 700;">DEPOSIT QUEUE</span>
-                <h3 style="margin: 0.2rem 0 0;">Deposit Approval Queue</h3>
+                <span class="badge" style="background: rgba(234, 179, 8, 0.25); color: #facc15; font-weight: 800;">💵 DEPOSIT APPROVAL QUEUE</span>
+                <h3 style="margin: 0.2rem 0 0; color: #ffffff;">Pending Investor Deposits &amp; Payment Gateway Verification</h3>
+                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.85rem;">Review uploaded blockchain TX hashes and authorize investor deposit credits.</p>
               </div>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Pending Action</span>
-                <button class="btn btn-secondary btn-sm" id="export-deposits-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <a href="#admin-overview" class="back-to-overview-btn">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  <span>Back to Dashboard</span>
+                </a>
+                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15; font-weight: 700;" id="admin-pending-dep-badge">0 Pending Action</span>
+                <button class="btn btn-secondary btn-sm" id="export-deposits-csv-btn" type="button" style="font-size: 0.8rem; border-color: #facc15; color: #facc15;">📥 CSV Export</button>
               </div>
             </div>
+
+            <!-- Search & Filter Bar -->
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+              <div style="flex: 1; min-width: 200px;">
+                <input type="text" id="admin-dep-search" placeholder="🔍 Search deposit ID, user, reference, method..." style="width: 100%; padding: 0.55rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;" />
+              </div>
+              <div style="min-width: 150px;">
+                <select id="admin-dep-filter" style="width: 100%; padding: 0.55rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;">
+                  <option value="all">Status: All Statuses</option>
+                  <option value="pending" selected>Status: Pending Only</option>
+                  <option value="approved">Status: Approved Only</option>
+                  <option value="rejected">Status: Rejected Only</option>
+                </select>
+              </div>
+              <button class="btn btn-secondary" id="admin-dep-refresh-btn" type="button" style="padding: 0.55rem 0.8rem; font-size: 0.85rem;">🔄 Refresh Queue</button>
+            </div>
+
             <div class="table-wrap">
               <table class="table" id="admin-deposits-table">
                 <thead>
                   <tr>
-                    <th>ID / User</th>
-                    <th>Method</th>
-                    <th>Reference / Tx</th>
-                    <th>Amount</th>
+                    <th>Deposit ID / Investor</th>
+                    <th>Payment Gateway</th>
+                    <th>Reference / TX Hash</th>
+                    <th>Amount ($)</th>
+                    <th>Request Date</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Command Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="6" class="text-center muted">Loading deposit requests...</td>
+                    <td colspan="7" class="text-center muted">Loading deposit requests...</td>
                   </tr>
                 </tbody>
               </table>
@@ -421,32 +553,55 @@
           </div>
 
           <!-- Pending Withdrawals Approval Table -->
-          <div class="panel admin-ui-box">
-            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+          <div class="panel admin-ui-box" id="admin-withdrawals-section">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
               <div>
-                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 700;">WITHDRAWAL QUEUE</span>
-                <h3 style="margin: 0.2rem 0 0;">Withdrawal Review Queue</h3>
+                <span class="badge" style="background: rgba(239, 68, 68, 0.25); color: #f87171; font-weight: 800;">💸 WITHDRAWAL REVIEW QUEUE</span>
+                <h3 style="margin: 0.2rem 0 0; color: #ffffff;">Pending Withdrawal Requests &amp; Payout Authorization</h3>
+                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.85rem;">Audit investor payout wallet addresses and approve automated balance deductions.</p>
               </div>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Pending Action</span>
-                <button class="btn btn-secondary btn-sm" id="export-withdrawals-csv-btn" type="button" style="font-size: 0.78rem;">📥 CSV Export</button>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <a href="#admin-overview" class="back-to-overview-btn">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  <span>Back to Dashboard</span>
+                </a>
+                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 700;" id="admin-pending-wd-badge">0 Pending Action</span>
+                <button class="btn btn-secondary btn-sm" id="export-withdrawals-csv-btn" type="button" style="font-size: 0.8rem; border-color: #f87171; color: #f87171;">📥 CSV Export</button>
               </div>
             </div>
+
+            <!-- Search & Filter Bar -->
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+              <div style="flex: 1; min-width: 200px;">
+                <input type="text" id="admin-wd-search" placeholder="🔍 Search withdrawal ID, user, destination wallet..." style="width: 100%; padding: 0.55rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;" />
+              </div>
+              <div style="min-width: 150px;">
+                <select id="admin-wd-filter" style="width: 100%; padding: 0.55rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;">
+                  <option value="all">Status: All Statuses</option>
+                  <option value="pending" selected>Status: Pending Only</option>
+                  <option value="approved">Status: Approved Only</option>
+                  <option value="rejected">Status: Rejected Only</option>
+                </select>
+              </div>
+              <button class="btn btn-secondary" id="admin-wd-refresh-btn" type="button" style="padding: 0.55rem 0.8rem; font-size: 0.85rem;">🔄 Refresh Queue</button>
+            </div>
+
             <div class="table-wrap">
               <table class="table" id="admin-withdrawals-table">
                 <thead>
                   <tr>
-                    <th>ID / User</th>
+                    <th>Withdrawal ID / Investor</th>
                     <th>Source Wallet</th>
-                    <th>Method &amp; Details</th>
-                    <th>Amount</th>
+                    <th>Destination Wallet / Coin</th>
+                    <th>Amount ($)</th>
+                    <th>Request Date</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Command Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="6" class="text-center muted">Loading withdrawal requests...</td>
+                    <td colspan="7" class="text-center muted">Loading withdrawal requests...</td>
                   </tr>
                 </tbody>
               </table>
@@ -455,14 +610,18 @@
         </div>
 
         <!-- Registered User Directory -->
-        <div class="panel admin-ui-box box-blue" id="admin-users-section" style="scroll-margin-top: 90px;">
+        <div class="panel admin-ui-box box-blue" id="admin-users-section" style="scroll-margin-top: 90px; margin-top: 1.5rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
             <div>
-              <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">USER DATABASE DIRECTORY</span>
-              <h3 style="margin: 0.3rem 0 0; color: #ffffff;">Registered Investor Accounts &amp; Command Center</h3>
-              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Real-time access to all registered database users, client balances, wallet addresses, and administrative command operations.</p>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.25); color: #38bdf8; font-weight: 800;">👥 USER DATABASE DIRECTORY</span>
+              <h2 style="margin: 0.3rem 0 0; color: #ffffff;">Registered Investor Directory &amp; Account Control</h2>
+              <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.88rem;">Real-time access to all registered database users, client balances, wallet addresses, and administrative account controls.</p>
             </div>
-            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <a href="#admin-overview" class="back-to-overview-btn">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>Back to Dashboard</span>
+              </a>
               <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;" id="admin-user-stat-total">Total: 0</span>
               <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;" id="admin-user-stat-active">Active: 0</span>
               <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;" id="admin-user-stat-suspended">Suspended: 0</span>
@@ -472,11 +631,11 @@
           <!-- Search & Filter Controls Bar -->
           <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
             <div style="flex: 1; min-width: 240px; position: relative;">
-              <input type="text" id="admin-users-search" placeholder="🔍 Search name, email, ID, phone, country, wallet..." style="width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;" />
+              <input type="text" id="admin-users-search" placeholder="🔍 Search investor by Name, Email, User ID, Phone, Country, Wallet..." style="width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;" />
             </div>
             <div style="min-width: 160px;">
               <select id="admin-users-filter" style="width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem;">
-                <option value="all">Filter: All Users</option>
+                <option value="all">Filter: All Registered Users</option>
                 <option value="client">Filter: Clients Only</option>
                 <option value="admin">Filter: Admins Only</option>
                 <option value="active">Filter: Active Accounts</option>
@@ -678,6 +837,42 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal: View Deposit Details -->
+    <div id="admin-view-deposit-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 1rem;">
+      <div style="background: #0f172a; border: 1px solid rgba(234, 179, 8, 0.5); border-radius: 16px; width: 100%; max-width: 550px; padding: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
+          <h3 style="margin: 0; color: #facc15; font-size: 1.2rem;">💳 Deposit Request Details</h3>
+          <button type="button" id="close-view-dep-modal" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        <div id="view-dep-content" style="display: grid; gap: 0.8rem; font-size: 0.9rem;">
+          <!-- Dynamically populated -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+          <button type="button" class="btn btn-secondary" id="cancel-view-dep-btn">Close</button>
+          <button type="button" class="btn btn-primary" id="modal-approve-dep-btn" style="background: #16a34a; border-color: #22c55e;">Approve Deposit</button>
+          <button type="button" class="btn btn-secondary" id="modal-reject-dep-btn" style="border-color: #f87171; color: #f87171;">Reject Deposit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: View Withdrawal Details -->
+    <div id="admin-view-withdrawal-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 1rem;">
+      <div style="background: #0f172a; border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 16px; width: 100%; max-width: 550px; padding: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
+          <h3 style="margin: 0; color: #f87171; font-size: 1.2rem;">💸 Withdrawal Request Details</h3>
+          <button type="button" id="close-view-wd-modal" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        <div id="view-wd-content" style="display: grid; gap: 0.8rem; font-size: 0.9rem;">
+          <!-- Dynamically populated -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+          <button type="button" class="btn btn-secondary" id="cancel-view-wd-btn">Close</button>
+          <button type="button" class="btn btn-primary" id="modal-approve-wd-btn" style="background: #16a34a; border-color: #22c55e;">Approve Withdrawal</button>
+          <button type="button" class="btn btn-secondary" id="modal-reject-wd-btn" style="border-color: #f87171; color: #f87171;">Reject Withdrawal</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Modal: Edit Registered User Profile -->
     <div id="admin-edit-user-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 1rem;">
