@@ -1,3 +1,4 @@
+# Bitfury Tech Platform Configuration
 [providers]
 providers = ["node"]
 
