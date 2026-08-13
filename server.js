@@ -2748,7 +2748,7 @@ app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'testing' && process.env.npm_lifecycle_event !== 'test' && isEntryPoint) {
+if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'testing' && process.env.npm_lifecycle_event !== 'test' && (isEntryPoint || process.env.PORT || process.env.RAILWAY_STATIC_URL)) {
   app.listen(port, '0.0.0.0', () => {
     console.log(`Bitfurytech server running on port ${port}`);
   });
