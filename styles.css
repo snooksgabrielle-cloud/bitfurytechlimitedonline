@@ -4084,18 +4084,38 @@ body.theme-light .fee-badge {
   color: #000000 !important;
 }
 
-/* Printable Document PDF Styles */
+/* Printable Document PDF Styles (A4 Page Fit for Mobile & Desktop) */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm 12mm 10mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body * {
     visibility: hidden !important;
   }
+
   .modal-overlay.active,
   .modal-overlay.active .printable-doc,
   .modal-overlay.active .printable-doc * {
     visibility: visible !important;
   }
+
   .modal-overlay.active {
-    position: absolute !important;
+    position: static !important;
+    display: block !important;
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
@@ -4104,22 +4124,63 @@ body.theme-light .fee-badge {
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
+    border: none !important;
   }
+
   .modal-overlay.active .printable-doc {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    position: static !important;
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
-    padding: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     background: #ffffff !important;
     color: #0f172a !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
   }
-  .no-print {
+
+  .printable-doc h1, .printable-doc h2, .printable-doc h3, .printable-doc h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .printable-doc table, .printable-doc tr, .printable-doc .preview-row, .printable-doc .stamp-box {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    font-size: 9pt !important;
+  }
+
+  .no-print, .modal-close, .modal-actions {
     display: none !important;
+  }
+}
+
+/* Mobile Responsiveness for Document / PDF Modal Content */
+@media (max-width: 640px) {
+  .printable-doc {
+    padding: 1.25rem 0.85rem !important;
+    max-width: 96vw !important;
+    margin: 0.5rem auto !important;
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
+  }
+  .printable-doc h2 {
+    font-size: 1.25rem !important;
+  }
+  .printable-doc h3 {
+    font-size: 1.05rem !important;
+  }
+  .printable-doc table {
+    font-size: 0.75rem !important;
+    display: table !important;
+    width: 100% !important;
+  }
+  .printable-doc .preview-row {
+    font-size: 0.8rem !important;
   }
 }
 

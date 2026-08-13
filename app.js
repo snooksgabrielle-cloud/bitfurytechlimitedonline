@@ -373,6 +373,7 @@ function updateAuthNavbar() {
   const user = getStoredUser();
 
   let dashLink = nav.querySelector('a[href="dashboard.html"]');
+  let adminLink = nav.querySelector('a[href="admin.html"]');
   const loginLink = nav.querySelector('a[href="login.html"]');
   const regLink = nav.querySelector('a[href="register.html"]');
   let logoutBtn = nav.querySelector('[data-logout]');
@@ -393,6 +394,22 @@ function updateAuthNavbar() {
     if (loginLink) loginLink.style.display = 'none';
     if (regLink) regLink.style.display = 'none';
 
+    // Show Admin link if user is admin
+    if (user.role === 'admin') {
+      if (!adminLink) {
+        adminLink = document.createElement('a');
+        adminLink.href = 'admin.html';
+        adminLink.className = 'btn btn-secondary';
+        adminLink.style.borderColor = '#10b981';
+        adminLink.style.color = '#10b981';
+        adminLink.textContent = '🛡️ Admin Panel';
+        nav.insertBefore(adminLink, logoutBtn || null);
+      }
+      adminLink.style.display = 'inline-flex';
+    } else if (adminLink) {
+      adminLink.style.display = 'none';
+    }
+
     if (!logoutBtn) {
       logoutBtn = document.createElement('a');
       logoutBtn.href = 'index.html';
@@ -410,6 +427,7 @@ function updateAuthNavbar() {
     }
   } else {
     dashLink.className = 'btn btn-secondary';
+    if (adminLink) adminLink.style.display = 'none';
     if (loginLink) {
       loginLink.style.display = 'inline-flex';
     }
@@ -431,6 +449,52 @@ function updateTranslatorControlsUI(lang) {
       select.value = lang;
     }
   });
+}
+
+let smartsuppInitialized = false;
+
+async function initSmartsuppLiveChat() {
+  try {
+    const res = await fetch('/api/smartsupp-key');
+    const data = await res.json();
+    if (res.ok && data.ok && data.key) {
+      window._smartsupp = window._smartsupp || {};
+      window._smartsupp.key = data.key;
+
+      if (!smartsuppInitialized) {
+        smartsuppInitialized = true;
+        window.smartsuppLoaded = true;
+
+        (function(d) {
+          var s, c, o = window.smartsupp = function() { o._.push(arguments); };
+          o._ = [];
+          s = d.getElementsByTagName('script')[0];
+          c = d.createElement('script');
+          c.type = 'text/javascript';
+          c.charset = 'utf-8';
+          c.async = true;
+          c.src = 'https://www.smartsuppchat.com/loader.js?';
+          if (s && s.parentNode) {
+            s.parentNode.insertBefore(c, s);
+          } else {
+            d.head.appendChild(c);
+          }
+        })(document);
+
+        setTimeout(() => {
+          try {
+            const user = typeof getStoredUser === 'function' ? getStoredUser() : null;
+            if (user && typeof window.smartsupp === 'function') {
+              if (user.fullName) window.smartsupp('name', user.fullName);
+              if (user.email) window.smartsupp('email', user.email);
+            }
+          } catch(e) {}
+        }, 1500);
+      }
+    }
+  } catch (err) {
+    console.warn('Could not initialize Smartsupp live chat:', err);
+  }
 }
 
 function setupCustomerCareFloatingWidget() {
@@ -524,9 +588,33 @@ function setupCustomerCareFloatingWidget() {
     modal.style.display = 'none';
   };
 
-  if (floatBtn) floatBtn.onclick = openModal;
+  window.openCustomerSupport = () => {
+    if (window.smartsuppLoaded || window.smartsupp || window._smartsupp) {
+      try {
+        if (typeof window.smartsupp === 'function') {
+          window.smartsupp('chat:open');
+          return;
+        } else if (window._smartsupp) {
+          window._smartsupp('open');
+          return;
+        }
+      } catch (err) {
+        console.warn('Smartsupp open fallback to modal:', err);
+      }
+    }
+    openModal();
+  };
+
+  if (floatBtn) floatBtn.onclick = () => window.openCustomerSupport();
   if (closeBtn) closeBtn.onclick = closeModal;
   if (cancelBtn) cancelBtn.onclick = closeModal;
+
+  document.querySelectorAll('.open-customer-care, [data-open-customer-care]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openCustomerSupport();
+    });
+  });
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
@@ -967,7 +1055,7 @@ function handleAuthFormSubmit(event) {
       createMessage(form, isRegister ? 'Account created successfully! Redirecting to dashboard...' : 'Login successful! Redirecting to dashboard...');
       setTimeout(() => {
         if (data && data.user && data.user.role === 'admin') {
-          window.location.href = '/admin';
+          window.location.href = 'admin.html';
         } else {
           window.location.href = 'dashboard.html';
         }
@@ -2348,6 +2436,16 @@ function initDashboardControls() {
     }
     if (modalLimitTxt) modalLimitTxt.textContent = `Limits: $${(min || 100).toLocaleString()} - $${(max || 1000000).toLocaleString()}`;
 
+    // Update wallet option labels with live user balances
+    const user = window.currentDashboardData?.user || {};
+    const depBal = typeof user.depositBalance !== 'undefined' ? user.depositBalance : (user.deposit_balance || 0);
+    const intBal = typeof user.interestBalance !== 'undefined' ? user.interestBalance : (user.interest_balance || 0);
+
+    const depOpt = document.getElementById('modal-dep-opt');
+    const intOpt = document.getElementById('modal-int-opt');
+    if (depOpt) depOpt.textContent = `Deposit Wallet ($${Number(depBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+    if (intOpt) intOpt.textContent = `Interest Wallet ($${Number(intBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+
     const updateModalCalc = () => {
       const amtInput = document.getElementById('invest-amount-input');
       const amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
@@ -2384,9 +2482,21 @@ function initDashboardControls() {
   if (investForm) {
     investForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const confirmBtn = document.getElementById('confirm-invest-btn');
       const planId = document.getElementById('modal-plan-id').value;
       const walletSource = document.getElementById('invest-wallet-source').value;
       const amount = parseFloat(document.getElementById('invest-amount-input').value);
+
+      if (!planId || isNaN(amount) || amount <= 0) {
+        showToast('❌ Please enter a valid investment amount.', false);
+        return;
+      }
+
+      const origText = confirmBtn ? confirmBtn.innerHTML : 'Confirm & Activate Plan';
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '⏳ Activating Plan...';
+      }
 
       try {
         const res = await fetch('/api/investments', {
@@ -2395,12 +2505,12 @@ function initDashboardControls() {
             'Content-Type': 'application/json',
             ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {}),
           },
-          body: JSON.stringify({ planId, amount, walletSource }),
+          body: JSON.stringify({ planId, amount, walletSource, walletType: walletSource }),
         });
         const data = await res.json();
 
-        if (res.ok && data.success) {
-          showToast(`🚀 Investment in ${data.investment.planName} activated!`, true);
+        if (res.ok && (data.ok || data.success)) {
+          showToast(`🚀 ${data.message || 'Investment plan activated successfully!'}`, true);
           closeInvestModal();
           await loadDashboardData();
           const activeInvestTab = document.querySelector('[data-tab="active-investments"]');
@@ -2414,7 +2524,13 @@ function initDashboardControls() {
           showToast(`❌ ${data.error || 'Failed to activate investment.'}`, false);
         }
       } catch (err) {
+        console.error('Error activating investment:', err);
         showToast('❌ Investment submission error. Please try again.', false);
+      } finally {
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = origText;
+        }
       }
     });
   }
@@ -5116,6 +5232,81 @@ function initAdminMailingForm() {
     });
   }
 
+  // Smartsupp Live Chat Admin Controls
+  const toggleSmartsuppBtn = document.getElementById('toggle-smartsupp-config-btn');
+  const smartsuppBox = document.getElementById('smartsupp-config-box');
+  const smartsuppForm = document.getElementById('admin-smartsupp-config-form');
+
+  if (toggleSmartsuppBtn && !toggleSmartsuppBtn.dataset.bound) {
+    toggleSmartsuppBtn.dataset.bound = 'true';
+    toggleSmartsuppBtn.addEventListener('click', () => {
+      if (smartsuppBox) {
+        const isHidden = smartsuppBox.style.display === 'none';
+        smartsuppBox.style.display = isHidden ? 'block' : 'none';
+      }
+    });
+  }
+
+  const loadSmartsuppSettings = async () => {
+    try {
+      const res = await fetch('/api/admin/smartsupp', {
+        headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {}
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        const keyInput = document.getElementById('smartsupp-key-input');
+        const statusBadge = document.getElementById('smartsupp-configured-status');
+
+        if (keyInput) keyInput.value = data.key || '';
+
+        if (statusBadge) {
+          if (data.isConfigured) {
+            statusBadge.textContent = '🟢 Smartsupp Active';
+            statusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+            statusBadge.style.color = '#34d399';
+          } else {
+            statusBadge.textContent = '🟡 Not Configured (Fallback Active)';
+            statusBadge.style.background = 'rgba(234, 179, 8, 0.2)';
+            statusBadge.style.color = '#facc15';
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not load Smartsupp settings:', e);
+    }
+  };
+
+  loadSmartsuppSettings();
+
+  if (smartsuppForm && !smartsuppForm.dataset.bound) {
+    smartsuppForm.dataset.bound = 'true';
+    smartsuppForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const key = document.getElementById('smartsupp-key-input')?.value?.trim() || '';
+
+      try {
+        const res = await fetch('/api/admin/smartsupp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {})
+          },
+          body: JSON.stringify({ key })
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          showToast(`💬 ${data.message || 'Smartsupp configuration saved!'}`, true);
+          await loadSmartsuppSettings();
+          initSmartsuppLiveChat();
+        } else {
+          showToast(`❌ ${data.error || 'Failed to save Smartsupp settings.'}`, false);
+        }
+      } catch (err) {
+        showToast('❌ Error saving Smartsupp key.', false);
+      }
+    });
+  }
+
   if (targetSelect && !targetSelect.dataset.bound) {
     targetSelect.dataset.bound = 'true';
     targetSelect.addEventListener('change', () => {
@@ -6472,6 +6663,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setActiveNav();
   setupHeaderControls();
   setupCustomerCareFloatingWidget();
+  initSmartsuppLiveChat();
   initGoogleTranslateScript();
   setLanguage(getLanguage());
   initForms();

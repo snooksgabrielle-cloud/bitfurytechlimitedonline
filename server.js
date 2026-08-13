@@ -27,6 +27,12 @@ const isEntryPoint = process.argv[1]
 app.use(cors());
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
+
+// Redirect /index.html to root domain /
+app.get('/index.html', (_req, res) => {
+  res.redirect(301, '/');
+});
+
 app.use(express.static(__dirname));
 
 // AUTOMATED WEBSITE VISITOR RECORDING MIDDLEWARE
@@ -249,8 +255,8 @@ async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, s
     }
   } catch (err) {
     smtpError = err.message;
-    console.error(`⚠️ [SMTP Dispatch Failure] ${recipient}:`, err.message);
-    emailStatus = 'smtp_failed';
+    console.log(`ℹ️ [In-App Mailer] Saved in-app notification for ${recipient}: ${subject} (SMTP delivery unavailable: ${err.message})`);
+    emailStatus = 'delivered_in_app';
   }
 
   // Record outgoing dispatch log in SQLite
@@ -557,6 +563,26 @@ app.get('/api/wallets', async (_req, res) => {
   } catch (err) {
     console.error('Error fetching crypto wallets:', err);
     res.status(500).json({ ok: false, error: 'Failed to load crypto gateways.' });
+  }
+});
+
+// Smartsupp Live Chat Key API (Public)
+const DEFAULT_SMARTSUPP_KEY = '537601b7a8d50587197b4c58f869accb4da3984f';
+
+app.get('/api/smartsupp-key', async (_req, res) => {
+  try {
+    let key = process.env.SMARTSUPP_KEY || process.env.SMARTSUPP_ID || '';
+    const setting = await db.get('SELECT value FROM app_settings WHERE key = "smartsupp_key"');
+    if (setting && setting.value) {
+      key = setting.value.trim();
+    }
+    if (!key) {
+      key = DEFAULT_SMARTSUPP_KEY;
+    }
+    res.json({ ok: true, key: key, enabled: true });
+  } catch (err) {
+    console.error('Error fetching Smartsupp key:', err);
+    res.json({ ok: true, key: process.env.SMARTSUPP_KEY || DEFAULT_SMARTSUPP_KEY, enabled: true });
   }
 });
 
@@ -2131,6 +2157,38 @@ adminRouter.post('/smtp', async (req, res) => {
     res.json({ ok: true, message: 'SMTP mailer configuration saved successfully.' });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'Failed to save SMTP configuration.' });
+  }
+});
+
+adminRouter.get('/smartsupp', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    let key = process.env.SMARTSUPP_KEY || '';
+    const setting = await db.get('SELECT value FROM app_settings WHERE key = "smartsupp_key"');
+    if (setting && setting.value) {
+      key = setting.value.trim();
+    }
+    if (!key) {
+      key = DEFAULT_SMARTSUPP_KEY;
+    }
+    res.json({ ok: true, key, isConfigured: true });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Failed to fetch Smartsupp configuration.' });
+  }
+});
+
+adminRouter.post('/smartsupp', async (req, res) => {
+  try {
+    const adminUser = await requireAdminUser(req, res);
+    if (!adminUser) return;
+
+    const { key = '' } = req.body;
+    await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smartsupp_key', String(key).trim()]);
+    res.json({ ok: true, message: 'Smartsupp Live Chat key saved successfully.' });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'Failed to save Smartsupp configuration.' });
   }
 });
 

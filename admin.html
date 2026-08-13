@@ -348,8 +348,33 @@
               <button type="button" class="btn btn-secondary btn-sm" id="toggle-smtp-config-btn" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700;">
                 ⚙️ SMTP Mailer Settings
               </button>
+              <button type="button" class="btn btn-secondary btn-sm" id="toggle-smartsupp-config-btn" style="border-color: #22c55e; color: #4ade80; font-weight: 700;">
+                💬 Smartsupp Live Chat
+              </button>
               <span class="badge badge-accent" id="mail-status-badge">info@trustpay.tax Ready</span>
             </div>
+          </div>
+
+          <!-- Smartsupp Live Chat Key Configuration Form -->
+          <div id="smartsupp-config-box" style="display: none; background: rgba(0,0,0,0.4); border: 1px solid rgba(34, 197, 94, 0.3); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.6rem;">
+              <h4 style="margin: 0; color: #4ade80; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+                💬 Smartsupp Live Chat Integration Setup
+              </h4>
+              <span class="badge" id="smartsupp-configured-status" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">Not Configured</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0; margin-bottom: 1rem;">
+              Paste your <strong>Smartsupp Key / ID</strong> below to activate Smartsupp 24/7 Live Chat across the entire website when users click Customer Support.
+            </p>
+            <form id="admin-smartsupp-config-form" style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end;">
+              <div class="form-group" style="margin: 0;">
+                <label for="smartsupp-key-input" style="font-size: 0.8rem; color: #94a3b8;">Smartsupp Key (e.g. <code>5d8f2a1b...</code>)</label>
+                <input type="text" id="smartsupp-key-input" placeholder="e.g. 5d8f2a1b9c7e3d4f..." style="width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff;" />
+              </div>
+              <button class="btn btn-primary" type="submit" id="save-smartsupp-btn" style="background: #16a34a; border-color: #22c55e; white-space: nowrap;">
+                💾 Save Smartsupp Key
+              </button>
+            </form>
           </div>
 
           <!-- SMTP Mailer Server Credentials Configuration Form -->
