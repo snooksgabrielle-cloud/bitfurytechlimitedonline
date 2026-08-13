@@ -539,7 +539,7 @@ function setupCustomerCareFloatingWidget() {
       <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.2rem; font-size: 0.85rem; color: #cbd5e1;">
         <p style="margin: 0 0 0.4rem 0;">Need immediate assistance with deposits, withdrawals, or account verification? Our customer care team responds 24/7.</p>
         <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; font-size: 0.8rem; font-weight: 600; color: #38bdf8; margin-top: 0.4rem;">
-          <span>📧 info@trustpay.tax</span>
+          <span>📧 support@bitfurytech.pro</span>
           <span>⏱️ Typical Response: &lt; 15 Mins</span>
         </div>
       </div>
@@ -4965,7 +4965,7 @@ async function loadUserNotifications() {
         <div style="text-align: center; padding: 2.5rem 1rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: 12px;">
           <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#38bdf8" stroke-width="1.5" style="margin-bottom: 0.5rem;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           <p style="margin: 0; color: #94a3b8; font-weight: 600;">No mail notifications in inbox yet.</p>
-          <small class="muted">All official messages sent from <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong> will be logged here.</small>
+          <small class="muted">All official messages sent from <strong style="color: #38bdf8; font-family: monospace;">support@bitfurytech.pro</strong> will be logged here.</small>
         </div>
       `;
       return;
@@ -4975,7 +4975,7 @@ async function loadUserNotifications() {
       <div class="panel" style="background: rgba(13, 27, 42, 0.85); border: 1px solid ${n.is_read ? 'rgba(255,255,255,0.08)' : 'rgba(56, 189, 248, 0.4)'}; border-left: 4px solid ${n.type === 'warning' ? '#f87171' : '#38bdf8'}; border-radius: 12px; padding: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
           <div>
-            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700; font-size: 0.75rem;">From: ${n.sender || 'info@trustpay.tax'}</span>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700; font-size: 0.75rem;">From: ${n.sender || 'support@bitfurytech.pro'}</span>
             <span class="badge" style="background: rgba(255,255,255,0.08); color: #e2e8f0; font-size: 0.75rem; margin-left: 0.4rem;">${n.type ? n.type.toUpperCase() : 'NOTICE'}</span>
           </div>
           <span style="font-size: 0.78rem; color: #94a3b8;">${new Date(n.created_at).toLocaleString('en-US')}</span>
@@ -5039,32 +5039,32 @@ async function sendAutomatedInvestorNotification(actionType, payload = {}) {
   switch (actionType) {
     case 'ROI_PAYMENT':
       category = 'ROI Daily Yield Payment';
-      subject = `TrustPay Tax: Daily ROI Yield Payment Credited ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nYour daily ROI yield payment of $${Number(amount).toFixed(2)} USD for your "${planName || 'Active Investment Plan'}" has been calculated and credited to your Interest Balance.\n\nTransaction Reference: ${transactionId || 'ROI-' + Date.now()}\nStatus: ${status}\n\nOfficial Sender: info@trustpay.tax`;
+      subject = `Bitfury Tech: Daily ROI Yield Payment Credited ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nYour daily ROI yield payment of $${Number(amount).toFixed(2)} USD for your "${planName || 'Active Investment Plan'}" has been calculated and credited to your Interest Balance.\n\nTransaction Reference: ${transactionId || 'ROI-' + Date.now()}\nStatus: ${status}\n\nOfficial Sender: support@bitfurytech.pro`;
       break;
 
     case 'DEPOSIT':
       category = 'Deposit Activity';
-      subject = `TrustPay Tax: Crypto Deposit Notice ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nA deposit transaction of $${Number(amount).toFixed(2)} USD has been recorded on your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'DEP-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
+      subject = `Bitfury Tech: Crypto Deposit Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA deposit transaction of $${Number(amount).toFixed(2)} USD has been recorded on your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'DEP-' + Date.now()}\n\nOfficial Sender: support@bitfurytech.pro`;
       break;
 
     case 'WITHDRAWAL':
       category = 'Withdrawal Activity';
-      subject = `TrustPay Tax: Withdrawal Request Notice ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nA withdrawal request of $${Number(amount).toFixed(2)} USD has been submitted for your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'WTH-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
+      subject = `Bitfury Tech: Withdrawal Request Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA withdrawal request of $${Number(amount).toFixed(2)} USD has been submitted for your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'WTH-' + Date.now()}\n\nOfficial Sender: support@bitfurytech.pro`;
       break;
 
     case 'PLAN_UPDATE':
       category = 'Plan Update Activity';
-      subject = `TrustPay Tax: Investment Plan Status Update (${planName || 'Investment Plan'})`;
-      body = `Dear ${investorName},\n\nYour investment plan "${planName || 'Investment Plan'}" status has been updated to "${status}".\n\nCapital Invested: $${Number(amount).toFixed(2)} USD\n\nOfficial Sender: info@trustpay.tax`;
+      subject = `Bitfury Tech: Investment Plan Status Update (${planName || 'Investment Plan'})`;
+      body = `Dear ${investorName},\n\nYour investment plan "${planName || 'Investment Plan'}" status has been updated to "${status}".\n\nCapital Invested: $${Number(amount).toFixed(2)} USD\n\nOfficial Sender: support@bitfurytech.pro`;
       break;
 
     default:
       category = 'Official System Notice';
-      subject = `TrustPay Tax: Investor Account Notification`;
-      body = `Dear ${investorName},\n\nAn automated update has occurred on your investor account.\n\nStatus: ${status}\nOfficial Sender: info@trustpay.tax`;
+      subject = `Bitfury Tech: Investor Account Notification`;
+      body = `Dear ${investorName},\n\nAn automated update has occurred on your investor account.\n\nStatus: ${status}\nOfficial Sender: support@bitfurytech.pro`;
       break;
   }
 
@@ -5123,7 +5123,7 @@ async function loadAdminMailLogs() {
     tableBody.innerHTML = data.logs.map((log) => `
       <tr>
         <td><strong>#${log.id}</strong></td>
-        <td><code style="color: #38bdf8;">${log.sender || 'info@trustpay.tax'}</code></td>
+        <td><code style="color: #38bdf8;">${log.sender || 'support@bitfurytech.pro'}</code></td>
         <td><code>${log.recipient}</code></td>
         <td><span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${log.category || 'Official'}</span></td>
         <td><strong>${log.subject}</strong></td>
@@ -5177,7 +5177,7 @@ function initAdminMailingForm() {
         if (hostEl) hostEl.value = s.host || '';
         if (portEl) portEl.value = s.port || '587';
         if (userEl) userEl.value = s.user || '';
-        if (fromEl) fromEl.value = s.from || 'info@trustpay.tax';
+        if (fromEl) fromEl.value = s.from || 'support@bitfurytech.pro';
         if (secureEl) secureEl.value = s.secure || 'false';
 
         if (statusBadge) {
@@ -5207,7 +5207,7 @@ function initAdminMailingForm() {
       const port = document.getElementById('smtp-port')?.value?.trim() || '587';
       const user = document.getElementById('smtp-user')?.value?.trim() || '';
       const pass = document.getElementById('smtp-pass')?.value || '';
-      const from = document.getElementById('smtp-from')?.value?.trim() || 'info@trustpay.tax';
+      const from = document.getElementById('smtp-from')?.value?.trim() || 'support@bitfurytech.pro';
       const secure = document.getElementById('smtp-secure')?.value || 'false';
 
       try {

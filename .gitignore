@@ -3,4 +3,7 @@ data/
 *.db
 *.sqlite
 *.sqlite-journal
+bun.lock
+bun.lockb
 .env
+backups/backup_operations_*.json

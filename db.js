@@ -170,7 +170,7 @@ export async function initDb() {
 
       CREATE TABLE IF NOT EXISTS mail_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        sender TEXT NOT NULL DEFAULT 'info@trustpay.tax',
+        sender TEXT NOT NULL DEFAULT 'support@bitfurytech.pro',
         recipient TEXT NOT NULL,
         subject TEXT NOT NULL,
         message TEXT NOT NULL,
@@ -182,7 +182,7 @@ export async function initDb() {
       CREATE TABLE IF NOT EXISTS user_notifications (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
-        sender TEXT NOT NULL DEFAULT 'info@trustpay.tax',
+        sender TEXT NOT NULL DEFAULT 'support@bitfurytech.pro',
         title TEXT NOT NULL,
         body TEXT NOT NULL,
         type TEXT NOT NULL DEFAULT 'info',
