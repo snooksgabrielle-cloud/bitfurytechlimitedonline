@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /dashboard.html
+Disallow: /dashboard
+Disallow: /login.html
+Disallow: /login
+Disallow: /register.html
+Disallow: /register
+Disallow: /api/
+
+Sitemap: https://bitfurytech.pro/sitemap.xml

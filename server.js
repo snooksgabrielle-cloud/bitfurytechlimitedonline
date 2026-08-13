@@ -25,6 +25,22 @@ const isEntryPoint = process.argv[1]
   : false;
 
 app.use(cors());
+
+// Enforce search engine indexing protection on sensitive routes & APIs
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (
+    p.includes('admin') ||
+    p.includes('dashboard') ||
+    p.includes('login') ||
+    p.includes('register') ||
+    p.startsWith('/api/')
+  ) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
+  }
+  next();
+});
+
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
