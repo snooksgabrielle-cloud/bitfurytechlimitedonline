@@ -457,9 +457,9 @@ async function initSmartsuppLiveChat() {
   try {
     const res = await fetch('/api/smartsupp-key');
     const data = await res.json();
-    if (res.ok && data.ok && data.key) {
+    if (res.ok && data.ok && data.key && data.key.trim().length > 0) {
       window._smartsupp = window._smartsupp || {};
-      window._smartsupp.key = data.key;
+      window._smartsupp.key = data.key.trim();
 
       if (!smartsuppInitialized) {
         smartsuppInitialized = true;
@@ -539,7 +539,7 @@ function setupCustomerCareFloatingWidget() {
       <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.2rem; font-size: 0.85rem; color: #cbd5e1;">
         <p style="margin: 0 0 0.4rem 0;">Need immediate assistance with deposits, withdrawals, or account verification? Our customer care team responds 24/7.</p>
         <div style="display: flex; flex-wrap: wrap; gap: 0.8rem; font-size: 0.8rem; font-weight: 600; color: #38bdf8; margin-top: 0.4rem;">
-          <span>📧 support@bitfurytech.pro</span>
+          <span>📧 info@trustpay.tax</span>
           <span>⏱️ Typical Response: &lt; 15 Mins</span>
         </div>
       </div>
@@ -589,7 +589,7 @@ function setupCustomerCareFloatingWidget() {
   };
 
   window.openCustomerSupport = () => {
-    if (window.smartsuppLoaded || window.smartsupp || window._smartsupp) {
+    if (window.smartsuppLoaded && (typeof window.smartsupp === 'function' || window._smartsupp)) {
       try {
         if (typeof window.smartsupp === 'function') {
           window.smartsupp('chat:open');
@@ -2420,46 +2420,178 @@ function initDashboardControls() {
     if (!investModal) return;
 
     const planIdEl = document.getElementById('modal-plan-id');
+    const planRateRawEl = document.getElementById('modal-plan-raw-rate');
+    const planMinRawEl = document.getElementById('modal-plan-raw-min');
+    const planMaxRawEl = document.getElementById('modal-plan-raw-max');
     const planTitleEl = document.getElementById('modal-plan-title');
+    const planCatEl = document.getElementById('modal-plan-cat');
     const planRateEl = document.getElementById('modal-plan-rate');
+    const planMonthlyPctEl = document.getElementById('modal-plan-monthly-pct');
     const investAmtInput = document.getElementById('invest-amount-input');
     const modalLimitTxt = document.getElementById('modal-limit-text');
+    const walletSelect = document.getElementById('invest-wallet-source');
+    const availBalEl = document.getElementById('modal-selected-wallet-bal');
+    const valBox = document.getElementById('modal-amount-validation-box');
 
-    if (planIdEl) planIdEl.value = planId || 'beginners';
+    const cleanPlanId = planId || 'beginners';
+    const cleanRate = parseFloat(rate || 1.00);
+    const cleanMin = parseFloat(min || 100);
+    const cleanMax = parseFloat(max || 1000000);
+
+    if (planIdEl) planIdEl.value = cleanPlanId;
+    if (planRateRawEl) planRateRawEl.value = cleanRate;
+    if (planMinRawEl) planMinRawEl.value = cleanMin;
+    if (planMaxRawEl) planMaxRawEl.value = cleanMax;
+
     if (planTitleEl) planTitleEl.textContent = planName || 'Investment Plan';
-    if (planRateEl) planRateEl.textContent = `${rate || 1.00}% / Daily`;
-    if (investAmtInput) {
-      const defaultVal = initialAmount || min || 100;
-      investAmtInput.value = defaultVal;
-      investAmtInput.min = min || 100;
-      investAmtInput.max = max || 1000000;
+    if (planRateEl) planRateEl.textContent = `${cleanRate.toFixed(2)}% / Daily`;
+    if (planMonthlyPctEl) planMonthlyPctEl.textContent = `${(cleanRate * 30).toFixed(1)}% Monthly Yield`;
+
+    // Try finding corporate segment details
+    const corpInfo = window.CORPORATE_INCOME_DATA?.[cleanPlanId];
+    if (planCatEl) {
+      planCatEl.textContent = corpInfo?.segment || 'Institutional Yield Strategy';
     }
-    if (modalLimitTxt) modalLimitTxt.textContent = `Limits: $${(min || 100).toLocaleString()} - $${(max || 1000000).toLocaleString()}`;
+
+    if (modalLimitTxt) {
+      modalLimitTxt.textContent = `Limits: $${cleanMin.toLocaleString()} - $${cleanMax.toLocaleString()}`;
+    }
 
     // Update wallet option labels with live user balances
     const user = window.currentDashboardData?.user || {};
-    const depBal = typeof user.depositBalance !== 'undefined' ? user.depositBalance : (user.deposit_balance || 0);
-    const intBal = typeof user.interestBalance !== 'undefined' ? user.interestBalance : (user.interest_balance || 0);
+    const depBal = typeof user.depositBalance !== 'undefined' ? Number(user.depositBalance) : (typeof user.deposit_balance !== 'undefined' ? Number(user.deposit_balance) : 0);
+    const intBal = typeof user.interestBalance !== 'undefined' ? Number(user.interestBalance) : (typeof user.interest_balance !== 'undefined' ? Number(user.interest_balance) : 0);
 
     const depOpt = document.getElementById('modal-dep-opt');
     const intOpt = document.getElementById('modal-int-opt');
-    if (depOpt) depOpt.textContent = `Deposit Wallet ($${Number(depBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
-    if (intOpt) intOpt.textContent = `Interest Wallet ($${Number(intBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+    if (depOpt) depOpt.textContent = `Deposit Wallet ($${depBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+    if (intOpt) intOpt.textContent = `Interest Wallet ($${intBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
 
-    const updateModalCalc = () => {
-      const amtInput = document.getElementById('invest-amount-input');
-      const amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
-      const dailyProfit = amt * ((rate || 1.00) / 100);
-      const monthlyProfit = dailyProfit * 30;
-      const dailyCalcEl = document.getElementById('modal-daily-return-calc');
-      const monthlyCalcEl = document.getElementById('modal-monthly-return-calc');
-      if (dailyCalcEl) dailyCalcEl.textContent = `$${dailyProfit.toFixed(2)}`;
-      if (monthlyCalcEl) monthlyCalcEl.textContent = `$${monthlyProfit.toFixed(2)}`;
+    const getSelectedWalletBalance = () => {
+      const src = walletSelect ? walletSelect.value : 'deposit';
+      return src === 'interest' ? intBal : depBal;
     };
 
-    updateModalCalc();
-    if (investAmtInput) investAmtInput.oninput = updateModalCalc;
+    const getSelectedWalletName = () => {
+      const src = walletSelect ? walletSelect.value : 'deposit';
+      return src === 'interest' ? 'Interest Wallet' : 'Deposit Wallet';
+    };
 
+    const updateWalletAvailabilityDisplay = () => {
+      const bal = getSelectedWalletBalance();
+      const name = getSelectedWalletName();
+      if (availBalEl) {
+        availBalEl.textContent = `Available: $${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    };
+
+    const updateModalCalc = () => {
+      const amt = parseFloat(investAmtInput ? investAmtInput.value : 0) || 0;
+      const dailyProfit = amt * (cleanRate / 100);
+      const weeklyProfit = dailyProfit * 7;
+      const monthlyProfit = dailyProfit * 30;
+      const grandTotal = amt + monthlyProfit;
+
+      const dailyCalcEl = document.getElementById('modal-daily-return-calc');
+      const weeklyCalcEl = document.getElementById('modal-weekly-return-calc');
+      const monthlyCalcEl = document.getElementById('modal-monthly-return-calc');
+      const grandCalcEl = document.getElementById('modal-grand-total-calc');
+
+      if (dailyCalcEl) dailyCalcEl.textContent = `+$${dailyProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (weeklyCalcEl) weeklyCalcEl.textContent = `+$${weeklyProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (monthlyCalcEl) monthlyCalcEl.textContent = `+$${monthlyProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (grandCalcEl) grandCalcEl.textContent = `$${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      updateWalletAvailabilityDisplay();
+
+      // Real-time validation feedback
+      if (valBox) {
+        const bal = getSelectedWalletBalance();
+        const wName = getSelectedWalletName();
+
+        if (amt === 0 || isNaN(amt)) {
+          valBox.style.display = 'none';
+          valBox.innerHTML = '';
+        } else if (amt < cleanMin) {
+          valBox.style.display = 'block';
+          valBox.style.color = '#f59e0b';
+          valBox.innerHTML = `⚠️ Below minimum limit ($${cleanMin.toLocaleString()} minimum required for ${planName || 'this plan'}).`;
+        } else if (amt > cleanMax) {
+          valBox.style.display = 'block';
+          valBox.style.color = '#ef4444';
+          valBox.innerHTML = `❌ Exceeds maximum limit ($${cleanMax.toLocaleString()} maximum allowed).`;
+        } else if (amt > bal) {
+          valBox.style.display = 'block';
+          valBox.style.color = '#f87171';
+          const needed = (amt - bal).toFixed(2);
+          valBox.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem; background: rgba(239, 68, 68, 0.12); padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
+              <span>⚠️ Insufficient ${wName} balance ($${bal.toFixed(2)} available. Need $${needed} more).</span>
+              <button type="button" id="modal-quick-deposit-btn" class="btn btn-primary btn-xs" style="padding: 0.2rem 0.6rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">
+                + Fund Wallet Now
+              </button>
+            </div>
+          `;
+          const quickDepBtn = document.getElementById('modal-quick-deposit-btn');
+          if (quickDepBtn) {
+            quickDepBtn.onclick = () => {
+              closeInvestModal();
+              const depTab = document.querySelector('[data-tab="deposit"], [data-switch-tab="deposit"]');
+              if (depTab) depTab.click();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+          }
+        } else {
+          valBox.style.display = 'block';
+          valBox.style.color = '#34d399';
+          valBox.innerHTML = `✓ Ready to activate with $${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} from ${wName}.`;
+        }
+      }
+    };
+
+    if (investAmtInput) {
+      const defaultVal = initialAmount || cleanMin || 100;
+      investAmtInput.value = defaultVal;
+      investAmtInput.min = cleanMin;
+      investAmtInput.max = cleanMax;
+      investAmtInput.oninput = updateModalCalc;
+      investAmtInput.onkeyup = updateModalCalc;
+      investAmtInput.onchange = updateModalCalc;
+    }
+
+    if (walletSelect) {
+      walletSelect.onchange = updateModalCalc;
+    }
+
+    // Setup Quick Preset buttons
+    const presetBtns = investModal.querySelectorAll('.btn-preset');
+    presetBtns.forEach((pBtn) => {
+      pBtn.onclick = (e) => {
+        e.preventDefault();
+        const presetType = pBtn.getAttribute('data-preset');
+        let currentAmt = parseFloat(investAmtInput?.value || 0) || 0;
+        const curBal = getSelectedWalletBalance();
+
+        if (presetType === 'min') {
+          currentAmt = cleanMin;
+        } else if (presetType === 'add250') {
+          currentAmt = currentAmt + 250;
+        } else if (presetType === 'add500') {
+          currentAmt = currentAmt + 500;
+        } else if (presetType === 'add1000') {
+          currentAmt = currentAmt + 1000;
+        } else if (presetType === 'maxbal') {
+          currentAmt = curBal > 0 ? Math.min(curBal, cleanMax) : cleanMin;
+        }
+
+        if (investAmtInput) {
+          investAmtInput.value = currentAmt;
+          investAmtInput.dispatchEvent(new Event('input'));
+        }
+      };
+    });
+
+    updateModalCalc();
     investModal.classList.add('active');
   };
 
@@ -4965,7 +5097,7 @@ async function loadUserNotifications() {
         <div style="text-align: center; padding: 2.5rem 1rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: 12px;">
           <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#38bdf8" stroke-width="1.5" style="margin-bottom: 0.5rem;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           <p style="margin: 0; color: #94a3b8; font-weight: 600;">No mail notifications in inbox yet.</p>
-          <small class="muted">All official messages sent from <strong style="color: #38bdf8; font-family: monospace;">support@bitfurytech.pro</strong> will be logged here.</small>
+          <small class="muted">All official messages sent from <strong style="color: #38bdf8; font-family: monospace;">info@trustpay.tax</strong> will be logged here.</small>
         </div>
       `;
       return;
@@ -4975,7 +5107,7 @@ async function loadUserNotifications() {
       <div class="panel" style="background: rgba(13, 27, 42, 0.85); border: 1px solid ${n.is_read ? 'rgba(255,255,255,0.08)' : 'rgba(56, 189, 248, 0.4)'}; border-left: 4px solid ${n.type === 'warning' ? '#f87171' : '#38bdf8'}; border-radius: 12px; padding: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
           <div>
-            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700; font-size: 0.75rem;">From: ${n.sender || 'support@bitfurytech.pro'}</span>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700; font-size: 0.75rem;">From: ${n.sender || 'info@trustpay.tax'}</span>
             <span class="badge" style="background: rgba(255,255,255,0.08); color: #e2e8f0; font-size: 0.75rem; margin-left: 0.4rem;">${n.type ? n.type.toUpperCase() : 'NOTICE'}</span>
           </div>
           <span style="font-size: 0.78rem; color: #94a3b8;">${new Date(n.created_at).toLocaleString('en-US')}</span>
@@ -5039,32 +5171,32 @@ async function sendAutomatedInvestorNotification(actionType, payload = {}) {
   switch (actionType) {
     case 'ROI_PAYMENT':
       category = 'ROI Daily Yield Payment';
-      subject = `Bitfury Tech: Daily ROI Yield Payment Credited ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nYour daily ROI yield payment of $${Number(amount).toFixed(2)} USD for your "${planName || 'Active Investment Plan'}" has been calculated and credited to your Interest Balance.\n\nTransaction Reference: ${transactionId || 'ROI-' + Date.now()}\nStatus: ${status}\n\nOfficial Sender: support@bitfurytech.pro`;
+      subject = `TrustPay Tax: Daily ROI Yield Payment Credited ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nYour daily ROI yield payment of $${Number(amount).toFixed(2)} USD for your "${planName || 'Active Investment Plan'}" has been calculated and credited to your Interest Balance.\n\nTransaction Reference: ${transactionId || 'ROI-' + Date.now()}\nStatus: ${status}\n\nOfficial Sender: info@trustpay.tax`;
       break;
 
     case 'DEPOSIT':
       category = 'Deposit Activity';
-      subject = `Bitfury Tech: Crypto Deposit Notice ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nA deposit transaction of $${Number(amount).toFixed(2)} USD has been recorded on your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'DEP-' + Date.now()}\n\nOfficial Sender: support@bitfurytech.pro`;
+      subject = `TrustPay Tax: Crypto Deposit Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA deposit transaction of $${Number(amount).toFixed(2)} USD has been recorded on your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'DEP-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
       break;
 
     case 'WITHDRAWAL':
       category = 'Withdrawal Activity';
-      subject = `Bitfury Tech: Withdrawal Request Notice ($${Number(amount).toFixed(2)} USD)`;
-      body = `Dear ${investorName},\n\nA withdrawal request of $${Number(amount).toFixed(2)} USD has been submitted for your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'WTH-' + Date.now()}\n\nOfficial Sender: support@bitfurytech.pro`;
+      subject = `TrustPay Tax: Withdrawal Request Notice ($${Number(amount).toFixed(2)} USD)`;
+      body = `Dear ${investorName},\n\nA withdrawal request of $${Number(amount).toFixed(2)} USD has been submitted for your account.\n\nStatus: ${status}\nTransaction Ref: ${transactionId || 'WTH-' + Date.now()}\n\nOfficial Sender: info@trustpay.tax`;
       break;
 
     case 'PLAN_UPDATE':
       category = 'Plan Update Activity';
-      subject = `Bitfury Tech: Investment Plan Status Update (${planName || 'Investment Plan'})`;
-      body = `Dear ${investorName},\n\nYour investment plan "${planName || 'Investment Plan'}" status has been updated to "${status}".\n\nCapital Invested: $${Number(amount).toFixed(2)} USD\n\nOfficial Sender: support@bitfurytech.pro`;
+      subject = `TrustPay Tax: Investment Plan Status Update (${planName || 'Investment Plan'})`;
+      body = `Dear ${investorName},\n\nYour investment plan "${planName || 'Investment Plan'}" status has been updated to "${status}".\n\nCapital Invested: $${Number(amount).toFixed(2)} USD\n\nOfficial Sender: info@trustpay.tax`;
       break;
 
     default:
       category = 'Official System Notice';
-      subject = `Bitfury Tech: Investor Account Notification`;
-      body = `Dear ${investorName},\n\nAn automated update has occurred on your investor account.\n\nStatus: ${status}\nOfficial Sender: support@bitfurytech.pro`;
+      subject = `TrustPay Tax: Investor Account Notification`;
+      body = `Dear ${investorName},\n\nAn automated update has occurred on your investor account.\n\nStatus: ${status}\nOfficial Sender: info@trustpay.tax`;
       break;
   }
 
@@ -5123,7 +5255,7 @@ async function loadAdminMailLogs() {
     tableBody.innerHTML = data.logs.map((log) => `
       <tr>
         <td><strong>#${log.id}</strong></td>
-        <td><code style="color: #38bdf8;">${log.sender || 'support@bitfurytech.pro'}</code></td>
+        <td><code style="color: #38bdf8;">${log.sender || 'info@trustpay.tax'}</code></td>
         <td><code>${log.recipient}</code></td>
         <td><span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${log.category || 'Official'}</span></td>
         <td><strong>${log.subject}</strong></td>
@@ -5177,7 +5309,7 @@ function initAdminMailingForm() {
         if (hostEl) hostEl.value = s.host || '';
         if (portEl) portEl.value = s.port || '587';
         if (userEl) userEl.value = s.user || '';
-        if (fromEl) fromEl.value = s.from || 'support@bitfurytech.pro';
+        if (fromEl) fromEl.value = s.from || 'info@trustpay.tax';
         if (secureEl) secureEl.value = s.secure || 'false';
 
         if (statusBadge) {
@@ -5207,7 +5339,7 @@ function initAdminMailingForm() {
       const port = document.getElementById('smtp-port')?.value?.trim() || '587';
       const user = document.getElementById('smtp-user')?.value?.trim() || '';
       const pass = document.getElementById('smtp-pass')?.value || '';
-      const from = document.getElementById('smtp-from')?.value?.trim() || 'support@bitfurytech.pro';
+      const from = document.getElementById('smtp-from')?.value?.trim() || 'info@trustpay.tax';
       const secure = document.getElementById('smtp-secure')?.value || 'false';
 
       try {

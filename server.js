@@ -23,31 +23,11 @@ const port = process.env.PORT || 3000;
 const isEntryPoint = process.argv[1]
   ? import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
   : false;
+const isTestEnv = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'testing' || process.env.npm_lifecycle_event === 'test' || process.argv.some(arg => arg.includes('test'));
 
 app.use(cors());
-
-// Enforce search engine indexing protection on sensitive routes & APIs
-app.use((req, res, next) => {
-  const p = req.path.toLowerCase();
-  if (
-    p.includes('admin') ||
-    p.includes('dashboard') ||
-    p.includes('login') ||
-    p.includes('register') ||
-    p.startsWith('/api/')
-  ) {
-    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
-  }
-  next();
-});
-
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
-
-// Redirect /index.html to root domain /
-app.get('/index.html', (_req, res) => {
-  res.redirect(301, '/');
-});
 
 app.use(express.static(__dirname));
 
@@ -84,8 +64,68 @@ initDb().catch((err) => console.error('Error initializing SQLite database:', err
 // Official Bitfury Tech Investment Plans Definition
 const INVESTMENT_PLANS = [
   {
+    id: 'beginners',
+    name: 'Beginners Plan',
+    category: 'Micro-Cap Quantitative Segment',
+    dailyProfit: 1.00, // 1.00% daily
+    monthlyProfit: 30.0, // 30.0% monthly
+    minDeposit: 100,
+    maxDeposit: 4999,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Automated spot exchange liquidity routing, zero-leverage micro-arbitrage execution, and order book spread capturing.'
+  },
+  {
+    id: 'prime',
+    name: 'Prime Plan',
+    category: 'Institutional Tech Equities Segment',
+    dailyProfit: 1.50, // 1.50% daily
+    monthlyProfit: 45.0, // 45.0% monthly
+    minDeposit: 5000,
+    maxDeposit: 19999,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Quantitative tech equities trading, index momentum tracking, and covered call derivative yield mechanics.'
+  },
+  {
+    id: 'executive',
+    name: 'Executive Plan',
+    category: 'Private Equity & Credit Segment',
+    dailyProfit: 2.00, // 2.00% daily
+    monthlyProfit: 60.0, // 60.0% monthly
+    minDeposit: 20000,
+    maxDeposit: 49999,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Late-stage private tech financing, mezzanine corporate credit syndicates, and pre-IPO liquidity rounds.'
+  },
+  {
+    id: 'master',
+    name: 'Master Plan',
+    category: 'Commercial Assets & Infrastructure Segment',
+    dailyProfit: 2.50, // 2.50% daily
+    monthlyProfit: 75.0, // 75.0% monthly
+    minDeposit: 50000,
+    maxDeposit: 99999,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Direct allocation into commercial real estate, distribution logistics hubs, and renewable energy contracts.'
+  },
+  {
+    id: 'prime_executive',
+    name: 'Prime Executive Plan',
+    category: 'Bespoke Sovereign & VIP Desk Segment',
+    dailyProfit: 3.20, // 3.20% daily
+    monthlyProfit: 96.0, // 96.0% monthly
+    minDeposit: 100000,
+    maxDeposit: 1000000,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Bespoke prime brokerage liquidity swaps, sovereign note rate arbitrage, and 24/7 dedicated portfolio manager execution.'
+  },
+  {
     id: 'stock',
-    name: 'STOCK Plan',
+    name: 'Stock Market Strategy',
     category: 'Stock Market',
     dailyProfit: 1.08, // 1.08% daily
     monthlyProfit: 32.4, // 32.4% monthly
@@ -94,42 +134,6 @@ const INVESTMENT_PLANS = [
     referralBonus: 6,
     durationDays: 30,
     description: 'Broad international equity & momentum index exposure with quantitative rebalancing.'
-  },
-  {
-    id: 'prime',
-    name: 'PRIME Plan',
-    category: 'Institutional Growth',
-    dailyProfit: 1.60, // 1.60% daily
-    monthlyProfit: 48.0, // 48.0% monthly
-    minDeposit: 20000,
-    maxDeposit: 49999,
-    referralBonus: 6,
-    durationDays: 30,
-    description: 'High-yield institutional strategy combining tech equities, blue-chip stocks, and yield arbitrage.'
-  },
-  {
-    id: 'executive',
-    name: 'EXECUTIVE Plan',
-    category: 'Executive Capital',
-    dailyProfit: 1.98, // 1.98% daily
-    monthlyProfit: 59.4, // 59.4% monthly
-    minDeposit: 50000,
-    maxDeposit: 99999,
-    referralBonus: 6,
-    durationDays: 30,
-    description: 'Private equity liquidity pools, structured forex arbitrage, and risk-managed capital preservation.'
-  },
-  {
-    id: 'premium',
-    name: 'PREMIUM Plan',
-    category: 'VIP Wealth',
-    dailyProfit: 2.60, // 2.60% daily
-    monthlyProfit: 78.0, // 78.0% monthly
-    minDeposit: 100000,
-    maxDeposit: 1000000,
-    referralBonus: 6,
-    durationDays: 30,
-    description: 'Bespoke institutional algorithmic trading, multi-asset real estate, and maximum yield optimization.'
   },
   {
     id: 'crypto',
@@ -157,7 +161,7 @@ const INVESTMENT_PLANS = [
   },
   {
     id: 'agriculture',
-    name: 'AGRICULTURE Plan',
+    name: 'Agriculture Strategy',
     category: 'Sustainable Agriculture',
     dailyProfit: 1.45, // 1.45% daily
     monthlyProfit: 43.5, // 43.5% monthly
@@ -166,8 +170,44 @@ const INVESTMENT_PLANS = [
     referralBonus: 6,
     durationDays: 30,
     description: 'Investing in Sustainable Agriculture, Precision Farming Technology & Agri-Assets.'
+  },
+  {
+    id: 'premium',
+    name: 'VIP Premium Plan',
+    category: 'VIP Wealth Desk',
+    dailyProfit: 3.20,
+    monthlyProfit: 96.0,
+    minDeposit: 100000,
+    maxDeposit: 1000000,
+    referralBonus: 6,
+    durationDays: 30,
+    description: 'Bespoke institutional algorithmic trading, multi-asset real estate, and maximum yield optimization.'
   }
 ];
+
+function findInvestmentPlan(planKey) {
+  if (!planKey) return null;
+  const raw = String(planKey).toLowerCase().trim();
+  const normalized = raw.replace(/[\s-]+/g, '_');
+  return INVESTMENT_PLANS.find((p) => {
+    const pId = p.id.toLowerCase();
+    const pName = p.name.toLowerCase();
+    if (pId === normalized || pId === raw) return true;
+    if (pName === raw || pName === normalized) return true;
+    if (normalized === 'beginner' && pId === 'beginners') return true;
+    if (normalized === 'beginners_plan' && pId === 'beginners') return true;
+    if (normalized === 'prime_plan' && pId === 'prime') return true;
+    if (normalized === 'executive_plan' && pId === 'executive') return true;
+    if (normalized === 'master_plan' && pId === 'master') return true;
+    if ((normalized === 'prime_executive' || normalized === 'primeexecutive' || normalized === 'prime_executive_plan') && (pId === 'prime_executive' || pId === 'premium')) return true;
+    if (normalized === 'premium' && (pId === 'premium' || pId === 'prime_executive')) return true;
+    if (normalized === 'stocks' && pId === 'stock') return true;
+    if (normalized === 'stock_market' && pId === 'stock') return true;
+    if (normalized === 'real_estate' && pId === 'realestate') return true;
+    if (normalized === 'agri' && pId === 'agriculture') return true;
+    return false;
+  }) || null;
+}
 
 const OFFICIAL_COMPANY_EMAIL = 'info@trustpay.tax';
 
@@ -362,8 +402,8 @@ async function processAutomatedInvestmentROI() {
           await sendOfficialNotificationEmail({
             toUser: user,
             category: 'Automated 24h ROI Payout',
-            subject: `Bitfury Tech: 24h Profit Yield Credited - $${dailyProfit.toFixed(2)} USD`,
-            message: `Dear ${user.full_name},\n\nYour automated 24-hour profit yield for investment "${inv.plan_name}" has been calculated and credited directly to your Interest Wallet.\n\nTransaction ID: ${trxId}\nPlan Name: ${inv.plan_name}\nInvested Capital: $${inv.amount.toFixed(2)} USD\nDaily Yield Rate: ${inv.daily_rate}%\nDaily Yield Credited: $${dailyProfit.toFixed(2)} USD\nPayout Cycle: Day ${payoutsCount} of ${durationDays}\nUpdated Interest Wallet Balance: $${newInterest.toFixed(2)} USD\nTimestamp: ${nowIso}\n\nOfficial Company Email: support@bitfurytech.pro`,
+            subject: `TrustPay Tax: 24h Profit Yield Credited - $${dailyProfit.toFixed(2)} USD`,
+            message: `Dear ${user.full_name},\n\nYour automated 24-hour profit yield for investment "${inv.plan_name}" has been calculated and credited directly to your Interest Wallet.\n\nTransaction ID: ${trxId}\nPlan Name: ${inv.plan_name}\nInvested Capital: $${inv.amount.toFixed(2)} USD\nDaily Yield Rate: ${inv.daily_rate}%\nDaily Yield Credited: $${dailyProfit.toFixed(2)} USD\nPayout Cycle: Day ${payoutsCount} of ${durationDays}\nUpdated Interest Wallet Balance: $${newInterest.toFixed(2)} USD\nTimestamp: ${nowIso}\n\nOfficial Company Email: info@trustpay.tax`,
             notificationType: 'info'
           });
         }
@@ -404,8 +444,8 @@ async function processAutomatedInvestmentROI() {
         await sendOfficialNotificationEmail({
           toUser: user,
           category: '30-Day Capital Return',
-          subject: `Bitfury Tech: 30-Day Investment Term Complete - $${inv.amount.toFixed(2)} Capital Returned`,
-          message: `Dear ${user.full_name},\n\nYour 30-day investment term for plan "${inv.plan_name}" has reached maturity. As per institutional policy, your full principal capital of $${inv.amount.toFixed(2)} USD has been returned directly to your Interest Wallet.\n\nTransaction ID: ${capTrxId}\nPlan Name: ${inv.plan_name}\nOriginal Investment Amount: $${inv.amount.toFixed(2)} USD\nCapital Credited Wallet: Interest Wallet\nStatus: Investment Term Completed\nUpdated Interest Wallet Balance: $${newInterestWithCapital.toFixed(2)} USD\nTimestamp: ${nowIso}\n\nThank you for investing with Bitfurytech.\nOfficial Company Email: support@bitfurytech.pro`,
+          subject: `TrustPay Tax: 30-Day Investment Term Complete - $${inv.amount.toFixed(2)} Capital Returned`,
+          message: `Dear ${user.full_name},\n\nYour 30-day investment term for plan "${inv.plan_name}" has reached maturity. As per institutional policy, your full principal capital of $${inv.amount.toFixed(2)} USD has been returned directly to your Interest Wallet.\n\nTransaction ID: ${capTrxId}\nPlan Name: ${inv.plan_name}\nOriginal Investment Amount: $${inv.amount.toFixed(2)} USD\nCapital Credited Wallet: Interest Wallet\nStatus: Investment Term Completed\nUpdated Interest Wallet Balance: $${newInterestWithCapital.toFixed(2)} USD\nTimestamp: ${nowIso}\n\nThank you for investing with Bitfurytech.\nOfficial Company Email: info@trustpay.tax`,
           notificationType: 'info'
         });
       }
@@ -416,7 +456,10 @@ async function processAutomatedInvestmentROI() {
 }
 
 // Start background 60s timer for automated ROI processing
-setInterval(processAutomatedInvestmentROI, 60000).unref();
+if (!isTestEnv) {
+  const roiInterval = setInterval(processAutomatedInvestmentROI, 60000);
+  if (roiInterval && roiInterval.unref) roiInterval.unref();
+}
 
 async function calculateUserInvestmentsAndInterest(user) {
   if (!user) return { activeInvestments: [], totalInvested: 0, accruedInterest: 0 };
@@ -583,8 +626,6 @@ app.get('/api/wallets', async (_req, res) => {
 });
 
 // Smartsupp Live Chat Key API (Public)
-const DEFAULT_SMARTSUPP_KEY = '537601b7a8d50587197b4c58f869accb4da3984f';
-
 app.get('/api/smartsupp-key', async (_req, res) => {
   try {
     let key = process.env.SMARTSUPP_KEY || process.env.SMARTSUPP_ID || '';
@@ -592,13 +633,10 @@ app.get('/api/smartsupp-key', async (_req, res) => {
     if (setting && setting.value) {
       key = setting.value.trim();
     }
-    if (!key) {
-      key = DEFAULT_SMARTSUPP_KEY;
-    }
-    res.json({ ok: true, key: key, enabled: true });
+    res.json({ ok: true, key: key || '', enabled: !!key });
   } catch (err) {
     console.error('Error fetching Smartsupp key:', err);
-    res.json({ ok: true, key: process.env.SMARTSUPP_KEY || DEFAULT_SMARTSUPP_KEY, enabled: true });
+    res.json({ ok: true, key: process.env.SMARTSUPP_KEY || '', enabled: !!process.env.SMARTSUPP_KEY });
   }
 });
 
@@ -610,16 +648,17 @@ app.post('/api/investments', async (req, res) => {
       return res.status(401).json({ ok: false, error: 'Authentication required to make an investment.' });
     }
 
-    const { planId, amount, walletType = 'deposit' } = req.body;
+    const { planId, amount, walletType, walletSource } = req.body;
+    const chosenWallet = (walletSource || walletType || 'deposit').toLowerCase().trim();
     const numAmount = Number(amount);
 
     if (!planId || !numAmount || isNaN(numAmount) || numAmount <= 0) {
       return res.status(400).json({ ok: false, error: 'Please enter a valid investment amount.' });
     }
 
-    const plan = INVESTMENT_PLANS.find((p) => p.id === planId);
+    const plan = findInvestmentPlan(planId);
     if (!plan) {
-      return res.status(404).json({ ok: false, error: 'Selected investment plan not found.' });
+      return res.status(404).json({ ok: false, error: 'Selected investment plan not found. Please choose a valid plan.' });
     }
 
     if (numAmount < plan.minDeposit) {
@@ -636,19 +675,20 @@ app.post('/api/investments', async (req, res) => {
       });
     }
 
-    const targetWallet = walletType === 'interest' ? 'interest_balance' : 'deposit_balance';
-    const walletName = walletType === 'interest' ? 'Interest Wallet' : 'Deposit Wallet';
+    const isInterest = chosenWallet === 'interest';
+    const targetWallet = isInterest ? 'interest_balance' : 'deposit_balance';
+    const walletName = isInterest ? 'Interest Wallet' : 'Deposit Wallet';
     const currentBalance = user[targetWallet] || 0;
 
     if (currentBalance < numAmount) {
       return res.status(400).json({
         ok: false,
-        error: `Insufficient funds in your ${walletName}. Current balance: ${formatCurrency(currentBalance)}. Please fund your Deposit Wallet first.`
+        error: `Insufficient funds in your ${walletName}. Your current balance is ${formatCurrency(currentBalance)}. Please fund your Deposit Wallet first.`
       });
     }
 
     const newBalance = currentBalance - numAmount;
-    if (walletType === 'interest') {
+    if (isInterest) {
       await db.run('UPDATE users SET interest_balance = ? WHERE id = ?', [newBalance, user.id]);
     } else {
       await db.run('UPDATE users SET deposit_balance = ? WHERE id = ?', [newBalance, user.id]);
@@ -671,16 +711,18 @@ app.post('/api/investments', async (req, res) => {
     await sendOfficialNotificationEmail({
       toUser: updatedUser,
       category: 'Transaction Alert: Investment Activated',
-      subject: `Bitfury Tech: Investment Activated - $${numAmount.toFixed(2)} in ${plan.name}`,
-      message: `Dear ${updatedUser.full_name},\n\nYour investment in plan "${plan.name}" has been activated successfully.\n\nTransaction ID: ${trxId}\nTransaction Type: Plan Investment\nPlan Name: ${plan.name}\nAmount Invested: $${numAmount.toFixed(2)} USD\nDaily Profit Yield Rate: ${plan.dailyProfit}%\nEstimated Daily Yield: $${(numAmount * (plan.dailyProfit / 100)).toFixed(2)} USD\nDebited Wallet: ${walletName}\nUpdated ${walletName} Balance: $${newBalance.toFixed(2)} USD\nTimestamp: ${now}\n\nIf you did not authorize this transaction, please contact security immediately at support@bitfurytech.pro.\nOfficial Sender: support@bitfurytech.pro`,
+      subject: `TrustPay Tax: Investment Activated - $${numAmount.toFixed(2)} in ${plan.name}`,
+      message: `Dear ${updatedUser.full_name},\n\nYour investment in plan "${plan.name}" has been activated successfully.\n\nTransaction ID: ${trxId}\nTransaction Type: Plan Investment\nPlan Name: ${plan.name}\nAmount Invested: $${numAmount.toFixed(2)} USD\nDaily Profit Yield Rate: ${plan.dailyProfit}%\nEstimated Daily Yield: $${(numAmount * (plan.dailyProfit / 100)).toFixed(2)} USD\nDebited Wallet: ${walletName}\nUpdated ${walletName} Balance: $${newBalance.toFixed(2)} USD\nTimestamp: ${now}\n\nIf you did not authorize this transaction, please contact security immediately at info@trustpay.tax.\nOfficial Sender: info@trustpay.tax`,
       notificationType: 'info'
     });
 
     res.json({
       ok: true,
+      success: true,
       message: `Successfully invested ${formatCurrency(numAmount)} in ${plan.name}! Your daily returns will accrue automatically.`,
       investment: {
         id: resInv.lastID,
+        planId: plan.id,
         planName: plan.name,
         amount: numAmount,
         dailyProfitRate: plan.dailyProfit,
@@ -747,8 +789,8 @@ app.post('/api/withdrawals', async (req, res) => {
     await sendOfficialNotificationEmail({
       toUser: user,
       category: 'Transaction Alert: Withdrawal Requested',
-      subject: `Bitfury Tech: Withdrawal Request Logged - $${numAmount.toFixed(2)}`,
-      message: `Dear ${user.full_name},\n\nYour withdrawal request of $${numAmount.toFixed(2)} USD has been logged and is awaiting compliance verification.\n\nTransaction ID: ${trxId}\nTransaction Type: Withdrawal Request\nAmount: $${numAmount.toFixed(2)} USD\nSource Wallet: ${walletName}\nWithdrawal Method: ${method}\nDestination Account / Address: ${details}\nStatus: Pending Verification\nUpdated ${walletName} Balance: $${newBalance.toFixed(2)} USD\nTimestamp: ${now}\n\nOfficial Sender: support@bitfurytech.pro`,
+      subject: `TrustPay Tax: Withdrawal Request Logged - $${numAmount.toFixed(2)}`,
+      message: `Dear ${user.full_name},\n\nYour withdrawal request of $${numAmount.toFixed(2)} USD has been logged and is awaiting compliance verification.\n\nTransaction ID: ${trxId}\nTransaction Type: Withdrawal Request\nAmount: $${numAmount.toFixed(2)} USD\nSource Wallet: ${walletName}\nWithdrawal Method: ${method}\nDestination Account / Address: ${details}\nStatus: Pending Verification\nUpdated ${walletName} Balance: $${newBalance.toFixed(2)} USD\nTimestamp: ${now}\n\nOfficial Sender: info@trustpay.tax`,
       notificationType: 'warning'
     });
 
@@ -837,7 +879,7 @@ app.post('/api/user/transfer', async (req, res) => {
       userId: user.id,
       recipientEmail: user.email,
       category: 'Internal Transfer Confirmation',
-      subject: `Bitfury Tech: Internal Wallet Transfer of $${transferAmt.toFixed(2)} Completed`,
+      subject: `TrustPay Tax: Internal Wallet Transfer of $${transferAmt.toFixed(2)} Completed`,
       message: `Dear ${user.full_name},\n\nYour internal wallet transfer of $${transferAmt.toFixed(2)} from your Interest Wallet to your Deposit Wallet has been completed successfully.\n\nTransaction ID: ${trxId}\nUpdated Deposit Balance: $${newDeposit.toFixed(2)}\n\nThank you for choosing Bitfurytech.`,
       notificationType: 'info'
     });
@@ -875,8 +917,8 @@ app.post('/api/user/profile', async (req, res) => {
       userId: user.id,
       recipientEmail: user.email,
       category: 'Profile Update Notice',
-      subject: 'Bitfury Tech: Account Profile Details Updated',
-      message: `Dear ${updatedName},\n\nYour investor profile settings, profile picture, and default payout wallet addresses have been updated successfully.\n\nIf you did not initiate this change, please contact our security desk immediately at support@bitfurytech.pro.`,
+      subject: 'TrustPay Tax: Account Profile Details Updated',
+      message: `Dear ${updatedName},\n\nYour investor profile settings, profile picture, and default payout wallet addresses have been updated successfully.\n\nIf you did not initiate this change, please contact our security desk immediately at info@trustpay.tax.`,
       notificationType: 'info'
     });
 
@@ -923,8 +965,8 @@ app.post('/api/user/password', async (req, res) => {
       userId: user.id,
       recipientEmail: user.email,
       category: 'Security Alert',
-      subject: 'Bitfury Tech: Account Security Password Changed',
-      message: `Dear ${user.full_name},\n\nYour Bitfurytech security password was changed successfully.\n\nTimestamp: ${new Date().toUTCString()}\n\nIf you did not perform this action, please contact security immediately at support@bitfurytech.pro.`,
+      subject: 'TrustPay Tax: Account Security Password Changed',
+      message: `Dear ${user.full_name},\n\nYour Bitfurytech security password was changed successfully.\n\nTimestamp: ${new Date().toUTCString()}\n\nIf you did not perform this action, please contact security immediately at info@trustpay.tax.`,
       notificationType: 'warning'
     });
 
@@ -948,7 +990,7 @@ app.post('/api/user/2fa', async (req, res) => {
       userId: user.id,
       recipientEmail: user.email,
       category: 'Security Alert',
-      subject: `Bitfury Tech: Two-Factor Authentication ${next2FA ? 'Enabled' : 'Disabled'}`,
+      subject: `TrustPay Tax: Two-Factor Authentication ${next2FA ? 'Enabled' : 'Disabled'}`,
       message: `Dear ${user.full_name},\n\nTwo-Factor Authentication (2FA) protection on your account is now ${next2FA ? 'ENABLED' : 'DISABLED'}.\n\nTimestamp: ${new Date().toUTCString()}`,
       notificationType: next2FA ? 'info' : 'warning'
     });
@@ -986,7 +1028,7 @@ app.post('/api/support/ticket', async (req, res) => {
         userId: user.id,
         recipientEmail: user.email,
         category: 'Support Ticket Opened',
-        subject: `Bitfury Tech: Support Ticket #${result.lastID} Created - [${subject}]`,
+        subject: `TrustPay Tax: Support Ticket #${result.lastID} Created - [${subject}]`,
         message: `Dear ${userName},\n\nThank you for contacting Bitfurytech Institutional Support.\n\nYour support ticket #${result.lastID} has been assigned to our senior desk representative. Expected response time: under 2 hours.\n\nTicket Subject: ${subject}\nPriority: ${priority || 'Medium'}`,
         notificationType: 'info'
       });
@@ -1367,8 +1409,8 @@ app.post('/api/auth/register', async (req, res) => {
         userId,
         recipientEmail: normalizedEmail,
         category: 'Transaction Alert: Welcome Bonus',
-        subject: 'Bitfury Tech: Welcome & $10.00 Sign-Up Bonus Credited',
-        message: `Dear ${String(fullName).trim()},\n\nWelcome to Bitfurytech! Your account has been created successfully.\n\nUsername: ${cleanUsername}\nPhone Number: ${cleanPhone || 'Not provided'}\nTransaction ID: ${trxId}\nTransaction Type: Welcome Sign-Up Bonus\nAmount Credited: $10.00 USD\nWallet: Deposit Wallet\nUpdated Deposit Wallet Balance: $10.00 USD\nTimestamp: ${now}\n\nThank you for choosing Bitfurytech.\nOfficial Sender: support@bitfurytech.pro`,
+        subject: 'TrustPay Tax: Welcome & $10.00 Sign-Up Bonus Credited',
+        message: `Dear ${String(fullName).trim()},\n\nWelcome to Bitfurytech! Your account has been created successfully.\n\nUsername: ${cleanUsername}\nPhone Number: ${cleanPhone || 'Not provided'}\nTransaction ID: ${trxId}\nTransaction Type: Welcome Sign-Up Bonus\nAmount Credited: $10.00 USD\nWallet: Deposit Wallet\nUpdated Deposit Wallet Balance: $10.00 USD\nTimestamp: ${now}\n\nThank you for choosing Bitfurytech.\nOfficial Sender: info@trustpay.tax`,
         notificationType: 'info'
       });
     } catch (e) {
@@ -1458,8 +1500,8 @@ app.post('/api/auth/login', async (req, res) => {
     sendOfficialNotificationEmail({
       toUser: user,
       category: 'Security Alert: Account Login',
-      subject: 'Bitfury Tech: Account Security Login Notice',
-      message: `Dear ${user.full_name},\n\nA successful login to your Bitfurytech investor account was detected.\n\nAccount Identifier: ${user.username ? user.username + ' (' + user.email + ')' : user.email}\nRole: ${user.role}\nTimestamp: ${new Date().toUTCString()}\n\nIf you performed this action, no further steps are required. If you did not authorize this login, please contact support immediately at support@bitfurytech.pro.\n\nOfficial Company Email: support@bitfurytech.pro`,
+      subject: 'TrustPay Tax: Account Security Login Notice',
+      message: `Dear ${user.full_name},\n\nA successful login to your Bitfurytech investor account was detected.\n\nAccount Identifier: ${user.username ? user.username + ' (' + user.email + ')' : user.email}\nRole: ${user.role}\nTimestamp: ${new Date().toUTCString()}\n\nIf you performed this action, no further steps are required. If you did not authorize this login, please contact support immediately at info@trustpay.tax.\n\nOfficial Company Email: info@trustpay.tax`,
       notificationType: 'info'
     }).catch((e) => console.warn('Failed to send login notice email:', e.message));
 
@@ -1514,8 +1556,8 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         toUser: user,
         recipientEmail: user.email,
         category: 'Security Alert: Password Reset Code',
-        subject: 'Bitfury Tech: Password Reset Verification Code',
-        message: `Dear ${user.full_name},\n\nA request was initiated to reset the password for your Bitfurytech investor account.\n\nYour 6-Digit Password Reset Verification Code is:\n\n   👉  ${resetCode}  👈\n\nThis verification code is valid for 30 minutes.\n\nIf you did not request this password reset, please secure your account or contact security desk at support@bitfurytech.pro immediately.\n\nOfficial Sender: support@bitfurytech.pro`,
+        subject: 'TrustPay Tax: Password Reset Verification Code',
+        message: `Dear ${user.full_name},\n\nA request was initiated to reset the password for your Bitfurytech investor account.\n\nYour 6-Digit Password Reset Verification Code is:\n\n   👉  ${resetCode}  👈\n\nThis verification code is valid for 30 minutes.\n\nIf you did not request this password reset, please secure your account or contact security desk at info@trustpay.tax immediately.\n\nOfficial Sender: info@trustpay.tax`,
         notificationType: 'warning'
       });
     } catch (e) {
@@ -1577,8 +1619,8 @@ app.post('/api/auth/reset-password', async (req, res) => {
         toUser: user,
         recipientEmail: user.email,
         category: 'Security Notice: Password Updated',
-        subject: 'Bitfury Tech: Investor Password Reset Confirmation',
-        message: `Dear ${user.full_name},\n\nYour Bitfurytech investor account password has been updated successfully.\n\nYou can now log in to your dashboard using your username (${user.username || user.email}) or email and your new password.\n\nIf you did not make this change, please contact our security team immediately at support@bitfurytech.pro.`,
+        subject: 'TrustPay Tax: Investor Password Reset Confirmation',
+        message: `Dear ${user.full_name},\n\nYour Bitfurytech investor account password has been updated successfully.\n\nYou can now log in to your dashboard using your username (${user.username || user.email}) or email and your new password.\n\nIf you did not make this change, please contact our security team immediately at info@trustpay.tax.`,
         notificationType: 'info'
       });
     } catch (e) {
@@ -1667,12 +1709,12 @@ app.post('/api/contact', async (req, res) => {
     // Send auto-acknowledgement from official email
     await sendOfficialNotificationEmail({
       recipientEmail: email,
-      subject: `Inquiry Received - ${subject || 'Bitfury Tech Support'}`,
-      message: `Hello ${name},\n\nThank you for reaching out to Bitfury Tech. We have received your inquiry regarding "${subject}":\n\n"${message}"\n\nAn institutional representative will review your message and respond shortly.\n\nSender: support@bitfurytech.pro`,
+      subject: `Inquiry Received - ${subject || 'TrustPay Tax Support'}`,
+      message: `Hello ${name},\n\nThank you for reaching out to TrustPay Tax. We have received your inquiry regarding "${subject}":\n\n"${message}"\n\nAn institutional representative will review your message and respond shortly.\n\nSender: info@trustpay.tax`,
       category: 'Support Auto-Reply'
     });
 
-    res.json({ ok: true, message: 'Message recorded and notification sent from support@bitfurytech.pro.' });
+    res.json({ ok: true, message: 'Message recorded and notification sent from info@trustpay.tax.' });
   } catch (err) {
     console.error('Error saving contact message:', err);
     res.status(500).json({ ok: false, error: 'Failed to record message.' });
@@ -1706,8 +1748,8 @@ adminRouter.post('/contacts/:id/reply', async (req, res) => {
     // Send official reply email to investor
     await sendOfficialNotificationEmail({
       recipientEmail: contact.email,
-      subject: `Re: ${contact.subject || 'Bitfury Tech Support Inquiry'}`,
-      message: `Hello ${contact.name},\n\nRegarding your inquiry:\n"${contact.message}"\n\nOfficial Response:\n${replyMessage.trim()}\n\nBest regards,\nBitfury Tech Institutional Support Team\nEmail: support@bitfurytech.pro`,
+      subject: `Re: ${contact.subject || 'TrustPay Support Inquiry'}`,
+      message: `Hello ${contact.name},\n\nRegarding your inquiry:\n"${contact.message}"\n\nOfficial Response:\n${replyMessage.trim()}\n\nBest regards,\nTrustPay Institutional Support Team\nEmail: info@trustpay.tax`,
       category: 'Support Official Reply'
     });
 
@@ -2122,7 +2164,7 @@ adminRouter.get('/smtp', async (req, res) => {
     let user = process.env.SMTP_USER || '';
     let passSet = !!process.env.SMTP_PASS;
     let secure = process.env.SMTP_SECURE || 'false';
-    let from = process.env.SMTP_FROM || 'support@bitfurytech.pro';
+    let from = process.env.SMTP_FROM || 'info@trustpay.tax';
 
     const rows = await db.all('SELECT key, value FROM app_settings WHERE key LIKE "smtp_%"');
     const settings = {};
@@ -2134,7 +2176,7 @@ adminRouter.get('/smtp', async (req, res) => {
       user = settings.smtp_user || '';
       passSet = passSet || !!settings.smtp_pass;
       secure = settings.smtp_secure || 'false';
-      from = settings.smtp_from || 'support@bitfurytech.pro';
+      from = settings.smtp_from || 'info@trustpay.tax';
     }
 
     res.json({
@@ -2159,7 +2201,7 @@ adminRouter.post('/smtp', async (req, res) => {
     const adminUser = await requireAdminUser(req, res);
     if (!adminUser) return;
 
-    const { host = '', port = '587', user = '', pass = '', secure = 'false', from = 'support@bitfurytech.pro' } = req.body;
+    const { host = '', port = '587', user = '', pass = '', secure = 'false', from = 'info@trustpay.tax' } = req.body;
 
     await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_host', String(host).trim()]);
     await db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['smtp_port', String(port).trim()]);
@@ -2186,10 +2228,7 @@ adminRouter.get('/smartsupp', async (req, res) => {
     if (setting && setting.value) {
       key = setting.value.trim();
     }
-    if (!key) {
-      key = DEFAULT_SMARTSUPP_KEY;
-    }
-    res.json({ ok: true, key, isConfigured: true });
+    res.json({ ok: true, key, isConfigured: !!key });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'Failed to fetch Smartsupp configuration.' });
   }
@@ -2344,8 +2383,8 @@ app.post('/api/notifications/send-automated', async (req, res) => {
       userId: user ? user.id : null,
       recipientEmail: targetEmail,
       category,
-      subject: subject || `Bitfury Tech Notice: ${actionType} Event Alert`,
-      message: message || `Dear Investor,\n\nAn automated system event (${actionType}) was registered for your account.\n\nStatus: ${status}\nOfficial Sender: support@bitfurytech.pro`,
+      subject: subject || `TrustPay Notice: ${actionType} Event Alert`,
+      message: message || `Dear Investor,\n\nAn automated system event (${actionType}) was registered for your account.\n\nStatus: ${status}\nOfficial Sender: info@trustpay.tax`,
       notificationType: 'info'
     });
 
@@ -2393,8 +2432,8 @@ adminRouter.post('/users/:id/approve', async (req, res) => {
 
     await sendOfficialNotificationEmail({
       toUser: user,
-      subject: 'Bitfury Tech: Account Approved & Activated',
-      message: `Dear ${user.full_name},\n\nYour investor account (#${user.id}) has been manually approved and activated by our administration team. You now have full access to deposit, invest, and request withdrawals.\n\nOfficial Company Email: support@bitfurytech.pro`,
+      subject: 'TrustPay Tax: Account Approved & Activated',
+      message: `Dear ${user.full_name},\n\nYour investor account (#${user.id}) has been manually approved and activated by our administration team. You now have full access to deposit, invest, and request withdrawals.\n\nOfficial Company Email: info@trustpay.tax`,
       category: 'Account Notice'
     });
 
@@ -2444,8 +2483,11 @@ adminRouter.post('/users/:id/update-profile', async (req, res) => {
     const updatedCountry = country !== undefined ? String(country).trim() : (user.country || '');
     const updatedBtc = btcWallet !== undefined ? String(btcWallet).trim() : (user.btc_wallet || '');
     const updatedUsdt = usdtWallet !== undefined ? String(usdtWallet).trim() : (user.usdt_wallet || '');
-    const updatedDep = depositBalance !== undefined ? Math.max(parseFloat(depositBalance) || 0, 0) : user.deposit_balance;
-    const updatedInt = interestBalance !== undefined ? Math.max(parseFloat(interestBalance) || 0, 0) : user.interest_balance;
+    const rawDep = depositBalance !== undefined ? depositBalance : (req.body.deposit_balance !== undefined ? req.body.deposit_balance : undefined);
+    const rawInt = interestBalance !== undefined ? interestBalance : (req.body.interest_balance !== undefined ? req.body.interest_balance : undefined);
+
+    const updatedDep = rawDep !== undefined ? Math.max(parseFloat(rawDep) || 0, 0) : user.deposit_balance;
+    const updatedInt = rawInt !== undefined ? Math.max(parseFloat(rawInt) || 0, 0) : user.interest_balance;
     const updatedRole = role || user.role || 'client';
     const updatedStatus = status || user.status || 'active';
 
@@ -2615,13 +2657,14 @@ async function performWebsiteOperationsBackup(triggerType = '24h_cron') {
     // Dispatch official admin email notice
     try {
       const adminUsers = users.filter(u => u.role === 'admin');
-      const recipientEmails = adminUsers.length > 0 ? adminUsers.map(a => a.email) : ['support@bitfurytech.pro'];
+      const recipientEmails = adminUsers.length > 0 ? adminUsers.map(a => a.email) : ['info@trustpay.tax'];
+
       for (const email of recipientEmails) {
         await sendOfficialNotificationEmail({
           recipientEmail: email,
           category: '24h System Operations Backup Notice',
-          subject: `Bitfury Tech Security: 24h Website Operations & Investor Backup (${triggerType.toUpperCase()})`,
-          message: `Dear Operations Administrator,\n\nA complete snapshot backup of all website operations and investor data has been executed successfully.\n\nBackup ID: ${backupId}\nFilename: ${jsonFileName}\nCreation Timestamp: ${timestamp}\nTrigger Source: ${triggerType === '24h_cron' ? 'Automated 24-Hour Operations Cron Scheduler' : 'Internal Admin Website Command'}\nFile Size: ${fileSizeKB} KB (${fileSizeMB} MB)\n\nOperations Snapshot Metrics:\n- Investor Accounts: ${users.length}\n- Active/Historical Investments: ${investments.length}\n- Deposit Ledger Records: ${deposits.length}\n- Withdrawal Requests: ${withdrawals.length}\n- Financial Transactions: ${transactions.length}\n- Total Managed Client Deposit Capital: $${totalDepositBalance.toFixed(2)} USD\n- Total Accrued Interest Balances: $${totalInterestBalance.toFixed(2)} USD\n\nAll investor ledgers, wallet profiles, and platform operations are safely secured in encrypted backup archives.\n\nOfficial Sender: support@bitfurytech.pro`,
+          subject: `TrustPay Security: 24h Website Operations & Investor Backup (${triggerType.toUpperCase()})`,
+          message: `Dear Operations Administrator,\n\nA complete snapshot backup of all website operations and investor data has been executed successfully.\n\nBackup ID: ${backupId}\nFilename: ${jsonFileName}\nCreation Timestamp: ${timestamp}\nTrigger Source: ${triggerType === '24h_cron' ? 'Automated 24-Hour Operations Cron Scheduler' : 'Internal Admin Website Command'}\nFile Size: ${fileSizeKB} KB (${fileSizeMB} MB)\n\nOperations Snapshot Metrics:\n- Investor Accounts: ${users.length}\n- Active/Historical Investments: ${investments.length}\n- Deposit Ledger Records: ${deposits.length}\n- Withdrawal Requests: ${withdrawals.length}\n- Financial Transactions: ${transactions.length}\n- Total Managed Client Deposit Capital: $${totalDepositBalance.toFixed(2)} USD\n- Total Accrued Interest Balances: $${totalInterestBalance.toFixed(2)} USD\n\nAll investor ledgers, wallet profiles, and platform operations are safely secured in encrypted backup archives.\n\nOfficial Sender: info@trustpay.tax`,
           notificationType: 'info'
         });
       }
@@ -2640,7 +2683,7 @@ async function performWebsiteOperationsBackup(triggerType = '24h_cron') {
 function init24HourBackupScheduler() {
   const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
-  setTimeout(async () => {
+  const checkTimer = setTimeout(async () => {
     try {
       const manifestPath = path.join(BACKUP_DIR, 'backup_manifest.json');
       let shouldRunNow = true;
@@ -2673,9 +2716,10 @@ function init24HourBackupScheduler() {
     } catch (e) {
       console.error('Error in backup scheduler check:', e.message);
     }
-  }, 10000).unref();
+  }, 10000);
+  if (checkTimer && checkTimer.unref) checkTimer.unref();
 
-  setInterval(async () => {
+  const cronTimer = setInterval(async () => {
     try {
       console.log('Running scheduled 24-hour backup...');
       await performWebsiteOperationsBackup('24h_cron');
@@ -2683,11 +2727,14 @@ function init24HourBackupScheduler() {
     } catch (e) {
       console.error('Error running scheduled 24h backup:', e.message);
     }
-  }, TWENTY_FOUR_HOURS_MS).unref();
+  }, TWENTY_FOUR_HOURS_MS);
+  if (cronTimer && cronTimer.unref) cronTimer.unref();
 }
 
 // Start 24h Automated Backup Scheduler
-init24HourBackupScheduler();
+if (!isTestEnv) {
+  init24HourBackupScheduler();
+}
 
 // INTERNAL WEBSITE COMMAND: Trigger Immediate Manual Operations Backup
 adminRouter.post('/backup/trigger', async (req, res) => {
@@ -2836,7 +2883,7 @@ app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-if (process.env.NODE_ENV !== 'test' && process.env.npm_lifecycle_event !== 'test') {
+if (!isTestEnv && (isEntryPoint || process.env.RAILWAY_STATIC_URL)) {
   app.listen(port, '0.0.0.0', () => {
     console.log(`Bitfurytech server running on port ${port}`);
   });
