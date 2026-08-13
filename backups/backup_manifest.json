@@ -1,5 +1,20 @@
 [
   {
+    "backupId": "bkp_1786646993430",
+    "filename": "backup_operations_2026-08-13T18-49-53-430Z.json",
+    "created_at": "2026-08-13T18:49:53.430Z",
+    "trigger": "admin_command",
+    "sizeKB": "39.32",
+    "sizeMB": "0.04",
+    "userCount": 25,
+    "investmentCount": 4,
+    "depositCount": 6,
+    "withdrawalCount": 4,
+    "transactionCount": 40,
+    "totalDepositBalance": 26780,
+    "totalInterestBalance": 895.2
+  },
+  {
     "backupId": "bkp_1786646125981",
     "filename": "backup_operations_2026-08-13T18-35-25-981Z.json",
     "created_at": "2026-08-13T18:35:25.981Z",
