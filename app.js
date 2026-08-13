@@ -457,9 +457,11 @@ async function initSmartsuppLiveChat() {
   try {
     const res = await fetch('/api/smartsupp-key');
     const data = await res.json();
-    if (res.ok && data.ok && data.key && data.key.trim().length > 0) {
+    const smartsuppKey = (data && data.key && data.key.trim()) || '537601b7a8d50587197b4c58f869accb4da3984f';
+
+    if (smartsuppKey) {
       window._smartsupp = window._smartsupp || {};
-      window._smartsupp.key = data.key.trim();
+      window._smartsupp.key = smartsuppKey;
 
       if (!smartsuppInitialized) {
         smartsuppInitialized = true;
@@ -469,6 +471,7 @@ async function initSmartsuppLiveChat() {
           var s, c, o = window.smartsupp = function() { o._.push(arguments); };
           o._ = [];
           s = d.getElementsByTagName('script')[0];
+          if (!s) s = d.head || d.body;
           c = d.createElement('script');
           c.type = 'text/javascript';
           c.charset = 'utf-8';
@@ -476,7 +479,7 @@ async function initSmartsuppLiveChat() {
           c.src = 'https://www.smartsuppchat.com/loader.js?';
           if (s && s.parentNode) {
             s.parentNode.insertBefore(c, s);
-          } else {
+          } else if (d.head) {
             d.head.appendChild(c);
           }
         })(document);
@@ -489,7 +492,7 @@ async function initSmartsuppLiveChat() {
               if (user.email) window.smartsupp('email', user.email);
             }
           } catch(e) {}
-        }, 1500);
+        }, 1200);
       }
     }
   } catch (err) {
