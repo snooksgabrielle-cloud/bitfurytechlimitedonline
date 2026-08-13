@@ -728,18 +728,31 @@ function applyTranslations() {
 }
 
 async function postJson(url, payload, options = {}) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {}),
-    },
-    body: JSON.stringify(payload),
-  });
+  let response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {}),
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (netErr) {
+    throw new Error('Connection failed. Please check your internet connection and try again.');
+  }
 
-  const data = await response.json();
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (jsonErr) {
+    if (!response.ok) {
+      throw new Error(`Server returned status ${response.status}. Please try again.`);
+    }
+  }
+
   if (!response.ok) {
-    throw new Error(data.error || 'Request failed.');
+    throw new Error(data.error || `Request failed with status ${response.status}.`);
   }
   return data;
 }

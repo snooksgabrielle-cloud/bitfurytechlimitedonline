@@ -9,6 +9,15 @@ import { db, initDb } from './db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+process.on('uncaughtException', (err) => {
+  console.error('⚠️ Uncaught Exception detected:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('⚠️ Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 const app = express();
 const port = process.env.PORT || 3000;
 const isEntryPoint = process.argv[1]
@@ -173,7 +182,10 @@ async function getSmtpTransporter() {
       port,
       secure,
       auth: { user, pass },
-      tls: { rejectUnauthorized: false }
+      tls: { rejectUnauthorized: false },
+      connectionTimeout: 2500,
+      greetingTimeout: 2500,
+      socketTimeout: 3000
     });
   }
 
@@ -217,13 +229,19 @@ async function sendOfficialNotificationEmail({ toUser, userId, recipientEmail, s
         </div>
       `;
 
-      await transporter.sendMail({
+      const sendPromise = transporter.sendMail({
         from: `"Bitfurytech Support" <${sender}>`,
         to: recipient,
         subject: subject,
         text: message,
         html: htmlBody
       });
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('SMTP connection timed out after 3 seconds.')), 3000)
+      );
+
+      await Promise.race([sendPromise, timeoutPromise]);
       emailStatus = 'sent_smtp';
       console.log(`✅ [SMTP Mailer] Real email dispatched to ${recipient}: ${subject}`);
     } else {
@@ -1394,17 +1412,14 @@ app.post('/api/auth/login', async (req, res) => {
     const token = createToken();
     await db.run('UPDATE users SET auth_token = ? WHERE id = ?', [token, user.id]);
 
-    try {
-      await sendOfficialNotificationEmail({
-        toUser: user,
-        category: 'Security Alert: Account Login',
-        subject: 'TrustPay Tax: Account Security Login Notice',
-        message: `Dear ${user.full_name},\n\nA successful login to your Bitfurytech investor account was detected.\n\nAccount Identifier: ${user.username ? user.username + ' (' + user.email + ')' : user.email}\nRole: ${user.role}\nTimestamp: ${new Date().toUTCString()}\n\nIf you performed this action, no further steps are required. If you did not authorize this login, please contact support immediately at info@trustpay.tax.\n\nOfficial Company Email: info@trustpay.tax`,
-        notificationType: 'info'
-      });
-    } catch (e) {
-      console.warn('Failed to send login notice email:', e.message);
-    }
+    // Dispatch login security notification asynchronously in background
+    sendOfficialNotificationEmail({
+      toUser: user,
+      category: 'Security Alert: Account Login',
+      subject: 'TrustPay Tax: Account Security Login Notice',
+      message: `Dear ${user.full_name},\n\nA successful login to your Bitfurytech investor account was detected.\n\nAccount Identifier: ${user.username ? user.username + ' (' + user.email + ')' : user.email}\nRole: ${user.role}\nTimestamp: ${new Date().toUTCString()}\n\nIf you performed this action, no further steps are required. If you did not authorize this login, please contact support immediately at info@trustpay.tax.\n\nOfficial Company Email: info@trustpay.tax`,
+      notificationType: 'info'
+    }).catch((e) => console.warn('Failed to send login notice email:', e.message));
 
     res.json({
       ok: true,
