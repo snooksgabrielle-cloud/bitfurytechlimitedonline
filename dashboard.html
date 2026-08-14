@@ -178,6 +178,11 @@
             Official Mail &amp; Alerts
           </button>
 
+          <button class="dash-nav-btn open-agreement-modal-btn" type="button" style="color: #38bdf8; font-weight: 600;">
+            <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Legal Agreement (PDF)
+          </button>
+
           <button class="dash-nav-btn" data-tab="learn-more">
             <svg class="dash-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             Learn More &amp; About Us
@@ -213,21 +218,29 @@
         <div class="user-greeting-header-bar">
           <div class="user-info-cluster">
             <div class="user-avatar-circle">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
                 <path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 14c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z"/>
               </svg>
             </div>
             <div class="user-greeting-text">
-              <h2 style="margin:0; font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Hi, <span data-user-name>Investor</span></h2>
+              <h2>
+                Hi, <span data-user-name>Investor</span>
+                <span class="user-status-pill">
+                  <span class="user-status-dot"></span>
+                  Verified Investor
+                </span>
+              </h2>
             </div>
           </div>
           <div class="header-action-cluster">
             <button class="header-icon-btn" type="button" data-switch-tab="support" title="Customer Support">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
             </button>
             <button class="header-icon-btn notification-btn" type="button" data-switch-tab="notifications" title="Notifications &amp; Alerts">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              <span class="notification-badge-pill">99+</span>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -239,9 +252,9 @@
             <div class="balance-card-top">
               <div class="balance-label-group">
                 <span class="verified-shield-icon">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                 </span>
-                <span class="balance-title">Available Balance</span>
+                <span class="balance-title">Available Portfolio Balance</span>
                 <button class="eye-toggle-btn" type="button" id="toggle-balance-eye" title="Toggle balance visibility">
                   <svg id="eye-icon-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                   <svg id="eye-icon-closed" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -257,9 +270,12 @@
                 <h1 id="stat-total-available-balance" class="balance-amount">$10.00</h1>
                 <span class="balance-arrow">&rsaquo;</span>
               </div>
-              <button class="btn-add-money-purple" type="button" data-switch-tab="deposit">
-                Add Money
-              </button>
+              <div class="balance-card-actions">
+                <button class="btn-add-money-purple" type="button" data-switch-tab="deposit">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                  Add Money
+                </button>
+              </div>
             </div>
 
             <div class="balance-card-sub-row" data-switch-tab="active-investments">
@@ -423,35 +439,6 @@
             </div>
           </div>
 
-
-          <div class="panel">
-            <div class="panel-header">
-              <h3>Active Investments Overview</h3>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button class="btn btn-secondary btn-sm" type="button" data-switch-tab="active-investments">View All Active Investments</button>
-                <button class="btn btn-primary btn-sm" type="button" data-switch-tab="plans">+ New Investment</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table class="table" id="overview-active-investments">
-                <thead>
-                  <tr>
-                    <th>Plan Name</th>
-                    <th>Amount Invested</th>
-                    <th>Daily Return Rate</th>
-                    <th>Accrued Profit</th>
-                    <th>Status</th>
-                    <th>Agreement</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td colspan="6" class="text-center muted">No active investments found. Click "Explore Investment Plans" to activate your first strategy.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
 
           <div class="panel">
             <div class="panel-header">
@@ -1702,18 +1689,21 @@
 
     <!-- INVEST MODAL OVERLAY -->
     <div class="modal-overlay" id="invest-modal">
-      <div class="modal-content" style="max-width: 540px; border-radius: 16px; background: #0c1626; border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7); position: relative;">
+      <div class="modal-content" style="max-width: 540px; border-radius: 18px; background: #0c1626; border: 1px solid rgba(56, 189, 248, 0.25); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75); position: relative; padding: 1.5rem;">
         <button class="modal-close" id="close-invest-modal" aria-label="Close modal">&times;</button>
         <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.9rem; margin-bottom: 1.1rem;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem;">
-            <span class="eyebrow" id="modal-plan-cat" style="color: #38bdf8; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.06em;">Micro-Cap Quantitative Segment</span>
-            <span class="badge" id="modal-plan-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700; font-size: 0.72rem;">100% Capital Guaranteed</span>
+            <span class="eyebrow" id="modal-plan-cat" style="color: #38bdf8; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em;">Micro-Cap Quantitative Segment</span>
+            <span class="badge" id="modal-plan-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700; font-size: 0.72rem; border: 1px solid rgba(52, 211, 153, 0.35);">100% Capital Guaranteed</span>
           </div>
           <h2 id="modal-plan-title" style="margin: 0.2rem 0; font-size: 1.45rem; font-weight: 800; color: #ffffff;">Beginners Plan</h2>
-          <div style="display: flex; align-items: center; gap: 0.65rem; margin-top: 0.35rem; flex-wrap: wrap;">
-            <div style="font-size: 0.92rem; color: #94a3b8;">Fixed Daily Profit: <strong class="green-text" id="modal-plan-rate" style="color: #34d399; font-size: 1.05rem;">1.00% / Daily</strong></div>
-            <span style="color: #64748b;">•</span>
-            <div style="font-size: 0.85rem; color: #94a3b8;" id="modal-plan-monthly-pct">30.0% Monthly Yield</div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; flex-wrap: wrap;">
+            <div style="font-size: 0.85rem; color: #cbd5e1; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.2rem 0.55rem; border-radius: 6px;">
+              Fixed Daily Profit: <strong class="green-text" id="modal-plan-rate" style="color: #34d399; font-size: 0.95rem; font-weight: 800;">1.00% / Daily</strong>
+            </div>
+            <div style="font-size: 0.85rem; color: #38bdf8; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); padding: 0.2rem 0.55rem; border-radius: 6px; font-weight: 700;" id="modal-plan-monthly-pct">
+              30.0% Monthly Yield
+            </div>
           </div>
         </div>
 
@@ -1729,7 +1719,7 @@
               <label for="invest-wallet-source" style="font-size: 0.85rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0;">Payment Source</label>
               <span id="modal-selected-wallet-bal" style="font-size: 0.78rem; font-weight: 700; color: #38bdf8;">Available: $0.00</span>
             </div>
-            <select id="invest-wallet-source" required style="width: 100%; background: #08111e; border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 0.7rem 0.85rem; border-radius: 8px; font-size: 0.92rem;">
+            <select id="invest-wallet-source" required style="width: 100%; background: #08111e; border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 0.7rem 0.85rem; border-radius: 10px; font-size: 0.92rem; font-weight: 600;">
               <option value="deposit" id="modal-dep-opt">Deposit Wallet ($0.00)</option>
               <option value="interest" id="modal-int-opt">Interest Wallet ($0.00)</option>
             </select>
@@ -1742,49 +1732,61 @@
               <span id="modal-limit-text" style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Limits: $100.00 - $4,999.00</span>
             </div>
             <div style="position: relative;">
-              <span style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 1.1rem; font-weight: 700;">$</span>
-              <input type="number" id="invest-amount-input" required min="100" max="4999" step="any" placeholder="100" style="width: 100%; padding-left: 2.2rem; background: #08111e; border: 1px solid rgba(255, 255, 255, 0.18); color: #ffffff; font-size: 1.15rem; font-weight: 800; border-radius: 8px; padding-top: 0.65rem; padding-bottom: 0.65rem;" />
+              <span style="position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 1.15rem; font-weight: 700;">$</span>
+              <input type="number" id="invest-amount-input" required min="100" max="4999" step="any" placeholder="100" style="width: 100%; padding-left: 2.2rem; background: #08111e; border: 1px solid rgba(255, 255, 255, 0.18); color: #ffffff; font-size: 1.15rem; font-weight: 800; border-radius: 10px; padding-top: 0.7rem; padding-bottom: 0.7rem; font-family: monospace;" />
             </div>
 
-            <!-- Quick Amount Presets -->
-            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem;" id="modal-quick-presets">
-              <button type="button" class="btn-preset" data-preset="min" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #cbd5e1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; padding: 0.28rem 0.55rem; cursor: pointer; transition: all 0.2s;">Min Plan</button>
-              <button type="button" class="btn-preset" data-preset="add250" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #cbd5e1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; padding: 0.28rem 0.55rem; cursor: pointer; transition: all 0.2s;">+$250</button>
-              <button type="button" class="btn-preset" data-preset="add500" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #cbd5e1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; padding: 0.28rem 0.55rem; cursor: pointer; transition: all 0.2s;">+$500</button>
-              <button type="button" class="btn-preset" data-preset="add1000" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #cbd5e1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; padding: 0.28rem 0.55rem; cursor: pointer; transition: all 0.2s;">+$1,000</button>
-              <button type="button" class="btn-preset" data-preset="maxbal" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; border-radius: 6px; font-size: 0.75rem; font-weight: 700; padding: 0.28rem 0.55rem; cursor: pointer; transition: all 0.2s; margin-left: auto;">Max Balance</button>
+            <!-- Balanced Quick Amount Presets Grid -->
+            <div class="modal-presets-row" id="modal-quick-presets" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; margin-top: 0.55rem; width: 100%;">
+              <button type="button" class="btn-preset" data-preset="min">Min Plan</button>
+              <button type="button" class="btn-preset" data-preset="add250">+$250</button>
+              <button type="button" class="btn-preset" data-preset="add500">+$500</button>
+              <button type="button" class="btn-preset" data-preset="add1000">+$1,000</button>
+              <button type="button" class="btn-preset" data-preset="maxbal">Max Bal</button>
             </div>
             
             <!-- Inline validation & Deposit Prompt -->
-            <div id="modal-amount-validation-box" style="margin-top: 0.5rem; font-size: 0.8rem; display: none;"></div>
+            <div id="modal-amount-validation-box" style="margin-top: 0.55rem; font-size: 0.82rem; display: none;"></div>
           </div>
 
           <!-- Real-Time Projected Return Breakdown -->
-          <div class="modal-calc-preview" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(52, 211, 153, 0.25); border-radius: 12px; padding: 0.8rem 0.95rem; margin: 0.9rem 0;">
+          <div class="modal-calc-preview" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(52, 211, 153, 0.25); border-radius: 14px; padding: 0.85rem 1rem; margin: 0.95rem 0;">
             <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.45rem; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 0.25rem;">
               Real-Time Yield Forecast (30-Day Term)
             </div>
             <div class="preview-row" style="margin-bottom: 0.25rem;">
               <span style="color: #cbd5e1; font-size: 0.85rem;">Daily Interest Accrual:</span>
-              <strong class="green-text" id="modal-daily-return-calc" style="color: #34d399; font-size: 0.95rem;">+$0.00</strong>
+              <strong class="green-text" id="modal-daily-return-calc" style="color: #34d399; font-size: 0.95rem; font-family: monospace;">+$0.00</strong>
             </div>
             <div class="preview-row" style="margin-bottom: 0.25rem;">
               <span style="color: #cbd5e1; font-size: 0.85rem;">7-Day Estimated Yield:</span>
-              <strong class="green-text" id="modal-weekly-return-calc" style="color: #34d399; font-size: 0.95rem;">+$0.00</strong>
+              <strong class="green-text" id="modal-weekly-return-calc" style="color: #34d399; font-size: 0.95rem; font-family: monospace;">+$0.00</strong>
             </div>
             <div class="preview-row" style="margin-bottom: 0.25rem;">
               <span style="color: #cbd5e1; font-size: 0.85rem;">30-Day Total Net Profit:</span>
-              <strong class="green-text" id="modal-monthly-return-calc" style="color: #34d399; font-size: 0.95rem;">+$0.00</strong>
+              <strong class="green-text" id="modal-monthly-return-calc" style="color: #34d399; font-size: 0.95rem; font-family: monospace;">+$0.00</strong>
             </div>
             <div class="preview-row" style="border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 0.35rem; margin-top: 0.25rem;">
               <span style="color: #ffffff; font-weight: 700; font-size: 0.88rem;">Total Payout (Principal + Profit):</span>
-              <strong style="color: #38bdf8; font-weight: 800; font-size: 1rem;" id="modal-grand-total-calc">$0.00</strong>
+              <strong style="color: #38bdf8; font-weight: 800; font-size: 1.05rem; font-family: monospace;" id="modal-grand-total-calc">$0.00</strong>
             </div>
           </div>
 
-          <div class="modal-actions" style="display: flex; gap: 0.75rem; margin-top: 1.1rem;">
-            <button class="btn btn-secondary" type="button" id="cancel-invest-modal" style="flex: 1; padding: 0.75rem; font-weight: 600;">Cancel</button>
-            <button class="btn btn-primary" type="submit" id="confirm-invest-btn" style="flex: 2; padding: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          <!-- Official Investment Agreement Form Deed Clause -->
+          <div class="invest-agreement-clause" style="margin: 0.9rem 0 0.6rem; background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 0.75rem 0.9rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0; font-size: 0.82rem; color: #e2e8f0;">
+              <input type="checkbox" id="invest-agreement-agree" checked required style="accent-color: #38bdf8; width: 17px; height: 17px; cursor: pointer; border-radius: 4px;" />
+              <span>I agree to the <strong style="color: #38bdf8;">Master Investment Agreement</strong> &amp; Guarantee Deed</span>
+            </label>
+            <button type="button" class="btn btn-secondary btn-xs" id="modal-preview-agreement-btn" style="padding: 0.3rem 0.7rem; font-size: 0.75rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 8px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              View Agreement Form
+            </button>
+          </div>
+
+          <div class="modal-actions" style="display: flex; gap: 0.75rem; margin-top: 1.15rem;">
+            <button class="btn btn-secondary" type="button" id="cancel-invest-modal" style="flex: 1; padding: 0.75rem; font-weight: 600; border-radius: 12px;">Cancel</button>
+            <button class="btn btn-primary" type="submit" id="confirm-invest-btn" style="flex: 2; padding: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 12px;">
               <span>Confirm &amp; Activate Plan</span>
             </button>
           </div>
@@ -2099,16 +2101,6 @@
         <span>Profile</span>
       </button>
     </nav>
-
-    <footer>
-      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>© <span id="year"></span> Bitfurytech. All rights reserved.</div>
-        <button type="button" class="btn-terms-footer open-terms-modal-btn">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          Terms &amp; Conditions
-        </button>
-      </div>
-    </footer>
 
     <script src="app.js"></script>
   </body>

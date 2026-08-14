@@ -98,6 +98,35 @@
 
       <!-- Main Admin Content Grid -->
       <section class="dashboard-grid">
+        <!-- Admin Greeting Header Bar -->
+        <div class="user-greeting-header-bar admin-greeting-bar">
+          <div class="user-info-cluster">
+            <div class="user-avatar-circle" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: rgba(52, 211, 153, 0.4); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="user-greeting-text">
+              <h2>
+                Hi, <span data-user-name>Administrator</span>
+                <span class="user-status-pill" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(52, 211, 153, 0.35); color: #34d399;">
+                  <span class="user-status-dot"></span> System Executive
+                </span>
+              </h2>
+            </div>
+          </div>
+          <div class="header-action-cluster">
+            <a href="dashboard.html" class="header-icon-btn" title="Switch to Client View">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </a>
+            <button class="header-icon-btn" type="button" data-logout title="Logout">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <!-- Admin Header Banner -->
         <div class="panel admin-ui-box box-green" id="admin-overview" style="border-left: 4px solid #34d399;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -1030,12 +1059,6 @@
         </form>
       </div>
     </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="container">© <span id="year"></span> Bitfurytech. All rights reserved.</div>
-    </footer>
 
     <script src="app.js"></script>
   </body>

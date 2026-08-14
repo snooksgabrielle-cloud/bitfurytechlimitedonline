@@ -2708,13 +2708,33 @@ function initDashboardControls() {
   }
 
   // --- PDF Investment Agreement & Account Statement Handlers ---
-  window.openAgreementModal = function(invIdx) {
+  window.openAgreementModal = function(invIdx, customData) {
+    let inv = null;
     const list = window.currentActiveInvestments || [];
-    const inv = list[invIdx];
-    if (!inv) {
-      showToast('❌ Investment contract record not found.', false);
-      return;
+
+    if (typeof invIdx === 'object' && invIdx !== null) {
+      inv = invIdx;
+    } else if (typeof invIdx === 'number' && !isNaN(invIdx) && list[invIdx]) {
+      inv = list[invIdx];
+    } else if (customData) {
+      inv = customData;
+    } else if (list.length > 0) {
+      inv = list[0];
+    } else {
+      const planTitle = document.getElementById('modal-plan-title')?.textContent || 'Beginners Plan';
+      const amtVal = parseFloat(document.getElementById('invest-amount-input')?.value || 1000) || 1000;
+      const rateVal = parseFloat(document.getElementById('modal-plan-raw-rate')?.value || 1.0) || 1.0;
+      inv = {
+        id: Math.floor(100000 + Math.random() * 900000),
+        planName: planTitle,
+        plan_name: planTitle,
+        amount: amtVal,
+        dailyRate: rateVal,
+        daily_rate: rateVal,
+        createdAt: new Date().toISOString()
+      };
     }
+
     const userData = window.currentDashboardData?.user || {};
     const uName = userData.fullName || userData.email || 'Investor';
     const uEmail = userData.email || 'investor@example.com';
@@ -2752,6 +2772,35 @@ function initDashboardControls() {
   if (document.getElementById('close-agreement-modal')) document.getElementById('close-agreement-modal').addEventListener('click', closeAgreementModal);
   if (document.getElementById('close-agreement-btn')) document.getElementById('close-agreement-btn').addEventListener('click', closeAgreementModal);
 
+  // Hook up Preview Agreement Button in Invest Modal
+  const previewAgrBtn = document.getElementById('modal-preview-agreement-btn');
+  if (previewAgrBtn) {
+    previewAgrBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const planTitle = document.getElementById('modal-plan-title')?.textContent || 'Beginners Plan';
+      const amtVal = parseFloat(document.getElementById('invest-amount-input')?.value || 100) || 100;
+      const rateVal = parseFloat(document.getElementById('modal-plan-raw-rate')?.value || 1.0) || 1.0;
+      window.openAgreementModal(null, {
+        id: Math.floor(100000 + Math.random() * 900000),
+        planName: planTitle,
+        plan_name: planTitle,
+        amount: amtVal,
+        dailyRate: rateVal,
+        daily_rate: rateVal,
+        createdAt: new Date().toISOString()
+      });
+    });
+  }
+
+  // Print Agreement Trigger
+  const printAgrBtn = document.getElementById('print-agreement-trigger');
+  if (printAgrBtn) {
+    printAgrBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.print();
+    });
+  }
+
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.open-agreement-modal-btn');
     if (btn) {
@@ -2759,6 +2808,8 @@ function initDashboardControls() {
       const idx = parseInt(btn.getAttribute('data-inv-idx'), 10);
       if (!isNaN(idx)) {
         window.openAgreementModal(idx);
+      } else {
+        window.openAgreementModal(0);
       }
     }
   });
