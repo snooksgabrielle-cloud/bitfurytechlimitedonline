@@ -2771,6 +2771,7 @@ function initDashboardControls() {
 
   if (document.getElementById('close-agreement-modal')) document.getElementById('close-agreement-modal').addEventListener('click', closeAgreementModal);
   if (document.getElementById('close-agreement-btn')) document.getElementById('close-agreement-btn').addEventListener('click', closeAgreementModal);
+  if (document.getElementById('top-close-agreement-btn')) document.getElementById('top-close-agreement-btn').addEventListener('click', closeAgreementModal);
 
   // Hook up Preview Agreement Button in Invest Modal
   const previewAgrBtn = document.getElementById('modal-preview-agreement-btn');
@@ -2792,14 +2793,18 @@ function initDashboardControls() {
     });
   }
 
-  // Print Agreement Trigger
-  const printAgrBtn = document.getElementById('print-agreement-trigger');
-  if (printAgrBtn) {
-    printAgrBtn.addEventListener('click', (e) => {
+  // Print & Download Agreement Triggers
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.print-agreement-btn') || e.target.closest('#print-agreement-trigger')) {
       e.preventDefault();
       window.print();
-    });
-  }
+    }
+    if (e.target.closest('.download-agr-doc-btn')) {
+      e.preventDefault();
+      const uName = (document.getElementById('agr-user-name')?.textContent || 'Investor').replace(/\s+/g, '_');
+      window.downloadDocumentFile('agreement-modal', `Investment_Agreement_${uName}.html`);
+    }
+  });
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.open-agreement-modal-btn');
@@ -2847,16 +2852,16 @@ function initDashboardControls() {
     const stmtInvTbody = document.querySelector('#stmt-investments-table tbody');
     if (stmtInvTbody) {
       if (!invList || invList.length === 0) {
-        stmtInvTbody.innerHTML = `<tr><td colspan="6" style="padding: 0.6rem; text-align: center; color: #64748b;">No active investment contracts on record.</td></tr>`;
+        stmtInvTbody.innerHTML = `<tr><td colspan="6" style="padding: 0.8rem; text-align: center; color: #64748b; font-weight: 600;">No active investment contracts on record.</td></tr>`;
       } else {
         stmtInvTbody.innerHTML = invList.map((inv) => `
           <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 0.45rem 0.65rem; font-weight: 700;">${inv.planName || inv.plan_name}</td>
-            <td style="padding: 0.45rem 0.65rem; font-weight: 700; color: #0f172a;">${fmtNum(inv.amount)}</td>
-            <td style="padding: 0.45rem 0.65rem; color: #0284c7; font-weight: 700;">${parseFloat(inv.dailyRate || inv.daily_rate).toFixed(2)}%</td>
-            <td style="padding: 0.45rem 0.65rem; color: #16a34a; font-weight: 700;">${fmtNum(inv.accruedProfit || inv.accrued_profit)}</td>
-            <td style="padding: 0.45rem 0.65rem;">${new Date(inv.createdAt || inv.created_at || Date.now()).toLocaleDateString()}</td>
-            <td style="padding: 0.45rem 0.65rem;"><span style="background: #dcfce7; color: #15803d; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700; font-size: 0.72rem;">RUNNING</span></td>
+            <td style="padding: 0.6rem 0.85rem; font-weight: 800; color: #0f172a;">${inv.planName || inv.plan_name}</td>
+            <td style="padding: 0.6rem 0.85rem; font-weight: 800; color: #0f172a;">${fmtNum(inv.amount)}</td>
+            <td style="padding: 0.6rem 0.85rem; color: #0284c7; font-weight: 800;">${parseFloat(inv.dailyRate || inv.daily_rate).toFixed(2)}%</td>
+            <td style="padding: 0.6rem 0.85rem; color: #16a34a; font-weight: 800;">${fmtNum(inv.accruedProfit || inv.accrued_profit)}</td>
+            <td style="padding: 0.6rem 0.85rem; font-weight: 600;">${new Date(inv.createdAt || inv.created_at || Date.now()).toLocaleDateString()}</td>
+            <td style="padding: 0.6rem 0.85rem;"><span style="background: #dcfce7; color: #15803d; padding: 0.2rem 0.5rem; border-radius: 6px; font-weight: 800; font-size: 0.75rem;">RUNNING</span></td>
           </tr>
         `).join('');
       }
@@ -2867,7 +2872,7 @@ function initDashboardControls() {
     const stmtTrxTbody = document.querySelector('#stmt-transactions-table tbody');
     if (stmtTrxTbody) {
       if (!trxList || trxList.length === 0) {
-        stmtTrxTbody.innerHTML = `<tr><td colspan="7" style="padding: 0.6rem; text-align: center; color: #64748b;">No transaction ledger entries found.</td></tr>`;
+        stmtTrxTbody.innerHTML = `<tr><td colspan="7" style="padding: 0.8rem; text-align: center; color: #64748b; font-weight: 600;">No transaction ledger entries found.</td></tr>`;
       } else {
         stmtTrxTbody.innerHTML = trxList.map((trx) => {
           const amt = parseFloat(trx.amount || 0);
@@ -2880,13 +2885,13 @@ function initDashboardControls() {
 
           return `
             <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 0.45rem 0.6rem;">${new Date(trx.createdAt || trx.created_at || Date.now()).toLocaleDateString()}</td>
-              <td style="padding: 0.45rem 0.6rem; font-family: monospace;"><code>${trx.trxId || trx.id}</code></td>
-              <td style="padding: 0.45rem 0.6rem;">${trx.details || 'Transaction'}</td>
-              <td style="padding: 0.45rem 0.6rem; text-transform: capitalize;">${trx.wallet || trx.walletType || 'Wallet'}</td>
-              <td style="padding: 0.45rem 0.6rem; font-weight: 700; ${amt >= 0 ? 'color: #16a34a;' : 'color: #dc2626;'}">${amtStr}</td>
-              <td style="padding: 0.45rem 0.6rem;"><span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.12rem 0.4rem; border-radius: 4px; font-size: 0.68rem; font-weight: 700;">${status}</span></td>
-              <td style="padding: 0.45rem 0.6rem; font-weight: 700;">${fmtNum(trx.postBalance || trx.post_balance)}</td>
+              <td style="padding: 0.55rem 0.8rem; font-weight: 600;">${new Date(trx.createdAt || trx.created_at || Date.now()).toLocaleDateString()}</td>
+              <td style="padding: 0.55rem 0.8rem; font-family: monospace; font-weight: 700; color: #0369a1;"><code>${trx.trxId || trx.id}</code></td>
+              <td style="padding: 0.55rem 0.8rem; font-weight: 600;">${trx.details || 'Transaction'}</td>
+              <td style="padding: 0.55rem 0.8rem; text-transform: capitalize; font-weight: 600;">${trx.wallet || trx.walletType || 'Wallet'}</td>
+              <td style="padding: 0.55rem 0.8rem; font-weight: 800; ${amt >= 0 ? 'color: #16a34a;' : 'color: #dc2626;'}">${amtStr}</td>
+              <td style="padding: 0.55rem 0.8rem;"><span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.72rem; font-weight: 800;">${status}</span></td>
+              <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;">${fmtNum(trx.postBalance || trx.post_balance)}</td>
             </tr>
           `;
         }).join('');
@@ -2904,6 +2909,7 @@ function initDashboardControls() {
 
   if (document.getElementById('close-statement-modal')) document.getElementById('close-statement-modal').addEventListener('click', closeStatementModal);
   if (document.getElementById('close-statement-btn')) document.getElementById('close-statement-btn').addEventListener('click', closeStatementModal);
+  if (document.getElementById('top-close-statement-btn')) document.getElementById('top-close-statement-btn').addEventListener('click', closeStatementModal);
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.download-statement-btn');
@@ -2913,17 +2919,65 @@ function initDashboardControls() {
     }
   });
 
-  // Print triggers
-  if (document.getElementById('print-agreement-trigger')) {
-    document.getElementById('print-agreement-trigger').addEventListener('click', () => {
+  // Print & Download Statement Triggers
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.print-statement-btn') || e.target.closest('#print-statement-trigger')) {
+      e.preventDefault();
       window.print();
-    });
-  }
-  if (document.getElementById('print-statement-trigger')) {
-    document.getElementById('print-statement-trigger').addEventListener('click', () => {
-      window.print();
-    });
-  }
+    }
+    if (e.target.closest('.download-stmt-doc-btn')) {
+      e.preventDefault();
+      const uName = (document.getElementById('stmt-user-name')?.textContent || 'Investor').replace(/\s+/g, '_');
+      window.downloadDocumentFile('statement-modal', `Account_Statement_${uName}.html`);
+    }
+  });
+
+  // Universal Document Exporter Helper
+  window.downloadDocumentFile = function(modalId, defaultFilename) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    const docInner = modal.querySelector('.doc-inner-content');
+    if (!docInner) return;
+
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${defaultFilename.replace(/\.[^/.]+$/, '')} - BitfuryTech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; color: #0f172a; background: #f8fafc; margin: 0; padding: 24px 16px; }
+    .doc-container { max-width: 860px; margin: 0 auto; background: #ffffff; padding: 36px; border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: 0 4px 25px rgba(0,0,0,0.06); }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+    th { background: #f1f5f9; padding: 10px 12px; border: 1px solid #cbd5e1; text-align: left; font-weight: 800; color: #0f172a; }
+    td { padding: 9px 12px; border: 1px solid #e2e8f0; color: #334155; }
+    .no-print, .table-scroll-hint { display: none !important; }
+    .doc-table-scroll-container { width: 100%; overflow-x: auto; margin-bottom: 14px; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .doc-container { border: none; box-shadow: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    ${docInner.innerHTML}
+  </div>
+</body>
+</html>`;
+
+    const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', defaultFilename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // CSV Exporter Helper
   window.downloadCSVFile = function(filename, csvContent) {

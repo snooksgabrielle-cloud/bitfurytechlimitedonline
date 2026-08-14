@@ -1796,131 +1796,157 @@
 
     <!-- INVESTMENT AGREEMENT PDF MODAL OVERLAY -->
     <div class="modal-overlay" id="agreement-modal">
-      <div class="modal-content printable-doc" style="max-width: 820px; border-radius: 16px; background: #ffffff; color: #0f172a; padding: 2.2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
-        <button class="modal-close no-print" id="close-agreement-modal" style="color: #64748b;">&times;</button>
+      <div class="modal-content printable-doc" style="max-width: 860px; border-radius: 20px; background: #ffffff; color: #0f172a; position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+        <button class="modal-close no-print" id="close-agreement-modal" style="color: #64748b;" aria-label="Close modal">&times;</button>
         
-        <!-- Printable Header -->
-        <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
-          <div style="display: flex; align-items: center; gap: 0.85rem;">
-            <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7;">
-              B
+        <!-- Top Sticky Action Bar for Mobile & Desktop -->
+        <div class="doc-sticky-toolbar no-print">
+          <div class="doc-toolbar-title">
+            <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd;">OFFICIAL DEED</span>
+            <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Investment Agreement</span>
+          </div>
+          <div class="doc-toolbar-actions">
+            <button class="btn btn-sm btn-secondary" type="button" id="top-close-agreement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; font-weight: 700;">
+              Close
+            </button>
+            <button class="btn btn-sm btn-secondary download-agr-doc-btn" type="button" style="background: #f8fafc; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700;">
+              📥 Download File
+            </button>
+            <button class="btn btn-sm btn-primary print-agreement-btn" type="button" style="background: #0284c7; color: #ffffff; font-weight: 800;">
+              🖨️ Print / Save PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="doc-inner-content">
+          <!-- Printable Header -->
+          <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7; flex-shrink: 0;">
+                B
+              </div>
+              <div>
+                <div style="font-size: 1.2rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; line-height: 1.2;">BitfuryTech Investment Management Ltd.</div>
+                <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Regulated Quantitative Fund &amp; Wealth Management • Reg #11482910</div>
+                <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP, United Kingdom</div>
+              </div>
+            </div>
+            <div style="text-align: right;" class="doc-meta-header">
+              <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL DEED</span>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Contract Ref: <strong id="agr-doc-ref" style="color: #0f172a; font-family: monospace;">BF-AGR-2026-98124</strong></div>
+              <div style="font-size: 0.75rem; color: #64748b;">Issue Date: <strong id="agr-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 0.25rem;">MASTER INVESTMENT AGREEMENT</h2>
+            <div style="font-size: 0.82rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.06em;">&amp; CAPITAL GUARANTEE INDEMNITY CERTIFICATE</div>
+          </div>
+
+          <!-- Parties Box -->
+          <div class="doc-parties-grid" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem; margin-bottom: 1.5rem;">
+            <div>
+              <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY A (FUND MANAGER)</div>
+              <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;">BitfuryTech Investment Management Ltd.</div>
+              <div style="font-size: 0.78rem; color: #475569;">UK Registered &amp; SEC Compliant Firm</div>
+              <div style="font-size: 0.78rem; color: #475569; overflow-wrap: break-word;">Email: support@bitfurytechlimited.com</div>
             </div>
             <div>
-              <div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">BitfuryTech Investment Management Ltd.</div>
-              <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Regulated Quantitative Fund &amp; Wealth Management • Reg #11482910</div>
-              <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP, United Kingdom</div>
+              <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY B (INVESTOR)</div>
+              <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;" id="agr-user-name">Investor</div>
+              <div style="font-size: 0.78rem; color: #475569; overflow-wrap: break-word;" id="agr-user-email">investor@example.com</div>
+              <div style="font-size: 0.78rem; color: #475569;">Investor ID: <span id="agr-user-id" style="font-family: monospace; font-weight: 700;">USR-10001</span></div>
             </div>
           </div>
-          <div style="text-align: right;" class="doc-meta-header">
-            <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL DEED</span>
-            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Contract Ref: <strong id="agr-doc-ref" style="color: #0f172a; font-family: monospace;">BF-AGR-2026-98124</strong></div>
-            <div style="font-size: 0.75rem; color: #64748b;">Issue Date: <strong id="agr-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
-          </div>
-        </div>
 
-        <!-- Title -->
-        <div style="text-align: center; margin-bottom: 1.5rem;">
-          <h2 style="font-size: 1.45rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 0.25rem;">MASTER INVESTMENT AGREEMENT</h2>
-          <div style="font-size: 0.85rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.08em;">&amp; CAPITAL GUARANTEE INDEMNITY CERTIFICATE</div>
-        </div>
-
-        <!-- Parties Box -->
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem;">
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY A (FUND MANAGER)</div>
-            <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;">BitfuryTech Investment Management Ltd.</div>
-            <div style="font-size: 0.78rem; color: #475569;">UK Registered &amp; SEC Compliant Firm</div>
-            <div style="font-size: 0.78rem; color: #475569;">Email: support@bitfurytechlimited.com</div>
-          </div>
-          <div>
-            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">PARTY B (INVESTOR)</div>
-            <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a;" id="agr-user-name">Investor</div>
-            <div style="font-size: 0.78rem; color: #475569;" id="agr-user-email">investor@example.com</div>
-            <div style="font-size: 0.78rem; color: #475569;">Investor ID: <span id="agr-user-id" style="font-family: monospace; font-weight: 700;">USR-10001</span></div>
-          </div>
-        </div>
-
-        <!-- Investment Parameters Table -->
-        <div style="margin-bottom: 1.5rem;">
-          <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">SCHEDULE A: INVESTMENT PLAN PARAMETERS</div>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.85rem;">
-            <thead>
-              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
-                <th style="padding: 0.6rem 0.8rem; border-right: 1px solid #cbd5e1;">Specification</th>
-                <th style="padding: 0.6rem 0.8rem;">Agreed Terms &amp; Values</th>
-              </tr>
-            </thead>
-            <tbody style="color: #334155;">
-              <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc; width: 40%;">Investment Strategy Plan</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-plan-name">Beginners Plan</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Principal Invested Capital</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #15803d;" id="agr-plan-amount">$1,000.00 USD</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Contracted Daily Return Rate</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0284c7;" id="agr-plan-rate">1.00% Fixed Daily Yield</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Expected Daily Interest Dividends</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-daily-profit">$10.00 USD / Day</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Commencement &amp; Activation Date</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 700;" id="agr-start-date">August 9, 2026</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Capital Protection Assurance</td>
-                <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #166534;">100% Fully Backed by BitfuryTech Reserve Surety</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Terms & Legal Clauses -->
-        <div style="font-size: 0.78rem; color: #475569; line-height: 1.5; margin-bottom: 1.5rem; background: #f8fafc; border-left: 3px solid #0284c7; padding: 0.85rem 1rem; border-radius: 0 8px 8px 0;">
-          <strong style="color: #0f172a; display: block; margin-bottom: 0.3rem;">OPERATIONAL &amp; LEGAL COVENANTS:</strong>
-          <ol style="margin: 0; padding-left: 1.1rem; line-height: 1.5;">
-            <li><strong>Daily Dividend Credit:</strong> Yields accumulate continuously and are automatically distributed into the Investor's Interest Wallet every 24 hours.</li>
-            <li><strong>Principal Guarantee:</strong> BitfuryTech guarantees 100% preservation of the Principal Invested Capital under European Capital Surety regulations.</li>
-            <li><strong>Withdrawal Liquidity:</strong> The Investor reserves unconditional right to initiate withdrawal requests for accumulated profits directly through the investor portal.</li>
-            <li><strong>Binding Signature:</strong> Executed digitally under the Electronic Communications Act 2000 and UNCITRAL Model Law on Electronic Signatures.</li>
-          </ol>
-        </div>
-
-        <!-- Signatures & Official Stamp -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid #cbd5e1; flex-wrap: wrap; gap: 1rem;">
-          <div style="text-align: center; min-width: 180px;">
-            <div style="font-family: 'Brush Script MT', cursive, Georgia, serif; font-size: 1.6rem; color: #0369a1; font-weight: 700; line-height: 1; margin-bottom: 0.2rem;">Alexander Vance</div>
-            <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">ALEXANDER VANCE</div>
-            <div style="font-size: 0.68rem; color: #64748b;">Chief Investment Officer (CIO)</div>
-            <div style="font-size: 0.65rem; color: #0284c7; font-weight: 700;">BitfuryTech Management Ltd.</div>
-          </div>
-
-          <!-- Corporate Seal Stamp Badge -->
-          <div style="text-align: center;">
-            <div style="width: 82px; height: 82px; border: 3px double #0284c7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; background: rgba(2, 132, 199, 0.05); color: #0284c7; font-size: 0.58rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin: 0 auto;">
-              <span>★ BITFURYTECH ★</span>
-              <span style="font-size: 0.5rem; color: #0f172a; margin: 2px 0;">SEAL OF GUARANTEE</span>
-              <span>100% SECURED</span>
+          <!-- Investment Parameters Table -->
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">SCHEDULE A: INVESTMENT PLAN PARAMETERS</div>
+            <div class="doc-table-scroll-container">
+              <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.85rem;">
+                <thead>
+                  <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                    <th style="padding: 0.6rem 0.8rem; border-right: 1px solid #cbd5e1; white-space: nowrap;">Specification</th>
+                    <th style="padding: 0.6rem 0.8rem; white-space: nowrap;">Agreed Terms &amp; Values</th>
+                  </tr>
+                </thead>
+                <tbody style="color: #334155;">
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc; width: 40%;">Investment Strategy Plan</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-plan-name">Beginners Plan</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Principal Invested Capital</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #15803d;" id="agr-plan-amount">$1,000.00 USD</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Contracted Daily Return Rate</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0284c7;" id="agr-plan-rate">1.00% Fixed Daily Yield</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Expected Daily Interest Dividends</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #0f172a;" id="agr-daily-profit">$10.00 USD / Day</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Commencement &amp; Activation Date</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 700;" id="agr-start-date">August 9, 2026</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 0.55rem 0.8rem; border-right: 1px solid #cbd5e1; font-weight: 700; background: #f8fafc;">Capital Protection Assurance</td>
+                    <td style="padding: 0.55rem 0.8rem; font-weight: 800; color: #166534;">100% Fully Backed by BitfuryTech Reserve Surety</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div style="font-size: 0.65rem; color: #64748b; margin-top: 0.3rem;">Audit Stamp #BF-88219</div>
           </div>
 
-          <div style="text-align: center; min-width: 180px;">
-            <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 0.4rem; padding-top: 0.6rem;" id="agr-user-sig-name">Investor</div>
-            <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">INVESTOR ACCEPTANCE</div>
-            <div style="font-size: 0.68rem; color: #64748b;">Digitally Signed &amp; Authenticated</div>
-            <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">IP &amp; 2FA Verified Signature</div>
+          <!-- Terms & Legal Clauses -->
+          <div style="font-size: 0.78rem; color: #475569; line-height: 1.5; margin-bottom: 1.5rem; background: #f8fafc; border-left: 3px solid #0284c7; padding: 0.85rem 1rem; border-radius: 0 8px 8px 0;">
+            <strong style="color: #0f172a; display: block; margin-bottom: 0.3rem;">OPERATIONAL &amp; LEGAL COVENANTS:</strong>
+            <ol style="margin: 0; padding-left: 1.1rem; line-height: 1.5;">
+              <li><strong>Daily Dividend Credit:</strong> Yields accumulate continuously and are automatically distributed into the Investor's Interest Wallet every 24 hours.</li>
+              <li><strong>Principal Guarantee:</strong> BitfuryTech guarantees 100% preservation of the Principal Invested Capital under European Capital Surety regulations.</li>
+              <li><strong>Withdrawal Liquidity:</strong> The Investor reserves unconditional right to initiate withdrawal requests for accumulated profits directly through the investor portal.</li>
+              <li><strong>Binding Signature:</strong> Executed digitally under the Electronic Communications Act 2000 and UNCITRAL Model Law on Electronic Signatures.</li>
+            </ol>
+          </div>
+
+          <!-- Signatures & Official Stamp -->
+          <div class="doc-signatures-row" style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid #cbd5e1; flex-wrap: wrap; gap: 1rem;">
+            <div style="text-align: center; min-width: 160px; flex: 1;">
+              <div style="font-family: 'Brush Script MT', cursive, Georgia, serif; font-size: 1.6rem; color: #0369a1; font-weight: 700; line-height: 1; margin-bottom: 0.2rem;">Alexander Vance</div>
+              <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">ALEXANDER VANCE</div>
+              <div style="font-size: 0.68rem; color: #64748b;">Chief Investment Officer (CIO)</div>
+              <div style="font-size: 0.65rem; color: #0284c7; font-weight: 700;">BitfuryTech Management Ltd.</div>
+            </div>
+
+            <!-- Corporate Seal Stamp Badge -->
+            <div style="text-align: center; flex: 1;">
+              <div style="width: 82px; height: 82px; border: 3px double #0284c7; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; background: rgba(2, 132, 199, 0.05); color: #0284c7; font-size: 0.58rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin: 0 auto;">
+                <span>★ BITFURYTECH ★</span>
+                <span style="font-size: 0.5rem; color: #0f172a; margin: 2px 0;">SEAL OF GUARANTEE</span>
+                <span>100% SECURED</span>
+              </div>
+              <div style="font-size: 0.65rem; color: #64748b; margin-top: 0.3rem;">Audit Stamp #BF-88219</div>
+            </div>
+
+            <div style="text-align: center; min-width: 160px; flex: 1;">
+              <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 0.4rem; padding-top: 0.6rem;" id="agr-user-sig-name">Investor</div>
+              <div style="border-top: 1px solid #94a3b8; padding-top: 0.25rem; font-size: 0.72rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">INVESTOR ACCEPTANCE</div>
+              <div style="font-size: 0.68rem; color: #64748b;">Digitally Signed &amp; Authenticated</div>
+              <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">IP &amp; 2FA Verified Signature</div>
+            </div>
           </div>
         </div>
 
         <!-- Action Bar (hidden when printing) -->
-        <div class="modal-actions no-print" style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
-          <button class="btn btn-secondary" type="button" id="close-agreement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">Close</button>
-          <button class="btn btn-primary" type="button" id="print-agreement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem;">
+        <div class="modal-actions no-print" style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 20px 20px;">
+          <button class="btn btn-secondary" type="button" id="close-agreement-btn" style="background: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; font-weight: 700;">Close</button>
+          <button class="btn btn-secondary download-agr-doc-btn" type="button" style="background: #f8fafc; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+            📥 Download File
+          </button>
+          <button class="btn btn-primary print-agreement-btn" type="button" id="print-agreement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800;">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             Print / Save PDF Agreement
           </button>
@@ -1930,129 +1956,163 @@
 
     <!-- ACCOUNT STATEMENT PDF MODAL OVERLAY -->
     <div class="modal-overlay" id="statement-modal">
-      <div class="modal-content printable-doc" style="max-width: 860px; border-radius: 16px; background: #ffffff; color: #0f172a; padding: 2.2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
-        <button class="modal-close no-print" id="close-statement-modal" style="color: #64748b;">&times;</button>
+      <div class="modal-content printable-doc" style="max-width: 880px; border-radius: 20px; background: #ffffff; color: #0f172a; position: relative; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+        <button class="modal-close no-print" id="close-statement-modal" style="color: #64748b;" aria-label="Close modal">&times;</button>
         
-        <!-- Printable Header -->
-        <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
-          <div style="display: flex; align-items: center; gap: 0.85rem;">
-            <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7;">
-              B
+        <!-- Top Sticky Action Bar for Mobile & Desktop -->
+        <div class="doc-sticky-toolbar no-print">
+          <div class="doc-toolbar-title">
+            <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd;">OFFICIAL STATEMENT</span>
+            <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Financial Report</span>
+          </div>
+          <div class="doc-toolbar-actions">
+            <button class="btn btn-sm btn-secondary" type="button" id="top-close-statement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; font-weight: 700;">
+              Close
+            </button>
+            <button class="btn btn-sm btn-secondary download-stmt-doc-btn" type="button" style="background: #f8fafc; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700;">
+              📥 Download File
+            </button>
+            <button class="btn btn-sm btn-primary print-statement-btn" type="button" style="background: #0284c7; color: #ffffff; font-weight: 800;">
+              🖨️ Print / Save PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="doc-inner-content">
+          <!-- Printable Header -->
+          <div class="doc-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0284c7; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <div style="width: 48px; height: 48px; background: #0f172a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 900; font-size: 1.4rem; border: 2px solid #0284c7; flex-shrink: 0;">
+                B
+              </div>
+              <div>
+                <div style="font-size: 1.2rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; line-height: 1.2;">BitfuryTech Investment Management Ltd.</div>
+                <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Official Investor Financial Ledger &amp; Account Statement</div>
+                <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP • Reg #11482910</div>
+              </div>
             </div>
+            <div style="text-align: right;" class="doc-meta-header">
+              <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL STATEMENT</span>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Statement Ref: <strong id="stmt-doc-ref" style="color: #0f172a; font-family: monospace;">BF-STMT-2026-0809</strong></div>
+              <div style="font-size: 0.75rem; color: #64748b;">Generated On: <strong id="stmt-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div style="text-align: center; margin-bottom: 1.2rem;">
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 0.2rem;">OFFICIAL ACCOUNT FINANCIAL STATEMENT</h2>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Comprehensive Ledger &amp; Investment Portfolio Report</div>
+          </div>
+
+          <!-- Account Details & Financial Summary -->
+          <div class="doc-summary-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- Account Info -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;">
+              <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">ACCOUNT HOLDER INFORMATION</div>
+              <div style="font-size: 1.05rem; font-weight: 800; color: #0f172a; line-height: 1.2;" id="stmt-user-name">Investor</div>
+              <div style="font-size: 0.82rem; color: #475569; overflow-wrap: break-word; word-break: break-all; margin-top: 0.2rem;" id="stmt-user-email">investor@example.com</div>
+              <div style="font-size: 0.8rem; color: #475569; margin-top: 0.35rem;">Account ID: <span id="stmt-user-id" style="font-family: monospace; font-weight: 800; color: #0f172a;">USR-10001</span></div>
+              <div style="font-size: 0.8rem; color: #475569; margin-top: 0.2rem;">Account Status: <span style="color: #16a34a; font-weight: 800;">Active / Verified</span></div>
+            </div>
+
+            <!-- Financial Position -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem;">
+              <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">PORTFOLIO BALANCE POSITION</div>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;">
+                <div>
+                  <div style="font-size: 0.72rem; color: #15803d; font-weight: 700;">Portfolio Value</div>
+                  <div style="font-size: 1.2rem; font-weight: 800; color: #0f172a;" id="stmt-total-val">$0.00</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.72rem; color: #15803d; font-weight: 700;">Invested Capital</div>
+                  <div style="font-size: 1.2rem; font-weight: 800; color: #0284c7;" id="stmt-active-invest">$0.00</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.72rem; color: #15803d; font-weight: 700;">Deposit Wallet</div>
+                  <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="stmt-dep-bal">$0.00</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.72rem; color: #15803d; font-weight: 700;">Interest Dividends</div>
+                  <div style="font-size: 0.95rem; font-weight: 800; color: #16a34a;" id="stmt-int-bal">$0.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Investments Summary -->
+          <div style="margin-bottom: 1.5rem;" id="stmt-investments-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ACTIVE INVESTMENT CONTRACTS</div>
+              <span class="table-scroll-hint no-print" style="font-size: 0.7rem; color: #0284c7; font-weight: 700;">Swipe to view all →</span>
+            </div>
+            <div class="doc-table-scroll-container">
+              <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.82rem;" id="stmt-investments-table">
+                <thead>
+                  <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Plan Name</th>
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Invested Amount</th>
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Daily Yield %</th>
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Accrued Profit</th>
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Start Date</th>
+                    <th style="padding: 0.65rem 0.85rem; white-space: nowrap;">Status</th>
+                  </tr>
+                </thead>
+                <tbody style="color: #334155;">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Itemized Transactions Table -->
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ITEMIZED TRANSACTION LEDGER</div>
+              <span class="table-scroll-hint no-print" style="font-size: 0.7rem; color: #0284c7; font-weight: 700;">Swipe to view all →</span>
+            </div>
+            <div class="doc-table-scroll-container">
+              <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.8rem;" id="stmt-transactions-table">
+                <thead>
+                  <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Date</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Reference ID</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Transaction Details</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Wallet</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Amount</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Status</th>
+                    <th style="padding: 0.65rem 0.8rem; white-space: nowrap;">Post Balance</th>
+                  </tr>
+                </thead>
+                <tbody style="color: #334155;">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Footer Notice & Audit Stamp -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 1rem; font-size: 0.72rem; color: #64748b; flex-wrap: wrap; gap: 0.8rem;">
             <div>
-              <div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">BitfuryTech Investment Management Ltd.</div>
-              <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Official Investor Financial Ledger &amp; Account Statement</div>
-              <div style="font-size: 0.72rem; color: #64748b;">25 Bank Street, Canary Wharf, London E14 5JP • Reg #11482910</div>
+              <strong>BitfuryTech Investment Management Ltd.</strong><br/>
+              Official Audit Verification Code: <span style="font-family: monospace; font-weight: 700; color: #0f172a;">BF-AUDIT-2026-9810</span>
             </div>
-          </div>
-          <div style="text-align: right;" class="doc-meta-header">
-            <span class="badge no-print" style="background: #e0f2fe; color: #0369a1; font-weight: 700; border: 1px solid #bae6fd; padding: 0.25rem 0.65rem; border-radius: 999px;">OFFICIAL STATEMENT</span>
-            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Statement Ref: <strong id="stmt-doc-ref" style="color: #0f172a; font-family: monospace;">BF-STMT-2026-0809</strong></div>
-            <div style="font-size: 0.75rem; color: #64748b;">Generated On: <strong id="stmt-doc-date" style="color: #0f172a;">August 9, 2026</strong></div>
-          </div>
-        </div>
-
-        <!-- Title -->
-        <div style="text-align: center; margin-bottom: 1.2rem;">
-          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 0.2rem;">OFFICIAL ACCOUNT FINANCIAL STATEMENT</h2>
-          <div style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Comprehensive Ledger &amp; Investment Portfolio Report</div>
-        </div>
-
-        <!-- Account Details & Financial Summary -->
-        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-          <!-- Account Info -->
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem;">
-            <div style="font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">ACCOUNT HOLDER INFORMATION</div>
-            <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="stmt-user-name">Investor</div>
-            <div style="font-size: 0.8rem; color: #475569;" id="stmt-user-email">investor@example.com</div>
-            <div style="font-size: 0.78rem; color: #475569; margin-top: 0.2rem;">Account ID: <span id="stmt-user-id" style="font-family: monospace; font-weight: 700;">USR-10001</span></div>
-            <div style="font-size: 0.78rem; color: #475569;">Account Status: <span style="color: #16a34a; font-weight: 700;">Active / Verified</span></div>
-          </div>
-
-          <!-- Financial Position -->
-          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem;">
-            <div style="font-size: 0.72rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">PORTFOLIO BALANCE POSITION</div>
-            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem;">
-              <div>
-                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Total Portfolio Value</div>
-                <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a;" id="stmt-total-val">$0.00</div>
-              </div>
-              <div>
-                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Active Invested Capital</div>
-                <div style="font-size: 1.15rem; font-weight: 800; color: #0284c7;" id="stmt-active-invest">$0.00</div>
-              </div>
-              <div>
-                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Deposit Wallet</div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #0f172a;" id="stmt-dep-bal">$0.00</div>
-              </div>
-              <div>
-                <div style="font-size: 0.7rem; color: #15803d; font-weight: 600;">Interest Dividends Wallet</div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #16a34a;" id="stmt-int-bal">$0.00</div>
-              </div>
+            <div style="text-align: right;" class="doc-footer-meta">
+              Official Electronic Record • Securely Generated.<br/>
+              Confirmed &amp; Verified Official Report
             </div>
-          </div>
-        </div>
-
-        <!-- Active Investments Summary -->
-        <div style="margin-bottom: 1.5rem;" id="stmt-investments-section">
-          <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ACTIVE INVESTMENT CONTRACTS</div>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.8rem;" id="stmt-investments-table">
-            <thead>
-              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
-                <th style="padding: 0.5rem 0.65rem;">Plan Name</th>
-                <th style="padding: 0.5rem 0.65rem;">Invested Amount</th>
-                <th style="padding: 0.5rem 0.65rem;">Daily Yield %</th>
-                <th style="padding: 0.5rem 0.65rem;">Accrued Profit</th>
-                <th style="padding: 0.5rem 0.65rem;">Start Date</th>
-                <th style="padding: 0.5rem 0.65rem;">Status</th>
-              </tr>
-            </thead>
-            <tbody style="color: #334155;">
-              <!-- Populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Itemized Transactions Table -->
-        <div style="margin-bottom: 1.5rem;">
-          <div style="font-size: 0.85rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; border-left: 4px solid #0284c7; padding-left: 0.6rem;">ITEMIZED TRANSACTION LEDGER</div>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; font-size: 0.78rem;" id="stmt-transactions-table">
-            <thead>
-              <tr style="background: #f1f5f9; color: #0f172a; border-bottom: 2px solid #cbd5e1; text-align: left;">
-                <th style="padding: 0.5rem 0.6rem;">Date</th>
-                <th style="padding: 0.5rem 0.6rem;">Reference ID</th>
-                <th style="padding: 0.5rem 0.6rem;">Transaction Details</th>
-                <th style="padding: 0.5rem 0.6rem;">Wallet</th>
-                <th style="padding: 0.5rem 0.6rem;">Amount</th>
-                <th style="padding: 0.5rem 0.6rem;">Status</th>
-                <th style="padding: 0.5rem 0.6rem;">Post Balance</th>
-              </tr>
-            </thead>
-            <tbody style="color: #334155;">
-              <!-- Populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Footer Notice & Audit Stamp -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 1rem; font-size: 0.72rem; color: #64748b; flex-wrap: wrap; gap: 0.8rem;">
-          <div>
-            <strong>BitfuryTech Investment Management Ltd.</strong><br/>
-            Official Audit Verification Code: <span style="font-family: monospace; font-weight: 700; color: #0f172a;">BF-AUDIT-2026-9810</span>
-          </div>
-          <div style="text-align: right;">
-            Official Electronic Record • Generated automatically from secure database.<br/>
-            Confirmed &amp; Verified Official Report
           </div>
         </div>
 
         <!-- Action Bar (hidden when printing) -->
-        <div class="modal-actions no-print" style="margin-top: 1.8rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
-          <button class="btn btn-secondary" type="button" id="close-statement-btn" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">Close</button>
+        <div class="modal-actions no-print" style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.8rem; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 20px 20px;">
+          <button class="btn btn-secondary" type="button" id="close-statement-btn" style="background: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; font-weight: 700;">Close</button>
           <button class="btn btn-secondary" type="button" id="export-statement-csv-btn" style="background: #f8fafc; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
             📥 Export CSV
           </button>
-          <button class="btn btn-primary" type="button" id="print-statement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem;">
+          <button class="btn btn-secondary download-stmt-doc-btn" type="button" style="background: #f8fafc; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+            📥 Download File
+          </button>
+          <button class="btn btn-primary print-statement-btn" type="button" id="print-statement-trigger" style="background: #0284c7; color: #ffffff; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800;">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             Print / Save PDF Statement
           </button>
