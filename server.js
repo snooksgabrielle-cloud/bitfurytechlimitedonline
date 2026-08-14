@@ -562,6 +562,7 @@ app.get('/api/dashboard', async (req, res) => {
 
     res.json({
       user: {
+        id: user.id,
         fullName: user.full_name,
         email: user.email,
         phone: user.phone || '',
@@ -570,7 +571,15 @@ app.get('/api/dashboard', async (req, res) => {
         usdtWallet: user.usdt_wallet || '',
         avatar: user.avatar || '',
         twoFactorEnabled: !!user.two_factor_enabled,
-        role: user.role
+        role: user.role,
+        depositBalance: user.deposit_balance,
+        deposit_balance: user.deposit_balance,
+        interestBalance: currentInterestWallet,
+        interest_balance: currentInterestWallet,
+        depositWallet: formatCurrency(user.deposit_balance),
+        interestWallet: formatCurrency(currentInterestWallet),
+        totalDeposited: totalDeposit,
+        totalWithdrawn: totalWithdraw
       },
       balance: formatCurrency(user.deposit_balance),
       depositWallet: formatCurrency(user.deposit_balance),

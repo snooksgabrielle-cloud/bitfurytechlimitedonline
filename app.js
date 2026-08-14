@@ -2461,16 +2461,39 @@ function initDashboardControls() {
     }
 
     // Update wallet option labels with live user balances
-    const user = window.currentDashboardData?.user || {};
-    const depBal = typeof user.depositBalance !== 'undefined' ? Number(user.depositBalance) : (typeof user.deposit_balance !== 'undefined' ? Number(user.deposit_balance) : 0);
-    const intBal = typeof user.interestBalance !== 'undefined' ? Number(user.interestBalance) : (typeof user.interest_balance !== 'undefined' ? Number(user.interest_balance) : 0);
+    const getLiveBalances = () => {
+      const dash = window.currentDashboardData || {};
+      const user = dash.user || {};
+      const storedUser = (() => {
+        try { return JSON.parse(localStorage.getItem('bitfury_user') || '{}'); } catch(e) { return {}; }
+      })();
 
-    const depOpt = document.getElementById('modal-dep-opt');
-    const intOpt = document.getElementById('modal-int-opt');
-    if (depOpt) depOpt.textContent = `Deposit Wallet ($${depBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
-    if (intOpt) intOpt.textContent = `Interest Wallet ($${intBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      const parseBal = (val) => {
+        if (typeof val === 'number') return isNaN(val) ? 0 : val;
+        if (typeof val === 'string') {
+          const num = parseFloat(val.replace(/[^0-9.-]+/g, ''));
+          return isNaN(num) ? 0 : num;
+        }
+        return 0;
+      };
+
+      const dep = parseBal(dash.depositBalanceRaw) || parseBal(dash.depositWallet) || parseBal(dash.balance) || parseBal(user.depositBalance) || parseBal(user.deposit_balance) || parseBal(user.depositWallet) || parseBal(storedUser.depositBalance) || parseBal(storedUser.deposit_balance) || 0;
+      const int = parseBal(dash.interestBalanceRaw) || parseBal(dash.interestWallet) || parseBal(user.interestBalance) || parseBal(user.interest_balance) || parseBal(user.interestWallet) || parseBal(storedUser.interestBalance) || parseBal(storedUser.interest_balance) || 0;
+
+      return { depBal: dep, intBal: int };
+    };
+
+    const refreshBalancesUI = () => {
+      const { depBal, intBal } = getLiveBalances();
+      const depOpt = document.getElementById('modal-dep-opt');
+      const intOpt = document.getElementById('modal-int-opt');
+      if (depOpt) depOpt.textContent = `Deposit Wallet ($${depBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      if (intOpt) intOpt.textContent = `Interest Wallet ($${intBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      updateModalCalc();
+    };
 
     const getSelectedWalletBalance = () => {
+      const { depBal, intBal } = getLiveBalances();
       const src = walletSelect ? walletSelect.value : 'deposit';
       return src === 'interest' ? intBal : depBal;
     };
@@ -2482,7 +2505,6 @@ function initDashboardControls() {
 
     const updateWalletAvailabilityDisplay = () => {
       const bal = getSelectedWalletBalance();
-      const name = getSelectedWalletName();
       if (availBalEl) {
         availBalEl.textContent = `Available: $${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
@@ -2594,8 +2616,23 @@ function initDashboardControls() {
       };
     });
 
-    updateModalCalc();
+    refreshBalancesUI();
     investModal.classList.add('active');
+
+    // Asynchronously refresh balances from server to ensure 100% live state
+    if (getAuthToken()) {
+      fetch('/api/dashboard', {
+        headers: { Authorization: `Bearer ${getAuthToken()}` }
+      })
+        .then((r) => r.json())
+        .then((d) => {
+          if (d && (d.user || d.balance || d.depositWallet)) {
+            window.currentDashboardData = d;
+            refreshBalancesUI();
+          }
+        })
+        .catch(() => {});
+    }
   };
 
   // Delegated click handler for Open Invest Modal buttons
